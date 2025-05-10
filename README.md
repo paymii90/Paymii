@@ -1,7 +1,7 @@
 
 # Paymii 🚀
 
-![Paymii Banner](https://github.com/your-username/repository-name/raw/main/assets/paymii-banner.png)
+![Paymii Banner](https://github.com/paymii90/Paymii/raw/main/assets/paymiiLogo.png)
 
 A modern and efficient cryptocurrency application built with Spring Boot for the backend and React Native (Expo) for the frontend.
 
