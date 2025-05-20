@@ -6,7 +6,7 @@ const emailVerification = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../assets/emailverification.png")}
+        source={require("../../../assets/emailverification.png")}
         style={styles.image}
       />
       <View style={styles.text}>
