@@ -1,10 +1,11 @@
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
-import HomeScreen from "./src/screens/HomeScreen";
-import Screen2 from "./src/screens/screen2";
-import SignUp from "./src/screens/SignUp";
-import emailVerification from "./src/screens/emailVerification";
-import digitVerification from "./src/screens/digitVerification";
+import HomeScreen from "./src/screens/signup/HomeScreen";
+import Screen2 from "./src/screens/signup/screen2";
+import SignUp from "./src/screens/signup/SignUp";
+import emailVerification from "./src/screens/signup/emailVerification";
+import digitVerification from "./src/screens/signup/digitVerification";
+import Progress1 from './src/screens/signup/progress1'
 //import ComponentScreen from "./src/screens/ComponentScreen";
 // import ListScreen from "./src/screens/ListScreen";
 // import ImageScreen from "./src/screens/ImageScreen";
@@ -19,6 +20,7 @@ const navigator = createStackNavigator(
     Register: SignUp,
     Email: emailVerification,
     Digit: digitVerification,
+    Interlude: Progress1
     //  Components: ComponentScreen,
     // List: ListScreen,
     // Image: ImageScreen,
