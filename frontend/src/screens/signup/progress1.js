@@ -4,7 +4,7 @@ import {View, Text, Image, StyleSheet
 
 const Progress1 =()=>{
     return <View>
-<Image source={required('../../assets/SecureAccount.png')} />
+<Image source={require('../../../assets/SecureAccount.png')} />
     </View>
 }
 
