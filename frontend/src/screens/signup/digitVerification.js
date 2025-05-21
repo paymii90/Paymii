@@ -3,7 +3,7 @@ import { Text, View, StyleSheet } from "react-native";
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
 
-const digitVerification = ({navigation}) => {
+const DigitVerification = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>
@@ -43,4 +43,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default digitVerification;
+export default DigitVerification;
