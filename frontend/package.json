@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@react-native-community/cli": "^18.0.0",
     "react-native-svg-transformer": "^1.5.1"
   },
   "private": true
