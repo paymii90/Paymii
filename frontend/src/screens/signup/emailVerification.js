@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-import Button from "../Components/Button";
+import Button from "../../Components/Button";
 
 const EmailVerification = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../assets/emailverification.png")}
+        source={require("../../../assets/emailverification.png")}
         style={styles.image}
       />
       <View style={styles.text}>

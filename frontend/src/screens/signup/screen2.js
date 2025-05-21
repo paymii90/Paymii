@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, StyleSheet, View } from "react-native";
-import Button from "../Components/Button";
+import Button from "../../Components/Button";
 // import { SafeAreaView } from "react-navigation";
 
 const Screen2 = ({ navigation }) => {
