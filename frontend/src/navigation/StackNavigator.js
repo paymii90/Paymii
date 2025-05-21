@@ -1,11 +1,12 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from '../screens/HomeScreen';
-import Screen2 from '../screens/screen2';
-import SignUp from '../screens/SignUp';
-import EmailVerification from '../screens/EmailVerification';
-import DigitVerification from '../screens/DigitVerification';
-import SignIn from '../screens/SignIn';
+
+import HomeScreen from '../screens/signup/HomeScreen'
+import Screen2 from '../screens/signup/screen2';
+import SignUp from '../screens/signup/SignUp';
+import EmailVerification from '../screens/signup/emailVerification';
+import DigitVerification from '../screens/signup/digitVerification';
+import SignIn from '../screens/signup/SignIn';
 import TabNavigator from './TabNavigator';
 
 const Stack = createNativeStackNavigator();
