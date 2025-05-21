@@ -17,11 +17,12 @@ const SignIn = ({ navigation }) => {
     navigation.goBack();
   };
 
-   const handleSubmit = () => {
-    if (email && password){
-      setError('No error')
+  const handleSubmit = () => {
+    if (email && password) {
+      setError("No error");
+      navigation.replace("Main");
     } else {
-      setError('Email and Password are required!!')
+      setError("Email and Password are required!!");
     }
     // navigation.replace("Sign");
   };
