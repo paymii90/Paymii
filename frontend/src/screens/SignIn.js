@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Text, StyleSheet, View, TouchableOpacity, Alert } from "react-native";
-import { SafeAreaView } from "react-navigation";
+import { SafeAreaView } from "react-native-safe-area-context";
 import ClosureIcon from "../../assets/signIn/close";
 import Input from "../Components/Input";
 import Spacer from "../Components/Spacer";
