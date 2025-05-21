@@ -5,6 +5,7 @@ import Screen2 from "./src/screens/screen2";
 import SignUp from "./src/screens/SignUp";
 import emailVerification from "./src/screens/emailVerification";
 import digitVerification from "./src/screens/digitVerification";
+import SignIn from "./src/screens/SignIn";
 //import ComponentScreen from "./src/screens/ComponentScreen";
 // import ListScreen from "./src/screens/ListScreen";
 // import ImageScreen from "./src/screens/ImageScreen";
@@ -19,6 +20,7 @@ const navigator = createStackNavigator(
     Register: SignUp,
     Email: emailVerification,
     Digit: digitVerification,
+    SignIn: SignIn,
     //  Components: ComponentScreen,
     // List: ListScreen,
     // Image: ImageScreen,
