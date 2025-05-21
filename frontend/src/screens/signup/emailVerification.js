@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import Button from "../../Components/Button";
 
-const emailVerification = ({ navigation }) => {
+const EmailVerification = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image
@@ -57,4 +57,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default emailVerification;
+export default EmailVerification;
