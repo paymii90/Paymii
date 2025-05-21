@@ -17,7 +17,7 @@ const HomeScreen = ({ navigation }) => {
   }, [navigation]);
   return (
     <View style={styles.Container}>
-      <Image style={styles.Image} source={require("../../assets/logo1.png")} />
+      <Image style={styles.Image} source={require("../../../assets/logo1.png")} />
       <Text style={styles.Text}>Paymii</Text>
     </View>
   );

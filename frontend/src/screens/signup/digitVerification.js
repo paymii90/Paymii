@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, StyleSheet } from "react-native";
-import Input from "../Components/Input";
-import Button from "../Components/Button";
+import Input from "../../Components/Input";
+import Button from "../../Components/Button";
 
 const DigitVerification = () => {
   return (
@@ -14,7 +14,7 @@ const DigitVerification = () => {
       </Text>
       <Input keyboard="numeric" />
       <View style={styles.buttons}>
-        <Button label="Submit" backgroundColor="#052644" color="white" />
+        <Button label="Submit" backgroundColor="#052644" color="white" action={()=>navigation.navigate('Interlude')}/>
         <Button label="I need help" backgroundColor="#CFCFCF" color="black" />
       </View>
     </View>

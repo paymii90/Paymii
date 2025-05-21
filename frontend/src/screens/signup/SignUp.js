@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
-import Input from "../Components/Input";
-import Checkbox from "../Components/Checkbox";
-import Button from "../Components/Button";
+import Input from "../../Components/Input";
+import Checkbox from "../../Components/Checkbox";
+import Button from "../../Components/Button";
 
 const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState("");

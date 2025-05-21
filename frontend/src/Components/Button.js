@@ -1,4 +1,3 @@
-import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 const Button = ({ action, backgroundColor, label, color,style,labelStyle }) => {
