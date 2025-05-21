@@ -1,7 +1,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { View } from "react-native";
+import { View, Platform } from "react-native";
 
 import Home from "../screens/MainScreens/Home";
 import PortfolioScreen from "../screens/MainScreens/PortfolioScreen";
@@ -44,7 +44,12 @@ const TabNavigator = () => (
         }
 
         return (
-          <View style={[{ alignItems: "center", justifyContent: "center" }, iconStyle]}>
+          <View
+            style={[
+              { alignItems: "center", justifyContent: "center" },
+              iconStyle,
+            ]}
+          >
             <MaterialIcons name={iconName} size={iconSize} color={color} />
           </View>
         );
@@ -54,10 +59,11 @@ const TabNavigator = () => (
       tabBarStyle: {
         paddingVertical: 10,
         paddingHorizontal: 20,
-        height: 60,
+        height: 70,
         backgroundColor: "#fff",
         borderTopWidth: 1,
         borderTopColor: "#ddd",
+        paddingBottom: Platform.OS === "android" ? 15 : 25, // iPhones need a bit more
       },
       tabBarLabelStyle: {
         fontSize: 13,
