@@ -3,8 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
 import Screen2 from '../screens/screen2';
 import SignUp from '../screens/SignUp';
-import EmailVerification from '../screens/emailVerification';
-import DigitVerification from '../screens/digitVerification';
+import EmailVerification from '../screens/EmailVerification';
+import DigitVerification from '../screens/DigitVerification';
 import SignIn from '../screens/SignIn';
 import TabNavigator from './TabNavigator';
 
