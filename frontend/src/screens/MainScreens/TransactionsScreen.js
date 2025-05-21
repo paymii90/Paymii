@@ -3,7 +3,7 @@ import React from 'react'
 
 const TransactionsScreen = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>TransactionsScreen</Text>
     </View>
   )
@@ -11,4 +11,11 @@ const TransactionsScreen = () => {
 
 export default TransactionsScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+container: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: "#FFFFFF",
+    justifyContent: 'center',
+  },
+});

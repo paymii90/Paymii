@@ -3,7 +3,7 @@ import React from 'react'
 
 const PortfolioScreen = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>PortfolioScreen</Text>
     </View>
   )
@@ -11,4 +11,11 @@ const PortfolioScreen = () => {
 
 export default PortfolioScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+container: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: "#FFFFFF",
+    justifyContent: 'center',
+  },
+});
