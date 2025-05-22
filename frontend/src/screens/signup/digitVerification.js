@@ -1,11 +1,21 @@
 import React from "react";
-import { Text, View, StyleSheet } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Text,
+  View,
+  StyleSheet,
+  Platform,
+} from "react-native";
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
 
-const DigitVerification = () => {
+const DigitVerification = ({ navigation }) => {
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={5}
+    >
       <Text style={styles.header}>
         Enter the 7-digit code we sent to your email
       </Text>
@@ -14,10 +24,15 @@ const DigitVerification = () => {
       </Text>
       <Input keyboard="numeric" />
       <View style={styles.buttons}>
-        <Button label="Submit" backgroundColor="#052644" color="white" action={()=>navigation.navigate('Interlude')}/>
+        <Button
+          label="Submit"
+          backgroundColor="#052644"
+          color="white"
+          action={() => navigation.navigate("Interlude")}
+        />
         <Button label="I need help" backgroundColor="#CFCFCF" color="black" />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
