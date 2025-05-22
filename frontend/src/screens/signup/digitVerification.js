@@ -1,11 +1,21 @@
 import React from "react";
-import { KeyboardAvoidingView,Text, View, StyleSheet,Platform } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Text,
+  View,
+  StyleSheet,
+  Platform,
+} from "react-native";
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
 
-const DigitVerification = ({navigation}) => {
+const DigitVerification = ({ navigation }) => {
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS ==='ios'? 'padding':'height'} keyboardVerticalOffset={5}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={5}
+    >
       <Text style={styles.header}>
         Enter the 7-digit code we sent to your email
       </Text>
@@ -14,7 +24,12 @@ const DigitVerification = ({navigation}) => {
       </Text>
       <Input keyboard="numeric" />
       <View style={styles.buttons}>
-        <Button label="Submit" backgroundColor="#052644" color="white" action={()=>navigation.navigate('Interlude')}/>
+        <Button
+          label="Submit"
+          backgroundColor="#052644"
+          color="white"
+          action={() => navigation.navigate("Interlude")}
+        />
         <Button label="I need help" backgroundColor="#CFCFCF" color="black" />
       </View>
     </KeyboardAvoidingView>
