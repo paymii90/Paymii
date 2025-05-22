@@ -11,6 +11,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import Button from "../../Components/Button";
 
 const PhoneNumber = () => {
+  const [isFocused, setIsFocused] = useState(false);
   const phoneInput = useRef(null);
   const [phoneNumber, setPhoneNumber] = useState("");
   return (
@@ -33,10 +34,19 @@ const PhoneNumber = () => {
               defaultCode="US"
               layout="second"
               containerStyle={{ width: "90%" }}
+              textContainerStyle={[
+                styles.textInput,
+                isFocused && styles.textInputFocused,
+              ]}
+              textInputProps={{
+                onFocus: () => setIsFocused(true),
+                onBlur: () => setIsFocused(false),
+              }}
               onChangeFormattedText={(text) => {
                 setPhoneNumber(text);
               }}
               withShadow
+
               //   autoFocus
             />
           </View>
@@ -82,6 +92,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     marginBottom: "5%",
+  },
+  textInput: {
+    borderRadius: 10,
+  },
+  textInputFocused: {
+    borderColor: "#052644",
+    borderWidth: 1,
   },
 });
 export default PhoneNumber;
