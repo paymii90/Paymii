@@ -3,7 +3,7 @@ import {View, Text, Image, StyleSheet} from 'react-native'
 import BucketList from '../../Components/BucketList'
 import Button from '../../Components/Button'
 
-const Progress1 =()=>{
+const Progress1 =({navigation})=>{
     return <View style={styles.container}>
 <Image style={styles.image} source={require('../../../assets/SecureAccount.png')} />
 <Text style={styles.text}>Let's secure your account</Text>
@@ -13,7 +13,7 @@ const Progress1 =()=>{
     <BucketList backgroundColor='#F3F3F3' color='#111111' number='3' process='Verify your identity' status='5 min' />
 </View>
 <View style={styles.button}>
-<Button  label='Submit' backgroundColor='#052644' color='white' /></View>
+<Button  action={()=>navigation.navigate('Scan')} label='Submit' backgroundColor='#052644' color='white' /></View>
     </View>
 }
 

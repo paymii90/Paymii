@@ -9,6 +9,7 @@ import DigitVerification from '../screens/signup/digitVerification';
 import SignIn from '../screens/signup/SignIn';
 import TabNavigator from './TabNavigator';
 import Progress1 from '../screens/signup/progress1';
+import ScanScreen from '../screens/signup/Scan';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ const StackNavigator = () => (
     <Stack.Screen name="SignIn" component={SignIn} />
     <Stack.Screen name="Main" component={TabNavigator} />
     <Stack.Screen name="Interlude" component={Progress1} />
+    <Stack.Screen name='Scan' component={ScanScreen} />
   </Stack.Navigator>
 );
 
