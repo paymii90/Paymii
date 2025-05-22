@@ -8,6 +8,7 @@ import EmailVerification from '../screens/signup/emailVerification';
 import DigitVerification from '../screens/signup/digitVerification';
 import SignIn from '../screens/signup/SignIn';
 import TabNavigator from './TabNavigator';
+import Progress1 from '../screens/signup/progress1';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ const StackNavigator = () => (
     <Stack.Screen name="Digit" component={DigitVerification} />
     <Stack.Screen name="SignIn" component={SignIn} />
     <Stack.Screen name="Main" component={TabNavigator} />
+    <Stack.Screen name="Interlude" component={Progress1} />
   </Stack.Navigator>
 );
 

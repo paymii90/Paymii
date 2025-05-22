@@ -3,7 +3,7 @@ import { Text, View, StyleSheet } from "react-native";
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
 
-const DigitVerification = () => {
+const DigitVerification = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>
