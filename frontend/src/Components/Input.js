@@ -1,6 +1,8 @@
 import { StyleSheet, View, TextInput, Text } from "react-native";
+import { useState } from "react";
 
 const Input = (props) => {
+  const [isFocused, setIsFocused] = useState(false);
   return (
     <View style={{ alignSelf: "center" }}>
       <Text style={styles.text}>{props.title}</Text>
@@ -11,8 +13,10 @@ const Input = (props) => {
           secureTextEntry={props.visibility}
           onChangeText={props.action}
           keyboardType={props.keyboard}
-          style={styles.Input}
-        ></TextInput>
+          style={[styles.Input, isFocused && styles.activeInput]}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+        />
       </View>
     </View>
   );
@@ -35,6 +39,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontWeight: "medium",
     fontSize: 16,
+  },
+  activeInput: {
+    borderColor: "#052644",
+    borderWidth: 1,
   },
 });
 
