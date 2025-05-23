@@ -12,6 +12,8 @@ import Progress1 from "../screens/signup/progress1";
 import ScanScreen from "../screens/signup/Scan";
 import PhoneNumber from "../screens/signup/PhoneNumber";
 import PhoneAuthentication from "../screens/signup/PhoneAuthentication";
+import Citizenship from "../screens/signup/Citizenship";
+import IdentityVerification from "../screens/signup/IdentityVerification";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +30,8 @@ const StackNavigator = () => (
     <Stack.Screen name="Scan" component={ScanScreen} />
     <Stack.Screen name="Phone" component={PhoneNumber} />
     <Stack.Screen name="PhoneAuth" component={PhoneAuthentication} />
+    <Stack.Screen name="Citizenship" component={Citizenship} />
+    <Stack.Screen name="Verification" component={IdentityVerification} />
   </Stack.Navigator>
 );
 

@@ -31,7 +31,7 @@ const PhoneNumber = ({ navigation }) => {
             <PhoneInput
               ref={phoneInput}
               defaultValue={phoneNumber}
-              defaultCode="US"
+              defaultCode="GH"
               layout="second"
               containerStyle={{ width: "90%" }}
               textContainerStyle={[
