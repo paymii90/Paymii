@@ -11,6 +11,7 @@ import TabNavigator from "./TabNavigator";
 import Progress1 from "../screens/signup/progress1";
 import ScanScreen from "../screens/signup/Scan";
 import PhoneNumber from "../screens/signup/PhoneNumber";
+import PhoneAuthentication from "../screens/signup/PhoneAuthentication";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ const StackNavigator = () => (
     <Stack.Screen name="Interlude" component={Progress1} />
     <Stack.Screen name="Scan" component={ScanScreen} />
     <Stack.Screen name="Phone" component={PhoneNumber} />
+    <Stack.Screen name="PhoneAuth" component={PhoneAuthentication} />
   </Stack.Navigator>
 );
 

@@ -10,7 +10,7 @@ import PhoneInput from "react-native-phone-number-input";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import Button from "../../Components/Button";
 
-const PhoneNumber = () => {
+const PhoneNumber = ({ navigation }) => {
   const [isFocused, setIsFocused] = useState(false);
   const phoneInput = useRef(null);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -55,7 +55,7 @@ const PhoneNumber = () => {
               label="Submit"
               backgroundColor="#052644"
               color="white"
-              action={() => navigation.navigate("Interlude")}
+              action={() => navigation.navigate("PhoneAuth")}
             />
           </View>
         </KeyboardAvoidingView>
