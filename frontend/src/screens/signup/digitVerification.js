@@ -38,11 +38,12 @@ const DigitVerification = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 50,
-    paddingHorizontal: 20,
+    padding: "5%",
     flex: 1,
+    alignItems: "center",
   },
   header: {
+    marginTop: "30%",
     fontSize: 22,
     fontWeight: "bold",
     marginVertical: 20,
@@ -55,6 +56,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-end",
+    marginBottom: "5%",
+    width: "100%",
   },
 });
 
