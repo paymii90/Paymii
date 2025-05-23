@@ -18,7 +18,7 @@ import Button from "../../Components/Button";
 //   );
 // };
 
-const PhoneAuthentication = () => {
+const PhoneAuthentication = ({ navigation }) => {
   const [phoneOtp, setPhoneOtp] = useState("");
   return (
     <KeyboardAvoidingView
@@ -42,7 +42,7 @@ const PhoneAuthentication = () => {
           label="Submit"
           backgroundColor="#052644"
           color="white"
-          action={() => navigation.navigate("Interlude")}
+          action={() => navigation.navigate("Citizenship")}
         />
         <Button label="Resend Code" backgroundColor="#CFCFCF" color="black" />
       </View>
