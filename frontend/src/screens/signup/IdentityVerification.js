@@ -4,7 +4,7 @@ import Identityverification from "../../../assets/Identityverification.svg";
 import Lock_fill from "../../../assets/Lock_fill.svg";
 import Button from "../../Components/Button";
 
-const IdentityVerification = () => {
+const IdentityVerification = ({ navigation }) => {
   return (
     <SafeAreaProvider style={styles.container}>
       <SafeAreaView style={{ alignItems: "center" }}>
@@ -32,7 +32,7 @@ const IdentityVerification = () => {
             label="Continue"
             backgroundColor="#052644"
             color="white"
-            action={() => navigation.navigate("Verification")}
+            action={() => navigation.navigate("Information")}
           />
         </View>
       </SafeAreaView>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     width: "100%",
     // flex: 1,
     justifyContent: "flex-end",
-    gap: "5%",
+    gap: "10%",
   },
   footer: {
     alignItems: "center",
