@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     alignSelf: "center",
-    width: "95%",
+    width: "105%",
   },
   label: {
     marginBottom: 8,
