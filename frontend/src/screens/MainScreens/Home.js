@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -20,9 +20,37 @@ import Button from "../../Components/Button";
 import ButtonsInfo from "../../../assets/configs/HomeButtons";
 import SingleButtonItem from "../../../assets/configs/SingleButtonItem";
 import Plus from "../../../assets/plus-1.png";
+import mockCoinData from "../../../assets/configs/mockCoinData";
+
+//api request
+import { getMarketCoins } from "../../api/coinGecko";
 
 const Home = () => {
   const [activeButton, setActiveButton] = useState(null);
+  const [coinData, setCoinData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getMarketCoins();
+
+        const formatted = data.map((coin) => ({
+          id: coin.id,
+          name: coin.name,
+          symbol: coin.symbol.toUpperCase(),
+          price: `$${coin.current_price}`,
+          image: coin.image,
+        }));
+
+        setCoinData(formatted);
+      } catch (error) {
+        console.error("Error fetching market data:", error);
+      }
+    };
+
+    fetchData();
+  }, [activeButton]);
+
   return (
     <SafeAreaView
       style={styles.container}
@@ -66,13 +94,44 @@ const Home = () => {
             />
           ))}
         </ScrollView>
+        <Spacer />
+        {/* 👉 This shows only after a filter is selected */}
+        {activeButton && (
+          <View style={{ marginTop: 20 }}>
+            <Text style={{ fontSize: 16, color: "#333" }}>
+              Showing results for:{" "}
+              <Text style={{ fontWeight: "bold" }}>{activeButton}</Text>
+            </Text>
+            {coinData.map((coin) => (
+              <View
+                key={coin.id}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginBottom: 10,
+                }}
+              >
+                <Image
+                  source={{ uri: coin.image }}
+                  style={{ width: 32, height: 32, marginRight: 10 }}
+                />
+                <Text style={{ flex: 1, fontWeight: "bold" }}>{coin.name}</Text>
+                <Text>{coin.price}</Text>
+              </View>
+            ))}
+          </View>
+        )}
         <Spacer height={40} />
         <View style={styles.footButts}>
           <Button
             label="Buy & Sell"
             backgroundColor="#052644"
             color="white"
-            style={{ borderRadius: 60, width: "40%",transform: [{ translateX: 30 }] }}
+            style={{
+              borderRadius: 60,
+              width: "40%",
+              transform: [{ translateX: 30 }],
+            }}
             labelStyle={{ fontWeight: 600 }}
             // action={handleBuyCrypto}
           />
@@ -81,7 +140,11 @@ const Home = () => {
             label="Transfer"
             backgroundColor="#011D5C"
             color="white"
-            style={{ borderRadius: 60, width: "40%",transform: [{ translateX: -30 }]  }}
+            style={{
+              borderRadius: 60,
+              width: "40%",
+              transform: [{ translateX: -30 }],
+            }}
             labelStyle={{ fontWeight: 600 }}
             // action={handleBuyCrypto}
           />
