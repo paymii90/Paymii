@@ -23,17 +23,38 @@ const BuyCryptoPopup = ({ isVisible, onClose }) => {
         <Text style={styles.title}>Choose an action</Text>
 
         <TouchableOpacity style={styles.optionBtn}>
-          <Icon name="shopping-cart" size={18} color="#444" style={styles.icon} />
+          <Icon
+            name="shopping-cart"
+            size={18}
+            color="#444"
+            style={styles.icon}
+          />
           <Text style={styles.optionText}>Buy</Text>
+          <Icon
+            name="arrow-right"
+            size={18}
+            color="#444"
+            style={styles.icon2}
+          />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.optionBtn}>
-          <Icon name="money-bill-wave" size={18} color="#444" style={styles.icon} />
+          <Icon
+            name="money-bill-wave"
+            size={18}
+            color="#444"
+            style={styles.icon}
+          />
           <Text style={styles.optionText}>Sell</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.optionBtn}>
-          <Icon name="exchange-alt" size={18} color="#444" style={styles.icon} />
+          <Icon
+            name="exchange-alt"
+            size={18}
+            color="#444"
+            style={styles.icon}
+          />
           <Text style={styles.optionText}>Convert</Text>
         </TouchableOpacity>
       </View>
@@ -47,9 +68,11 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   popupContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: "#CFCFCF",
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
+    borderWidth: 1,
+    borderColor: "#fff",
     padding: 20,
     paddingBottom: Platform.OS === "ios" ? 40 : 20,
   },
@@ -61,12 +84,16 @@ const styles = StyleSheet.create({
   optionBtn: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 12,
+    paddingVertical: 20,
     borderBottomWidth: 1,
     borderColor: "#eee",
+    // paddingBottom : 25,
   },
   icon: {
     marginRight: 12,
+  },
+  icon2: {
+    
   },
   optionText: {
     fontSize: 16,
