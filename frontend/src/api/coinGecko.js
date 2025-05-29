@@ -7,9 +7,6 @@
 //   return response.data.coins;
 // };
 
-
-
-
 export const getMarketCoins = async () => {
   try {
     const response = await fetch(
@@ -23,4 +20,15 @@ export const getMarketCoins = async () => {
   }
 };
 
-
+export const fetchExchangeRate = async () => {
+  try {
+    const response = await fetch(
+      "https://api.exchangerate-api.com/v4/latest/USD"
+    );
+    const data = await response.json();
+    return data.rates.GHS;
+  } catch (error) {
+    console.error("❌ Error fetching exchange rate: ", error);
+    return "12";
+  }
+};
