@@ -33,7 +33,7 @@ const PersonalInformation = () => {
             <Input
               title="Legal Last Name"
               value={lastName}
-              placeholder="SpongeBob"
+              placeholder="SquarePants"
               action={(text) => setLastName(text)}
             />
             <DoB />
