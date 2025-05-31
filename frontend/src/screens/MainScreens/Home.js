@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   Platform,
   ScrollView,
   Image,
+  FlatList,
+  ActivityIndicator,
 } from "react-native";
 import Spacer from "../../Components/Spacer";
 import { BlurView } from "expo-blur";
@@ -20,9 +22,78 @@ import Button from "../../Components/Button";
 import ButtonsInfo from "../../../assets/configs/HomeButtons";
 import SingleButtonItem from "../../../assets/configs/SingleButtonItem";
 import Plus from "../../../assets/plus-1.png";
+import BuyCryptoPopup from "../../../assets/configs/BuyCryptoPopup.js";
+
+//mock data
+import {
+  watchlistCoins,
+  trendingCoins,
+  topGainers,
+  topLosers,
+  mostBuyers,
+  mostSearched,
+} from "../../../assets/configs/mockCoinCategories.js";
+
+//api request
+import { getMarketCoins, fetchExchangeRate } from "../../api/coinGecko";
 
 const Home = () => {
   const [activeButton, setActiveButton] = useState(null);
+  const [coins, setCoins] = useState([]);
+  const [exchangeRate, setExchangeRate] = useState(11); // Default rate
+  const [loading, setLoading] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(true);
+
+  switch (activeButton) {
+    case "Watchlist":
+      selectedData = watchlistCoins;
+      break;
+    case "Trending":
+      selectedData = trendingCoins;
+      break;
+    case "Top Gainers":
+      selectedData = topGainers;
+      break;
+    case "Top Losers":
+      selectedData = topLosers;
+      break;
+    case "Most Buyers":
+      selectedData = mostBuyers;
+      break;
+    case "Most Searched":
+      selectedData = mostSearched;
+      break;
+    default:
+      selectedData = watchlistCoins;
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const rate = await fetchExchangeRate();
+        setExchangeRate(rate || 11);
+
+        // const coinData = await getMarketCoins();
+        setCoins(selectedData);
+
+        // if (Array.isArray(coinData)) {
+
+        // } else {
+        //   console.warn("Coin data is not an array:", coinData);
+        //   setCoins([]); // fallback to empty array
+        // }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setCoins([]); // fallback on error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (activeButton) fetchData();
+  }, [activeButton]);
+
   return (
     <SafeAreaView
       style={styles.container}
@@ -66,22 +137,82 @@ const Home = () => {
             />
           ))}
         </ScrollView>
+        <Spacer />
+        {/* 👉 This shows only after a filter is selected */}
+        {activeButton && (
+          <View style={{ marginTop: 20 }}>
+            <Text style={{ fontSize: 16, color: "#333" }}>
+              Showing results for:{" "}
+              <Text style={{ fontWeight: "bold" }}>{activeButton}</Text>
+            </Text>
+            {loading ? (
+              <View style={styles.loader}>
+                <ActivityIndicator size="medium" color="#000000" />
+              </View>
+            ) : (
+              <View>
+                {coins.map((item) => (
+                  <View key={item.name} style={styles.coinContainer}>
+                    <Image source={{ uri: item.image }} style={styles.logo} />
+                    <View style={styles.coinInfo}>
+                      <Text style={styles.name}>
+                        {item.name} ({item.symbol.toUpperCase()})
+                      </Text>
+                      <Text style={styles.price}>
+                        GH₵ {(item.current_price * exchangeRate).toFixed(2)}
+                      </Text>
+                    </View>
+                    <Text
+                      style={[
+                        styles.priceChange,
+                        {
+                          color:
+                            item.price_change_percentage_24h >= 0
+                              ? "green"
+                              : "red",
+                        },
+                      ]}
+                    >
+                      {item.price_change_percentage_24h.toFixed(2)}%
+                    </Text>
+                  </View>
+                ))}
+                {/* /> */}
+              </View>
+            )}
+          </View>
+        )}
         <Spacer height={40} />
         <View style={styles.footButts}>
           <Button
             label="Buy & Sell"
             backgroundColor="#052644"
             color="white"
-            style={{ borderRadius: 60, width: "40%",transform: [{ translateX: 30 }] }}
+            style={{
+              borderRadius: 60,
+              width: "40%",
+              transform: [{ translateX: 30 }],
+            }}
             labelStyle={{ fontWeight: 600 }}
-            // action={handleBuyCrypto}
+            action={() => setPopupVisible(true)}
+          />
+
+          {/* Popup to show  */}
+
+          <BuyCryptoPopup
+            isVisible={popupVisible}
+            onClose={() => setPopupVisible(false)}
           />
           <Image source={Plus} style={styles.plus} />
           <Button
             label="Transfer"
             backgroundColor="#011D5C"
             color="white"
-            style={{ borderRadius: 60, width: "40%",transform: [{ translateX: -30 }]  }}
+            style={{
+              borderRadius: 60,
+              width: "40%",
+              transform: [{ translateX: -30 }],
+            }}
             labelStyle={{ fontWeight: 600 }}
             // action={handleBuyCrypto}
           />
@@ -106,7 +237,7 @@ const styles = StyleSheet.create({
   },
   iconsCont: {
     position: "absolute", // Fixes at the top
-    top: 20,
+    top: 0,
     left: 0,
     right: 0,
     height: 90, // Fixed height
@@ -153,5 +284,34 @@ const styles = StyleSheet.create({
   },
   plus: {
     zIndex: -1,
+  },
+  coinContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 10,
+    padding: 10,
+    backgroundColor: "#1e1e1e",
+    borderRadius: 10,
+  },
+  logo: {
+    width: 40,
+    height: 40,
+    marginRight: 12,
+  },
+  coinInfo: {
+    flex: 1,
+  },
+  name: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 14,
+  },
+  price: {
+    color: "#ccc",
+    fontSize: 13,
+  },
+  priceChange: {
+    fontWeight: "600",
+    fontSize: 13,
   },
 });
