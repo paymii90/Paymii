@@ -14,6 +14,7 @@
     "@react-navigation/bottom-tabs": "^7.3.13",
     "@react-navigation/native": "^7.1.9",
     "@react-navigation/native-stack": "^7.3.13",
+    "axios": "^1.9.0",
     "expo": "^53.0.9",
     "expo-blur": "~14.1.4",
     "expo-constants": "~17.1.6",
@@ -25,8 +26,12 @@
     "react-native": "0.79.2",
     "react-native-country-picker-modal": "^2.0.0",
     "react-native-gesture-handler": "~2.24.0",
+<<<<<<< HEAD
     "react-native-modal-datetime-picker": "^18.0.0",
     "react-native-phone-number": "^1.0.1",
+=======
+    "react-native-modal": "^14.0.0-rc.1",
+>>>>>>> origin/main
     "react-native-phone-number-input": "^2.1.0",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "^5.4.0",
