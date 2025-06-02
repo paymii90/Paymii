@@ -124,7 +124,7 @@ const SignUp = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 100,
+    marginTop: 40,
     flex: 1,
     padding: "auto",
     paddingHorizontal: 20,
