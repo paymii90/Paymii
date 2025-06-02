@@ -3,11 +3,17 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { View, Platform } from "react-native";
 
-import Home from "../screens/MainScreens/Home";
-import PortfolioScreen from "../screens/MainScreens/PortfolioScreen";
-import TransactionsScreen from "../screens/MainScreens/TransactionsScreen";
-import ExploreScreen from "../screens/MainScreens/ExploreScreen";
-import SettingsScreen from "../screens/MainScreens/SettingsScreen";
+// import Home from "../screens/MainScreens/Home";
+// import PortfolioScreen from "../screens/MainScreens/PortfolioScreen";
+// import TransactionsScreen from "../screens/MainScreens/TransactionsScreen";
+// import ExploreScreen from "../screens/MainScreens/ExploreScreen";
+// import SettingsScreen from "../screens/MainScreens/SettingsScreen";
+
+import HomeStack from "../screens/MainStacks/HomeStack";
+import ExploreStack from "../screens/MainStacks/ExploreStack";
+import PortfolioStack from "../screens/MainStacks/PortfolioStack";
+import TransactionsStack from "../screens/MainStacks/TransactionsStack";
+import SettingsStack from "../screens/MainStacks/SettingsStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -72,15 +78,15 @@ const TabNavigator = () => (
       headerShown: false, // Hide header for all screens
     })}
   >
-    <Tab.Screen name="Home" component={Home} />
-    <Tab.Screen name="Portfolio" component={PortfolioScreen} />
+    <Tab.Screen name="Home" component={HomeStack} />
+    <Tab.Screen name="Portfolio" component={PortfolioStack} />
     <Tab.Screen
       name="Transactions"
-      component={TransactionsScreen}
+      component={TransactionsStack}
       options={{ tabBarLabel: () => null }}
     />
-    <Tab.Screen name="Explore" component={ExploreScreen} />
-    <Tab.Screen name="Settings" component={SettingsScreen} />
+    <Tab.Screen name="Explore" component={ExploreStack} />
+    <Tab.Screen name="Settings" component={SettingsStack} />
   </Tab.Navigator>
 );
 

@@ -23,6 +23,7 @@ const SignIn = ({ navigation }) => {
       navigation.replace("Main");
     } else {
       setError("Email and Password are required!!");
+      navigation.replace("Main");
     }
     // navigation.replace("Sign");
   };
