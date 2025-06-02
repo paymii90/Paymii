@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Text, View, StyleSheet, Alert } from "react-native";
 import Input from "../../Components/Input";
 import Checkbox from "../../Components/Checkbox";
 import Button from "../../Components/Button";
 import axios from "axios";
+import { AuthContext } from "../../context/AuthContext"; // <-- Make sure this path is correct!
 
-const API_BASE_URL = "http://10.30.22.29:8080/api/auth"; // <-- REPLACE with your actual PC IP!
+const API_BASE_URL = "http://10.30.22.120:8080/api/auth";  // <-- REPLACE with your actual PC IP!
 
 const SignUp = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");
@@ -15,7 +16,9 @@ const SignUp = ({ navigation }) => {
   const [error, setError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  
+  // Use login from AuthContext
+  const { login } = useContext(AuthContext);
+
   const handleSubmit = async () => {
     console.log("handleSubmit CALLED");
     setError("");
@@ -59,14 +62,18 @@ const SignUp = ({ navigation }) => {
         email,
         password,
       });
-      console.log("Signup success:", response.data); // Log success data
-      Alert.alert("Signup successful!", "Please check your email for verification.");
-      navigation.navigate("Email");
+      console.log("Signup success:", response.data);
+
+      Alert.alert("Signup successful!", "Welcome to Paymii!");
+
+      // Login using context (store token or flag)
+      await login(response.data.token || "loggedin"); 
+      // No need for navigation.navigate here, the app will switch screens automatically
     } catch (err) {
       setError(
         err.response?.data?.message || "Signup failed. Try again."
       );
-      console.log("Signup error:", err); // Log the error object
+      console.log("Signup error:", err);
     }
   };
 
