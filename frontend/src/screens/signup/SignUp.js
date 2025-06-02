@@ -11,6 +11,7 @@ const SignUp = ({ navigation }) => {
   const [passworderror, setPasswordError] = useState("");
 
   const handleSubmit = () => {
+
     if (!email) {
       setError("Email is required");
       console.log(email);

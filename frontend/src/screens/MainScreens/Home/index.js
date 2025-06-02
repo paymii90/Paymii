@@ -11,18 +11,18 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
-import Spacer from "../../Components/Spacer";
+import Spacer from "../../../Components/Spacer";
 import { BlurView } from "expo-blur";
 
 //importing assets
-import SearchIcon from "../../../assets/search";
-import ChatIcon from "../../../assets/chatIcon";
-import Logo from "../../../assets/logo.svg";
-import Button from "../../Components/Button";
-import ButtonsInfo from "../../../assets/configs/HomeButtons";
-import SingleButtonItem from "../../../assets/configs/SingleButtonItem";
-import Plus from "../../../assets/plus-1.png";
-import BuyCryptoPopup from "../../../assets/configs/BuyCryptoPopup.js";
+import SearchIcon from "../../../../assets/search";
+import ChatIcon from "../../../../assets/chatIcon";
+import Logo from "../../../../assets/logo.svg";
+import Button from "../../../Components/Button";
+import ButtonsInfo from "../../../../assets/configs/HomeButtons";
+import SingleButtonItem from "../../../../assets/configs/SingleButtonItem";
+import Plus from "../../../../assets/plus-1.png";
+import BuyCryptoPopup from "../../../../assets/configs/BuyCryptoPopup.js";
 
 //mock data
 import {
@@ -32,17 +32,17 @@ import {
   topLosers,
   mostBuyers,
   mostSearched,
-} from "../../../assets/configs/mockCoinCategories.js";
+} from "../../../../assets/configs/mockCoinCategories.js";
 
 //api request
-import { getMarketCoins, fetchExchangeRate } from "../../api/coinGecko";
+import { getMarketCoins, fetchExchangeRate } from "../../../api/coinGecko";
 
 const Home = () => {
   const [activeButton, setActiveButton] = useState(null);
   const [coins, setCoins] = useState([]);
   const [exchangeRate, setExchangeRate] = useState(11); // Default rate
   const [loading, setLoading] = useState(false);
-  const [popupVisible, setPopupVisible] = useState(true);
+  const [popupVisible, setPopupVisible] = useState(false);
 
   switch (activeButton) {
     case "Watchlist":
