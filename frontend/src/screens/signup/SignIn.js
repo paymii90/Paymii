@@ -1,29 +1,23 @@
-import React, { useState } from "react";
-import { Text, StyleSheet, View, TouchableOpacity, Alert } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import ClosureIcon from "../../../assets/signIn/close";
+import React, { useState, useContext } from "react";
+import { Text, StyleSheet, View, Alert } from "react-native";
 import Input from "../../Components/Input";
-import Spacer from "../../Components/Spacer";
 import Button from "../../Components/Button";
-import ScreenWrapper from "../../Components/ScreenWrapper";
+import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
-// import AsyncStorage from '@react-native-async-storage/async-storage'; // Uncomment if you want to save the token
 
-const API_BASE_URL = "http://10.30.22.29:8080/api/auth"; // Backend URL
+const API_BASE_URL = "http://10.30.22.120:8080/api/auth";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handlePress = () => {
-    navigation.goBack();
-  };
+  const { login } = useContext(AuthContext);
 
   const handleSubmit = async () => {
     setError("");
     if (!email || !password) {
-      setError("Email and Password are required!!");
+      setError("Email and Password are required!");
       return;
     }
     if (!email.includes("@")) {
@@ -32,18 +26,13 @@ const SignIn = ({ navigation }) => {
     }
 
     try {
-      // Make API call to login
       const response = await axios.post(`${API_BASE_URL}/login`, {
         email,
         password,
       });
-      console.log("Login success:", response.data);
-
-      // If backend returns a token, you can store it for authenticated requests:
-      // await AsyncStorage.setItem("token", response.data.token);
-
       Alert.alert("Login successful!", "Welcome back!");
-      navigation.replace("Main"); // or your main/home screen
+      await login(response.data.token || "loggedin");
+      // No need for navigation.replace!
     } catch (err) {
       setError(
         err.response?.data?.message || "Login failed. Try again."
@@ -53,88 +42,20 @@ const SignIn = ({ navigation }) => {
   };
 
   return (
-    <ScreenWrapper>
-      <SafeAreaView style={styles.container}>
-        <View style={styles.closeCont}>
-          <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>
-            <ClosureIcon width={35} height={35} />
-          </TouchableOpacity>
-        </View>
-        <Spacer />
-        <Text style={styles.title}>Sign in to Paymii</Text>
-        <Spacer />
-        <View>
-          <Input
-            placeholder="SpongeBob@BikiniBottom.com"
-            title="Email"
-            value={email}
-            action={setEmail}
-            keyboard="email-address"
-          />
-        </View>
-        <Spacer />
-        <View>
-          <Input
-            placeholder="xxxxxxx"
-            title="Password"
-            value={password}
-            action={setPassword}
-            keyboard="default"
-            visibility
-          />
-          <Spacer height={45} />
-          <Text style={styles.error}>{error}</Text>
-        </View>
-        <Spacer height={45} />
-        <View style={styles.actionsCont}>
-          <Text style={styles.action}>Forget Password</Text>
-          <Text style={styles.action}>Privacy Policy</Text>
-        </View>
-        <Spacer height={45} />
-        <Button
-          label="Sign In"
-          backgroundColor="#052644"
-          color="white"
-          action={handleSubmit}
-        />
-      </SafeAreaView>
-    </ScreenWrapper>
+    <View style={styles.container}>
+      <Text style={styles.Text}>Sign in to Paymii</Text>
+      <Input placeholder="Email" value={email} action={setEmail} keyboard="email-address" />
+      <Input placeholder="Password" value={password} action={setPassword} keyboard="default" visibility />
+      <Text style={styles.error}>{error}</Text>
+      <Button label="Sign In" backgroundColor="#052644" color="white" action={handleSubmit} />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#ffffff",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    paddingHorizontal: 25,
-    paddingTop: 40,
-    flex: 1,
-    width: "100%",
-  },
-  closeCont: {
-    marginTop: 20,
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: "700",
-    textAlign: "center",
-    marginTop: 12,
-  },
-  error: {
-    color: "red",
-    marginHorizontal: 10,
-  },
-  actionsCont: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  action: {
-    color: "#052644",
-    fontWeight: "700",
-    fontSize: 16,
-  },
+  container: { flex: 1, paddingHorizontal: 20, justifyContent: "center" },
+  Text: { fontWeight: "500", fontSize: 22, marginBottom: 20 },
+  error: { color: "red", marginVertical: 10 },
 });
 
 export default SignIn;
