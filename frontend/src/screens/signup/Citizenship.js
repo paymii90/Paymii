@@ -33,13 +33,13 @@ const Citizenship = ({ navigation }) => {
       <View style={styles.footercontainer}>
         <View style={styles.footer}>
           <Lock_fill />
-          <Text>
+          <Text style={styles.footerText}>
             This info is used only for identity verification and is transmitted
             securely using 128-bit encryption
           </Text>
         </View>
         <Button
-          label="Submit"
+          label="Continue"
           backgroundColor="#052644"
           color="white"
           action={() => navigation.navigate("Verification")}
@@ -87,6 +87,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     width: "100%",
+  },
+  footerText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#111111",
   },
 });
 
