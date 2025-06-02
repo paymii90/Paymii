@@ -1,6 +1,6 @@
 import { View, StyleSheet, Text } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import Identityverification from "../../../assets/Identityverification.svg";
+import Identityverification from "../../../assets/identityverification.svg";
 import Lock_fill from "../../../assets/Lock_fill.svg";
 import Button from "../../Components/Button";
 
