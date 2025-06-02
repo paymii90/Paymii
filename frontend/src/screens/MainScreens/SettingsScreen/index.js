@@ -1,21 +1,20 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { useContext } from "react";
+import { AuthContext } from "../../../context/AuthContext";
+import { Button, View } from "react-native";
 
-const SettingsScreen = () => {
+
+const SettingsScreen = ({navigation}) => {
+  const { logout } = useContext(AuthContext);
   return (
-    <View style ={styles.container}>
-      <Text>SettingsScreen</Text>
+    <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}> 
+     <Button title="Logout" onPress={logout} />
     </View>
-  )
+  );
 }
 
-export default SettingsScreen
+export default SettingsScreen;
 
-const styles = StyleSheet.create({
-container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: "#FFFFFF",
-    justifyContent: 'center',
-  },
-});
+
+
+
+
