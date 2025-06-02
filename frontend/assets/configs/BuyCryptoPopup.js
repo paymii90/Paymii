@@ -121,6 +121,10 @@ const styles = StyleSheet.create({
   },
   optionBtn: {
     flexDirection: "row",
+<<<<<<< HEAD
+    justifyContent: "space-between",
+=======
+>>>>>>> origin/main
     alignItems: "center",
     justifyContent: "space-between",
     paddingVertical: 20,
@@ -128,6 +132,16 @@ const styles = StyleSheet.create({
     borderColor: "#eee",
     // paddingBottom : 25,
   },
+<<<<<<< HEAD
+  action: {
+    flexDirection: "row",
+    alignItems: 'center',
+  },
+  icon: {
+    marginRight: 12,
+  },
+  icon2: {},
+=======
   icon: {
     marginRight: 12,
   },
@@ -135,6 +149,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
   },
+<<<<<<< HEAD
+  optionSubText:{
+    fontWeight : '300',
+    marginTop: 7,
+  }
+=======
+>>>>>>> origin/main
 });
 
 export default BuyCryptoPopup;
