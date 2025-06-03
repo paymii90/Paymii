@@ -10,6 +10,7 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import Spacer from "../../../Components/Spacer";
 import { BlurView } from "expo-blur";
@@ -36,13 +37,17 @@ import {
 
 //api request
 import { getMarketCoins, fetchExchangeRate } from "../../../api/coinGecko";
+import TransferPopup from "./TransferPopup.js";
+import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
+  const navigation = useNavigation();
   const [activeButton, setActiveButton] = useState(null);
   const [coins, setCoins] = useState([]);
   const [exchangeRate, setExchangeRate] = useState(11); // Default rate
   const [loading, setLoading] = useState(false);
-  const [popupVisible, setPopupVisible] = useState(false);
+  const [buySellPopupVisible, setBuySellPopupVisible] = useState(false);
+  const [transferPopupVisible, setTransferPopupVisible] = useState(false);
 
   switch (activeButton) {
     case "Watchlist":
@@ -101,7 +106,9 @@ const Home = () => {
     >
       <BlurView intensity={80} tint="light" style={styles.iconsCont}>
         <SearchIcon style={{ marginLeft: 30 }} width={30} height={30} />
-        <ChatIcon style={{ marginRight: 30 }} width={30} height={30} />
+        <Pressable onPress={() => navigation.navigate("Chat")}>
+          <ChatIcon style={{ marginRight: 30 }} width={30} height={30} />
+        </Pressable>
       </BlurView>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Spacer height={80} />
@@ -120,7 +127,7 @@ const Home = () => {
           color="white"
           style={{ borderRadius: 60 }}
           labelStyle={{ fontWeight: 700 }}
-          // action={handleBuyCrypto}
+          action={() => navigation.navigate("Buy")}
         />
         <Spacer height={30} />
         <ScrollView
@@ -194,14 +201,14 @@ const Home = () => {
               transform: [{ translateX: 30 }],
             }}
             labelStyle={{ fontWeight: 600 }}
-            action={() => setPopupVisible(true)}
+            action={() => setBuySellPopupVisible(true)}
           />
 
           {/* Popup to show  */}
 
           <BuyCryptoPopup
-            isVisible={popupVisible}
-            onClose={() => setPopupVisible(false)}
+            isVisible={buySellPopupVisible}
+            onClose={() => setBuySellPopupVisible(false)}
           />
           <Image source={Plus} style={styles.plus} />
           <Button
@@ -214,7 +221,13 @@ const Home = () => {
               transform: [{ translateX: -30 }],
             }}
             labelStyle={{ fontWeight: 600 }}
-            // action={handleBuyCrypto}
+            action={() => setTransferPopupVisible(true)}
+          />
+          {/* Popup to show  */}
+
+          <TransferPopup
+            isVisible={transferPopupVisible}
+            onClose={() => setTransferPopupVisible(false)}
           />
         </View>
       </ScrollView>
