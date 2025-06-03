@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   },
   iconsCont: {
     position: "absolute", // Fixes at the top
-    top: 0,
+    top: 10,
     left: 0,
     right: 0,
     height: 90, // Fixed height

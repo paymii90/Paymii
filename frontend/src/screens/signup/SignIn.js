@@ -15,6 +15,7 @@ const SignIn = ({ navigation }) => {
   const { login } = useContext(AuthContext);
 
   const handleSubmit = async () => {
+    navigation.replace('Main')
     setError("");
     if (!email || !password) {
       setError("Email and Password are required!");
@@ -25,20 +26,24 @@ const SignIn = ({ navigation }) => {
       return;
     }
 
-    try {
-      const response = await axios.post(`${API_BASE_URL}/login`, {
-        email,
-        password,
-      });
-      Alert.alert("Login successful!", "Welcome back!");
-      await login(response.data.token || "loggedin");
-      // No need for navigation.replace!
-    } catch (err) {
-      setError(
-        err.response?.data?.message || "Login failed. Try again."
-      );
-      console.log("Login error:", err);
+    if (!error) {
+      navigation.replace('Main')
     }
+
+    // try {
+    //   const response = await axios.post(`${API_BASE_URL}/login`, {
+    //     email,
+    //     password,
+    //   });
+    //   Alert.alert("Login successful!", "Welcome back!");
+    //   await login(response.data.token || "loggedin");
+    //   // No need for navigation.replace!
+    // } catch (err) {
+    //   setError(
+    //     err.response?.data?.message || "Login failed. Try again."
+    //   );
+    //   console.log("Login error:", err);
+    // }
   };
 
   return (
