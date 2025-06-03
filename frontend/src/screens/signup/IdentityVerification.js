@@ -1,12 +1,17 @@
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Dimensions } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import Identityverification from "../../../assets/identityverification.svg";
 import Lock_fill from "../../../assets/Lock_fill.svg";
 import Button from "../../Components/Button";
 
 const IdentityVerification = ({ navigation }) => {
+  const screenWidth = Dimensions.get("window").width;
+  const screenHeight = Dimensions.get("window").height;
+
+  console.log(screenHeight);
+  
   return (
-    <SafeAreaProvider style={styles.container}>
+    <SafeAreaProvider style={[styles.container, { height: screenHeight }]}>
       <SafeAreaView style={{ alignItems: "center" }}>
         <Identityverification style={styles.image} />
         <View>
@@ -42,12 +47,12 @@ const IdentityVerification = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#FFFFFF",
-    flex: 1,
+    backgroundColor: "#ffffff",
+    // flex: 1,
     padding: "5%",
   },
   image: {
-    marginTop: "20%",
+    // marginTop: "20%",
   },
   header: {
     marginTop: "20%",
@@ -65,7 +70,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   footercontainer: {
-    marginTop: "30%",
+    marginTop: "0%",
     width: "100%",
     // flex: 1,
     justifyContent: "flex-end",
