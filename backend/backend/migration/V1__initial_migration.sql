@@ -1,0 +1,7 @@
+ALTER TABLE transactions
+ALTER
+COLUMN coin_symbol TYPE VARCHAR USING (coin_symbol::VARCHAR);
+
+ALTER TABLE wallets
+ALTER
+COLUMN currency TYPE VARCHAR USING (currency::VARCHAR);
