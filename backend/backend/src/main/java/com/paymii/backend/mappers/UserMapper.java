@@ -12,11 +12,11 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     UserDto toDto(User user);
-    @Mapping(source = "firstName", target = "firstName")
-    @Mapping(source = "lastName", target = "lastName")
-    @Mapping(source = "email", target = "email")
-    @Mapping(source = "password", target = "password")
-    @Mapping(source = "isVerified", target ="isVerified")
+//    @Mapping(source = "firstName", target = "firstName")
+//    @Mapping(source = "lastName", target = "lastName")
+//    @Mapping(source = "email", target = "email")
+//    @Mapping(source = "password", target = "password")
+//    @Mapping(source = "isVerified", target ="isVerified")
     User toEntity(RegisterUserRequest request);
     User toEntity(UserDto userDto);
     void updateEntityFromDto(UpdateUserRequest request, @MappingTarget User user);

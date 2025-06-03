@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     padding: "5%",
   },
   header: {
-    marginTop: "20%",
+    marginTop: "15%",
     fontSize: 22,
     fontWeight: "bold",
     marginVertical: 20,
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   },
   button: {
     // flex: 1,
-    marginTop: "50%",
+    marginTop: "13%",
     justifyContent: "flex-end",
   },
 });
