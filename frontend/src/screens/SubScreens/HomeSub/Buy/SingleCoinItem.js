@@ -1,14 +1,23 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const SingleCoinItem = ({ singleCoinItem }) => {
+  const navigation = useNavigation();
   const { name, current_price, price_change_percentage_24h, symbol, image } =
     singleCoinItem;
 
   const percentageColor =
     price_change_percentage_24h > 0 ? "#16c784" : "#ea3943";
   return (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate("CoinStack", {
+          screen: "CoinDetails",
+          params: { coin: singleCoinItem },
+        })
+      }
+    >
       <View style={styles.container}>
         {/* Left: Coin Image */}
         <Image

@@ -28,7 +28,9 @@ const TransferPopup = ({ isVisible, onClose }) => {
           onPress={() => {
             onClose(); // closes popup first
             setTimeout(() => {
-              navigation.navigate("Send"); // then navigates after slight delay
+              navigation.navigate("CoinStack", {
+                screen: "Send",
+              }); // then navigates after slight delay
             }, 200); // slight delay gives modal time to animate out
           }}
         >
@@ -49,7 +51,9 @@ const TransferPopup = ({ isVisible, onClose }) => {
           onPress={() => {
             onClose(); // closes popup first
             setTimeout(() => {
-              navigation.navigate("Receive"); // then navigates after slight delay
+              navigation.navigate("CoinStack", {
+                screen: "Receive",
+              }); // then navigates after slight delay
             }, 200); // slight delay gives modal time to animate out
           }}
         >
@@ -75,7 +79,9 @@ const TransferPopup = ({ isVisible, onClose }) => {
           onPress={() => {
             onClose(); // closes popup first
             setTimeout(() => {
-              navigation.navigate("Deposit"); // then navigates after slight delay
+              navigation.navigate("CoinStack", {
+                screen: "Deposit",
+              }); // then navigates after slight delay
             }, 200); // slight delay gives modal time to animate out
           }}
         >
@@ -96,7 +102,9 @@ const TransferPopup = ({ isVisible, onClose }) => {
           onPress={() => {
             onClose(); // closes popup first
             setTimeout(() => {
-              navigation.navigate("Withdraw"); // then navigates after slight delay
+              navigation.navigate("CoinStack", {
+                screen: "Withdraw",
+              }); // then navigates after slight delay
             }, 200); // slight delay gives modal time to animate out
           }}
         >
