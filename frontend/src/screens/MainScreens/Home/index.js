@@ -127,7 +127,11 @@ const Home = () => {
           color="white"
           style={{ borderRadius: 60 }}
           labelStyle={{ fontWeight: 700 }}
-          action={() => navigation.navigate("Buy")}
+          action={() =>
+            navigation.navigate("CoinStack", {
+              screen: "Buy",
+            })
+          }
         />
         <Spacer height={30} />
         <ScrollView
