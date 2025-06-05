@@ -3,7 +3,7 @@ import React from "react";
 import BuyHeader from "./header";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SingleCoinItem from "./SingleCoinItem";
-import cryptocurrencies from '../../../../../assets/data/cryptocurrencies.json'
+import cryptocurrencies from "../../../../../assets/data/cryptocurrencies.json";
 
 const BuyAssets = () => {
   return (
@@ -21,7 +21,8 @@ export default BuyAssets;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    paddingTop: 20,
+    paddingHorizontal: 20, // sets both left and right
     flex: 1,
     backgroundColor: "#ffffff",
   },
