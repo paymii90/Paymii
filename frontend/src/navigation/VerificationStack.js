@@ -12,6 +12,7 @@ import PhoneAuthentication from "../screens/signup/PhoneAuthentication";
 import Citizenship from "../screens/signup/Citizenship";
 import IdentityVerification from "../screens/signup/IdentityVerification";
 import PersonalInformation from "../screens/signup/PersonalInformation";
+import Address from "../screens/signup/Address";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,7 @@ const VerificationStack = () => (
     <Stack.Screen name="Citizenship" component={Citizenship} />
     <Stack.Screen name="Verification" component={IdentityVerification} />
     <Stack.Screen name="Information" component={PersonalInformation} />
+    <Stack.Screen name="Address" component={Address} />
   </Stack.Navigator>
 );
 
