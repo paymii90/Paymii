@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OnboardingStepRepository extends JpaRepository<OnboardingStep, Long> {
-    List<OnboardingStep> findByUserId(Long id);
-    Optional<OnboardingStep> findByUserIdAndStep(Long userId, String step);
+    List<OnboardingStep> findByUser_Id(Long id);
+    Optional<OnboardingStep> findByUser_IdAndStep(Long userId, String step);
 }
 
