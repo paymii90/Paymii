@@ -9,17 +9,17 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "deposits")
-public class Deposit {
+@Table(name = "user_kyc")
+public class UserKyc {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
 
     @NotNull
@@ -28,22 +28,29 @@ public class Deposit {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @NotNull
-    @Column(name = "amount", precision = 18, scale = 2)
-    private BigDecimal amount;
+    @Size(max = 50)
+    @Column(name = "citizenship", length = 50)
+    private String citizenship;
 
     @Size(max = 50)
-    @Column(name = "method", length = 50)
-    private String method;
+    @Column(name = "legal_first_name", length = 50)
+    private String legalFirstName;
 
-    @Size(max = 20)
-    @Column(name = "phone_number", length = 20)
-    private String phoneNumber;
+    @Size(max = 50)
+    @Column(name = "legal_last_name", length = 50)
+    private String legalLastName;
+
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
+
+    @Size(max = 255)
+    @Column(name = "address")
+    private String address;
 
     @Size(max = 20)
     @ColumnDefault("'PENDING'")
-    @Column(name = "status", length = 20)
-    private String status;
+    @Column(name = "kyc_status", length = 20)
+    private String kycStatus;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")

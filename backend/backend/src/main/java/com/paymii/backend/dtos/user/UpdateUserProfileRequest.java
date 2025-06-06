@@ -1,13 +1,10 @@
 package com.paymii.backend.dtos.user;
 
-import jakarta.validation.constraints.Email;
 import lombok.Data;
 
 @Data
-public class UpdateUserRequest {
+public class UpdateUserProfileRequest {
     private String firstName;
     private String lastName;
-
-    @Email
-    private String email;
+    private String profilePhoto;
 }
