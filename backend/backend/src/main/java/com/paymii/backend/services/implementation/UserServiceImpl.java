@@ -1,108 +1,63 @@
-
 package com.paymii.backend.services.implementation;
 
-import com.paymii.backend.dtos.user.*;
+import com.google.firebase.auth.FirebaseToken;
+import com.paymii.backend.dtos.user.UpdateUserProfileRequest;
+import com.paymii.backend.dtos.user.UserDto;
 import com.paymii.backend.entities.User;
-import com.paymii.backend.exceptions.*;
 import com.paymii.backend.mappers.UserMapper;
 import com.paymii.backend.repositories.UserRepository;
 import com.paymii.backend.services.UserService;
-import com.paymii.backend.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.time.Instant;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepository  userRepository;
-    private final UserMapper      userMapper;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtUtil         jwtUtil;
 
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
     @Override
-    @Transactional
-    public UserDto register(RegisterUserRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new EmailAlreadyExistsException("Email already in use: " + request.getEmail());
+    public UserDto getOrCreateUserByFirebaseToken(FirebaseToken token) {
+        Optional<User> userOpt = userRepository.findByFirebaseUid(token.getUid());
+        User user;
+        // Try to get the phone number from the claims
+        String phoneNumber = (String) token.getClaims().get("phone_number");
+
+        if (userOpt.isPresent()) {
+            user = userOpt.get();
+        } else {
+            // First time login, create a new user record
+            user = User.builder()
+                    .firebaseUid(token.getUid())
+                    .email(token.getEmail())
+                    .isPhoneVerified(phoneNumber != null)
+                    .createdAt(java.time.Instant.now())
+                    .updatedAt(java.time.Instant.now())
+                    .build();
+            user = userRepository.save(user);
         }
-        User user = userMapper.toEntity(request);
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole("USER");
-        user.setIsVerified(false);
-        User saved = userRepository.save(user);
-        return userMapper.toDto(saved);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public AuthResponse login(UserLoginRequest request) {
-        User user = (User) userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new InvalidCredentialsException("Invalid email or password");
-        }
-        String token = jwtUtil.generateToken(user.getId(), user.getEmail());
-        return userMapper.toAuthResponse(user, token);
-    }
-
-    @Override
-    @Transactional
-    public UserDto update(Long id, UpdateUserRequest request) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
-        if (request.getEmail() != null
-                && !request.getEmail().equals(user.getEmail())
-                && userRepository.existsByEmail(request.getEmail())) {
-            throw new EmailAlreadyExistsException("Email already in use: " + request.getEmail());
-        }
-        userMapper.updateEntityFromDto(request, user);
-        User saved = userRepository.save(user);
-        return userMapper.toDto(saved);
-    }
-
-    @Override
-    @Transactional
-    public void changePassword(Long id, ChangePasswordRequest request) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
-
-        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            throw new InvalidCredentialsException("Current password is incorrect");
-        }
-
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        userRepository.save(user);
-    }
-
-
-    @Transactional
-    @Override
-    public void deleteUser(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new UserNotFoundException("User not found with id: " + id);
-        }
-        userRepository.deleteById(id);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public UserDto getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
         return userMapper.toDto(user);
     }
-    @Transactional(readOnly = true)
     @Override
-    public List<UserDto> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(userMapper::toDto)
-                .toList();
+    public Long getUserIdFromFirebaseUid(String firebaseUid) {
+        User user = userRepository.findByFirebaseUid(firebaseUid)
+                .orElseThrow(() -> new RuntimeException("User not found for firebaseUid: " + firebaseUid));
+        return user.getId();
     }
 
+    @Override
+    public UserDto updateUserProfile(FirebaseToken token, UpdateUserProfileRequest request) {
+        User user = userRepository.findByFirebaseUid(token.getUid())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (request.getFirstName() != null) user.setFirstName(request.getFirstName());
+        if (request.getLastName() != null) user.setLastName(request.getLastName());
+        if (request.getProfilePhoto() != null) user.setProfilePhoto(request.getProfilePhoto());
+        user.setUpdatedAt(Instant.now());
+        user = userRepository.save(user);
+        return userMapper.toDto(user);
+    }
 
 }
