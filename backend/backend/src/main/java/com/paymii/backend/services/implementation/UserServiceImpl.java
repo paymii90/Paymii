@@ -4,11 +4,12 @@ import com.google.firebase.auth.FirebaseToken;
 import com.paymii.backend.dtos.user.UpdateUserProfileRequest;
 import com.paymii.backend.dtos.user.UserDto;
 import com.paymii.backend.entities.User;
-import com.paymii.backend.mappers.UserMapper;
+import com.paymii.backend.mappers.UsersMapper;
 import com.paymii.backend.repositories.UserRepository;
 import com.paymii.backend.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 
 import java.time.Instant;
 import java.util.Optional;
@@ -18,12 +19,12 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    private final UsersMapper usersMapper;
     @Override
     public UserDto getOrCreateUserByFirebaseToken(FirebaseToken token) {
         Optional<User> userOpt = userRepository.findByFirebaseUid(token.getUid());
         User user;
-        // Try to get the phone number from the claims
+
         String phoneNumber = (String) token.getClaims().get("phone_number");
 
         if (userOpt.isPresent()) {
@@ -39,7 +40,7 @@ public class UserServiceImpl implements UserService {
                     .build();
             user = userRepository.save(user);
         }
-        return userMapper.toDto(user);
+        return usersMapper.toDto(user);
     }
     @Override
     public Long getUserIdFromFirebaseUid(String firebaseUid) {
@@ -57,7 +58,7 @@ public class UserServiceImpl implements UserService {
         if (request.getProfilePhoto() != null) user.setProfilePhoto(request.getProfilePhoto());
         user.setUpdatedAt(Instant.now());
         user = userRepository.save(user);
-        return userMapper.toDto(user);
+        return usersMapper.toDto(user);
     }
 
 }

@@ -27,7 +27,7 @@ public class DocumentService {
     }
 
     public List<DocumentStatusResponse> getUserDocuments(Long userId) {
-        return userDocumentRepository.findByUserId(userId).stream().map(doc -> {
+        return userDocumentRepository.findByUser_Id(userId).stream().map(doc -> {
             DocumentStatusResponse resp = new DocumentStatusResponse();
             resp.setDocType(doc.getDocType());
             resp.setStatus(doc.getStatus());

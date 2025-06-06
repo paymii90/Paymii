@@ -16,7 +16,7 @@ public class OnboardingService {
 
     public void completeStep(Long userId, String step) {
         OnboardingStep os = onboardingStepRepository
-                .findByUserIdAndStep(userId, step)
+                .findByUser_IdAndStep(userId, step)
                 .orElse(new OnboardingStep());
         os.setUserId(userId);
         os.setStep(step);
@@ -26,7 +26,7 @@ public class OnboardingService {
     }
 
     public List<OnboardingStepResponse> getSteps(Long userId) {
-        return onboardingStepRepository.findByUserId(userId)
+        return onboardingStepRepository.findByUser_Id(userId)
                 .stream()
                 .map(step -> {
                     OnboardingStepResponse dto = new OnboardingStepResponse();
