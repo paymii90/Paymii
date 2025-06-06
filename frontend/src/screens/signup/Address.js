@@ -3,7 +3,7 @@ import { ScrollView, Text, StyleSheet, View } from "react-native";
 import Button from "../../Components/Button";
 import Input from "../../Components/Input";
 
-const Address = () => {
+const Address = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={{ marginBottom: "10%" }}>
@@ -18,7 +18,12 @@ const Address = () => {
         placeholder="Enter your address"
       ></Input>
       <View style={styles.button}>
-        <Button label="Submit" backgroundColor="#052644" color="white" />
+        <Button
+          label="Submit"
+          backgroundColor="#052644"
+          color="white"
+          action={() => navigation.navigate("Scanner")}
+        />
       </View>
     </ScrollView>
   );
