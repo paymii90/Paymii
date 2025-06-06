@@ -1,4 +1,4 @@
-// BuyCryptoPopup.js //
+// TransferPopup.js //
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -10,8 +10,9 @@ import {
 } from "react-native";
 import ModalComponent from "react-native-modal";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-const BuyCryptoPopup = ({ isVisible, onClose }) => {
+const TransferPopup = ({ isVisible, onClose }) => {
   const navigation = useNavigation();
   return (
     <ModalComponent
@@ -25,34 +26,6 @@ const BuyCryptoPopup = ({ isVisible, onClose }) => {
         <TouchableOpacity
           style={styles.optionBtn}
           onPress={() => {
-            onClose(); // closes popup firstcds
-            setTimeout(() => {
-              navigation.navigate("CoinStack", {
-                screen: "Buy",
-              }); // then navigates after slight delay
-            }, 200); // slight delay gives modal time to animate out
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Icon
-              name="shopping-cart"
-              size={18}
-              color="#444"
-              style={styles.icon}
-            />
-            <View>
-              <Text style={styles.optionText}>Buy</Text>
-              <Text style={{ fontWeight: 300, marginTop: 5 }}>
-                Buy Crypto with cash
-              </Text>
-            </View>
-          </View>
-          <Icon name="arrow-right" size={18} color="#444" />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.optionBtn}
-          onPress={() => {
             onClose(); // closes popup first
             setTimeout(() => {
               navigation.navigate("CoinStack", {
@@ -62,16 +35,11 @@ const BuyCryptoPopup = ({ isVisible, onClose }) => {
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Icon
-              name="money-bill-wave"
-              size={18}
-              color="#444"
-              style={styles.icon}
-            />
+            <Icon name="arrow-up" size={18} color="#444" style={styles.icon} />
             <View>
-              <Text style={styles.optionText}>Sell</Text>
+              <Text style={styles.optionText}>Send</Text>
               <Text style={{ fontWeight: 300, marginTop: 5 }}>
-                Buy Crypto with cash
+                Send crypto to another wallet
               </Text>
             </View>
           </View>
@@ -84,22 +52,73 @@ const BuyCryptoPopup = ({ isVisible, onClose }) => {
             onClose(); // closes popup first
             setTimeout(() => {
               navigation.navigate("CoinStack", {
-                screen: "Convert",
+                screen: "Receive",
               }); // then navigates after slight delay
             }, 200); // slight delay gives modal time to animate out
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Icon
-              name="exchange-alt"
+              name="arrow-down"
               size={18}
               color="#444"
               style={styles.icon}
             />
             <View>
-              <Text style={styles.optionText}>Convert</Text>
+              <Text style={styles.optionText}>Receive</Text>
               <Text style={{ fontWeight: 300, marginTop: 5 }}>
-                Buy Crypto with cash
+                Receive crypto from another wallet
+              </Text>
+            </View>
+          </View>
+          <Icon name="arrow-right" size={18} color="#444" />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.optionBtn}
+          onPress={() => {
+            onClose(); // closes popup first
+            setTimeout(() => {
+              navigation.navigate("CoinStack", {
+                screen: "Deposit",
+              }); // then navigates after slight delay
+            }, 200); // slight delay gives modal time to animate out
+          }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Icon name="home" size={18} color="#444" style={styles.icon} />
+            <View>
+              <Text style={styles.optionText}>Deposit Cash</Text>
+              <Text style={{ fontWeight: 300, marginTop: 5 }}>
+                Transfer funds from your account
+              </Text>
+            </View>
+          </View>
+          <Icon name="arrow-right" size={18} color="#444" />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.optionBtn}
+          onPress={() => {
+            onClose(); // closes popup first
+            setTimeout(() => {
+              navigation.navigate("CoinStack", {
+                screen: "Withdraw",
+              }); // then navigates after slight delay
+            }, 200); // slight delay gives modal time to animate out
+          }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <FontAwesome
+              name="credit-card-alt"
+              size={18}
+              color="#444"
+              style={styles.icon}
+            />
+            <View>
+              <Text style={styles.optionText}>Withdraw Cash</Text>
+              <Text style={{ fontWeight: 300, marginTop: 5 }}>
+                Transfer funds to your account
               </Text>
             </View>
           </View>
@@ -151,4 +170,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BuyCryptoPopup;
+export default TransferPopup;
