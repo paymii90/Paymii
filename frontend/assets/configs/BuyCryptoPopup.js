@@ -25,7 +25,7 @@ const BuyCryptoPopup = ({ isVisible, onClose }) => {
         <TouchableOpacity
           style={styles.optionBtn}
           onPress={() => {
-            onClose(); // closes popup first
+            onClose(); // closes popup firstcds
             setTimeout(() => {
               navigation.navigate("CoinStack", {
                 screen: "Buy",

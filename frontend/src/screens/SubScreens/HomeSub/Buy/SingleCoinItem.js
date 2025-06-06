@@ -35,7 +35,7 @@ const SingleCoinItem = ({ singleCoinItem }) => {
 
         {/* Right: Price and % Change */}
         <View style={styles.priceContainer}>
-          <Text style={styles.price}>GH₵ {current_price.toFixed(2)}</Text>
+          <Text style={styles.price}>GH₵ {current_price.toLocaleString()}</Text>
           <Text style={[styles.change, { color: percentageColor }]}>
             {price_change_percentage_24h.toFixed(2)}%
           </Text>
