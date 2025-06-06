@@ -16,6 +16,7 @@ import Citizenship from "../screens/signup/Citizenship";
 import IdentityVerification from "../screens/signup/IdentityVerification";
 import PersonalInformation from "../screens/signup/PersonalInformation";
 import Address from "../screens/signup/Address";
+import Scanner from "../screens/signup/Scanner";
 
 const Stack = createNativeStackNavigator();
 
