@@ -2,24 +2,24 @@ package com.paymii.backend.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "wallets")
-public class Wallet {
+@Table(name = "onboarding_steps")
+public class OnboardingStep {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @NotNull
     @ManyToOne
@@ -27,17 +27,18 @@ public class Wallet {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Size(max = 50)
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "currency", referencedColumnName = "symbol")
-    private Coin currency;
+    @Column(name = "step", length = 50)
+    private String step;
 
-    @ColumnDefault("0.0")
-    @Column(name = "balance", precision = 18, scale = 8)
-    private BigDecimal balance;
+    @ColumnDefault("false")
+    @Column(name = "completed")
+    private Boolean completed;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "updated_at")
-    private Instant updatedAt;
+    @Column(name = "completed_at")
+    private Instant completedAt;
 
+    public void setUserId(Long userId) {
+    }
 }
