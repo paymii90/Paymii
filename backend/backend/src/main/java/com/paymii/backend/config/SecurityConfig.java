@@ -14,7 +14,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/public/**").permitAll()  // Use requestMatchers
+                        .requestMatchers("/api/public/**", "/api/test/firebase").permitAll()  // Use requestMatchers
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new FirebaseAuthenticationFilter(),
