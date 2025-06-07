@@ -17,6 +17,7 @@ import java.time.Instant;
 @Table(name = "users")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ColumnDefault("nextval('users_id_seq')")
     @Column(name = "id", nullable = false)
     private Long id;
@@ -41,6 +42,8 @@ public class User {
     @Size(max = 255)
     @Column(name = "profile_photo")
     private String profilePhoto;
+
+    private boolean verified;
 
     @Size(max = 20)
     @Column(name = "phone_number", length = 20)
