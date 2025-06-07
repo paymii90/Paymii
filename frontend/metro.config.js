@@ -1,19 +1,26 @@
-const { getDefaultConfig } = require("expo/metro-config");
+// metro.config.js
 
-module.exports = (() => {
-  const config = getDefaultConfig(__dirname);
+const { getDefaultConfig } = require('expo/metro-config');
 
-  const { transformer, resolver } = config;
+/** 
+ * We start with the default Expo Metro config,
+ * then customize it to support SVG imports using
+ * react-native-svg-transformer.
+ */
+const config = getDefaultConfig(__dirname);
+config.resolver.sourceExts.push('cjs');
+config.resolver.unstable_enablePackageExports = false;
 
-  config.transformer = {
-    ...transformer,
-    babelTransformerPath: require.resolve("react-native-svg-transformer"),
-  };
-  config.resolver = {
-    ...resolver,
-    assetExts: resolver.assetExts.filter(ext => ext !== "svg"),
-    sourceExts: [...resolver.sourceExts, "svg"],
-  };
+// Extend default config for SVG support
+config.transformer = {
+  ...config.transformer,
+  babelTransformerPath: require.resolve('react-native-svg-transformer'),
+};
+config.resolver = {
+  ...config.resolver,
+  assetExts: config.resolver.assetExts.filter(ext => ext !== 'svg'),
+  sourceExts: [...config.resolver.sourceExts, 'svg'],
+};
 
-  return config;
-})();
+module.exports = config;
+
