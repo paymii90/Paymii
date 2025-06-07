@@ -12,6 +12,7 @@ public class UserDto {
     private String profilePhoto;
     private String phoneNumber;
     private Boolean isPhoneVerified;
+    private boolean verified;
     private Boolean isKycCompleted;
     private String createdAt;
     private String updatedAt;

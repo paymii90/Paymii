@@ -1,85 +1,47 @@
 import React, { useState, useContext } from "react";
-import { Text, View, StyleSheet, Alert, ScrollView } from "react-native";
+import { Text, View, StyleSheet, ScrollView } from "react-native";
 import Input from "../../Components/Input";
 import Checkbox from "../../Components/Checkbox";
 import Button from "../../Components/Button";
-import axios from "axios";
 import { AuthContext } from "../../context/AuthContext"; // <-- Make sure this path is correct!
-
-const API_BASE_URL = "http://10.30.22.120:8080/api/auth"; // <-- REPLACE with your actual PC IP!
 
 const SignUp = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [formError, setFormError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  // Use login from AuthContext
-  const { login } = useContext(AuthContext);
+  // Get signUp and authError from AuthContext
+  const { signUp, authError, loading } = useContext(AuthContext);
 
   const handleSubmit = async () => {
-    console.log("handleSubmit CALLED");
-    setError("");
+    setFormError("");
     setPasswordError("");
 
-    navigation.navigate("Email");
-
-    // Validation
+    // Form validation
     if (!firstName || !lastName) {
-      setError("First and last name are required");
-      console.log("Validation error: missing first or last name");
+      setFormError("First and last name are required");
       return;
     }
     if (!email) {
-      setError("Email is required");
-      console.log("Validation error: missing email");
+      setFormError("Email is required");
       return;
     }
     if (!email.includes("@")) {
-      setError("Email is invalid");
-      console.log("Validation error: invalid email");
+      setFormError("Email is invalid");
       return;
     }
     if (!password) {
       setPasswordError("Password is required");
-      console.log("Validation error: missing password");
       return;
     }
-    if (!error && !passwordError) {
-      navigation.navigate("Email");
-    }
 
-    // API Call
-    // try {
-    //   console.log("Attempting signup with:", {
-    //     firstName,
-    //     lastName,
-    //     email,
-    //     password,
-    //   });
-
-    //   console.log("Passing validation, about to call API");
-    //   const response = await axios.post(`${API_BASE_URL}/register`, {
-    //     firstName,
-    //     lastName,
-    //     email,
-    //     password,
-    //   });
-    //   console.log("Signup success:", response.data);
-
-    //   Alert.alert("Signup successful!", "Welcome to Paymii!");
-
-    //   // Login using context (store token or flag)
-    //   await login(response.data.token || "loggedin");
-    //   // No need for navigation.navigate here, the app will switch screens automatically
-    // } catch (err) {
-    //   setError(
-    //     err.response?.data?.message || "Signup failed. Try again."
-    //   );
-    //   console.log("Signup error:", err);
-    // }
+    // Only proceed if form validation passes
+    await signUp(firstName, lastName, email, password);
+    // Do NOT navigate yet! Wait until email is verified.
+    // navigation.navigate("Email"); // Consider showing this only after successful signup
   };
 
   return (
@@ -107,7 +69,12 @@ const SignUp = ({ navigation }) => {
           action={setEmail}
           keyboard="email-address"
         />
-        <Text style={styles.error}>{error}</Text>
+        {/* Show form error or auth error under email field */}
+        {formError ? (
+          <Text style={styles.error}>{formError}</Text>
+        ) : authError ? (
+          <Text style={styles.error}>{authError}</Text>
+        ) : null}
       </View>
       <View>
         <Input
@@ -118,7 +85,7 @@ const SignUp = ({ navigation }) => {
           keyboard="default"
           visibility
         />
-        <Text style={styles.error}>{passwordError}</Text>
+        {passwordError ? <Text style={styles.error}>{passwordError}</Text> : null}
       </View>
       <Checkbox
         style={styles.checkboxText}
@@ -126,10 +93,11 @@ const SignUp = ({ navigation }) => {
       />
       <View>
         <Button
-          label="Start"
+          label={loading ? "Registering..." : "Start"}
           backgroundColor="#052644"
           color="white"
           action={handleSubmit}
+          disabled={loading}
         />
       </View>
     </ScrollView>
@@ -151,6 +119,8 @@ const styles = StyleSheet.create({
   error: {
     color: "red",
     marginHorizontal: 10,
+    marginTop: 4,
+    fontSize: 13,
   },
 });
 
