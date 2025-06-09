@@ -1,2 +1,1 @@
-node_modules/ git add .gitignore
-DS_Store
+node_modules/
