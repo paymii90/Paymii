@@ -11,7 +11,7 @@ import Input from "../../Components/Input";
 import Button from "../../Components/Button";
 import DoB from "../../Components/DoB";
 
-const PersonalInformation = () => {
+const PersonalInformation = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
@@ -47,7 +47,7 @@ const PersonalInformation = () => {
               label="Continue"
               backgroundColor="#052644"
               color="white"
-              action={() => navigation.navigate("Information")}
+              action={() => navigation.navigate("Address")}
             />
           </View>
         </KeyboardAvoidingView>

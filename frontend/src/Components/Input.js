@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   },
   text: {
     paddingVertical: 10,
-    fontWeight: "medium",
+    fontWeight: "bold",
     fontSize: 16,
   },
   activeInput: {
