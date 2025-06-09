@@ -25,9 +25,11 @@ const BuyCryptoPopup = ({ isVisible, onClose }) => {
         <TouchableOpacity
           style={styles.optionBtn}
           onPress={() => {
-            onClose(); // closes popup first
+            onClose(); // closes popup firstcds
             setTimeout(() => {
-              navigation.navigate("Buy"); // then navigates after slight delay
+              navigation.navigate("CoinStack", {
+                screen: "Buy",
+              }); // then navigates after slight delay
             }, 200); // slight delay gives modal time to animate out
           }}
         >
@@ -53,7 +55,9 @@ const BuyCryptoPopup = ({ isVisible, onClose }) => {
           onPress={() => {
             onClose(); // closes popup first
             setTimeout(() => {
-              navigation.navigate("Sell"); // then navigates after slight delay
+              navigation.navigate("CoinStack", {
+                screen: "Send",
+              }); // then navigates after slight delay
             }, 200); // slight delay gives modal time to animate out
           }}
         >
@@ -79,7 +83,9 @@ const BuyCryptoPopup = ({ isVisible, onClose }) => {
           onPress={() => {
             onClose(); // closes popup first
             setTimeout(() => {
-              navigation.navigate("Convert"); // then navigates after slight delay
+              navigation.navigate("CoinStack", {
+                screen: "Convert",
+              }); // then navigates after slight delay
             }, 200); // slight delay gives modal time to animate out
           }}
         >

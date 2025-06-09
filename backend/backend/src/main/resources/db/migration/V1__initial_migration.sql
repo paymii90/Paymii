@@ -1,147 +1,155 @@
-create table users
-(
-    id          serial
-        primary key,
-    first_name  varchar(50)  not null,
-    last_name   varchar(50)  not null,
-    email       varchar(100) not null
-        unique,
-    password    varchar(255) not null,
-    is_verified boolean     default false,
-    role        varchar(20) default 'USER'::character varying,
-    created_at  timestamp   default CURRENT_TIMESTAMP,
-    updated_at  timestamp   default CURRENT_TIMESTAMP
+-- Timestamp trigger function for updated_at columns
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+    RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- USERS
+CREATE TABLE users (
+                       id              SERIAL PRIMARY KEY,
+                       firebase_uid    VARCHAR(50) UNIQUE NOT NULL,
+                       first_name      VARCHAR(50),
+                       last_name       VARCHAR(50),
+                       email           VARCHAR(100),
+                       profile_photo   VARCHAR(255),
+                       phone_number    VARCHAR(20),
+                       is_phone_verified BOOLEAN DEFAULT FALSE,
+                       is_kyc_completed BOOLEAN DEFAULT FALSE,
+                       created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                       updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-alter table users
-    owner to postgres;
+CREATE TRIGGER trg_update_users_updated_at
+    BEFORE UPDATE ON users
+    FOR EACH ROW
+    EXECUTE PROCEDURE update_updated_at_column();
 
-create trigger trg_update_users_updated_at
-    before update
-    on users
-    for each row
-execute procedure update_updated_at_column();
-
-create table coins
-(
-    id            serial
-        primary key,
-    name          varchar(50) not null,
-    symbol        varchar(10) not null
-        unique,
-    current_price numeric(18, 8)
+-- COINS
+CREATE TABLE coins (
+                       id            SERIAL PRIMARY KEY,
+                       name          VARCHAR(50) NOT NULL,
+                       symbol        VARCHAR(10) NOT NULL UNIQUE,
+                       current_price NUMERIC(18, 8)
 );
 
-alter table coins
-    owner to postgres;
-
-create table wallets
-(
-    id         serial
-        primary key,
-    user_id    integer     not null
-        references users
-            on delete cascade,
-    currency   varchar(10) not null
-        constraint fk_wallets_currency
-            references coins (symbol),
-    balance    numeric(18, 8) default 0.0,
-    updated_at timestamp      default CURRENT_TIMESTAMP,
-    unique (user_id, currency)
+-- WALLETS
+CREATE TABLE wallets (
+                         id         SERIAL PRIMARY KEY,
+                         user_id    INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
+                         currency   VARCHAR(10) NOT NULL REFERENCES coins(symbol),
+                         balance    NUMERIC(18, 8) DEFAULT 0.0,
+                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                         UNIQUE (user_id, currency)
 );
 
-alter table wallets
-    owner to postgres;
+CREATE TRIGGER trg_update_wallets_updated_at
+    BEFORE UPDATE ON wallets
+    FOR EACH ROW
+    EXECUTE PROCEDURE update_updated_at_column();
 
-create trigger trg_update_wallets_updated_at
-    before update
-    on wallets
-    for each row
-execute procedure update_updated_at_column();
-
-create table transactions
-(
-    id               serial
-        primary key,
-    sender_id        integer
-                                    references users
-                                        on delete set null,
-    receiver_id      integer
-                                    references users
-                                        on delete set null,
-    coin_symbol      varchar(10)    not null
-        constraint fk_transactions_coin
-            references coins (symbol),
-    amount           numeric(18, 8) not null,
-    transaction_type varchar(20)    not null
-        constraint transactions_transaction_type_check
-            check ((transaction_type)::text = ANY
-                   ((ARRAY ['SEND'::character varying, 'RECEIVE'::character varying, 'BUY'::character varying, 'SELL'::character varying, 'CONVERT'::character varying])::text[])),
-    status           varchar(20) default 'PENDING'::character varying,
-    created_at       timestamp   default CURRENT_TIMESTAMP,
-    updated_at       timestamp   default CURRENT_TIMESTAMP
+-- TRANSACTIONS
+CREATE TABLE transactions (
+                              id               SERIAL PRIMARY KEY,
+                              sender_id        INTEGER REFERENCES users ON DELETE SET NULL,
+                              receiver_id      INTEGER REFERENCES users ON DELETE SET NULL,
+                              coin_symbol      VARCHAR(10) NOT NULL REFERENCES coins(symbol),
+                              amount           NUMERIC(18, 8) NOT NULL,
+                              transaction_type VARCHAR(20) NOT NULL CHECK (transaction_type IN ('SEND', 'RECEIVE', 'BUY', 'SELL', 'CONVERT')),
+                              status           VARCHAR(20) DEFAULT 'PENDING',
+                              created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                              updated_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-alter table transactions
-    owner to postgres;
+CREATE TRIGGER trg_update_transactions_updated_at
+    BEFORE UPDATE ON transactions
+    FOR EACH ROW
+    EXECUTE PROCEDURE update_updated_at_column();
 
-create trigger trg_update_transactions_updated_at
-    before update
-    on transactions
-    for each row
-execute procedure update_updated_at_column();
-
-create table deposits
-(
-    id           serial
-        primary key,
-    user_id      integer        not null
-        references users
-            on delete cascade,
-    amount       numeric(18, 2) not null,
-    method       varchar(50),
-    phone_number varchar(20),
-    status       varchar(20) default 'PENDING'::character varying,
-    created_at   timestamp   default CURRENT_TIMESTAMP,
-    updated_at   timestamp   default CURRENT_TIMESTAMP,
-    constraint chk_deposits_phone_number_required
-        check (((method)::text <> 'Mobile Money'::text) OR
-               ((phone_number IS NOT NULL) AND ((phone_number)::text <> ''::text)))
+-- DEPOSITS
+CREATE TABLE deposits (
+                          id           SERIAL PRIMARY KEY,
+                          user_id      INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
+                          amount       NUMERIC(18, 2) NOT NULL,
+                          method       VARCHAR(50),
+                          phone_number VARCHAR(20),
+                          status       VARCHAR(20) DEFAULT 'PENDING',
+                          created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          updated_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          CONSTRAINT chk_deposits_phone_number_required
+                              CHECK ((method <> 'Mobile Money') OR (phone_number IS NOT NULL AND phone_number <> ''))
 );
 
-alter table deposits
-    owner to postgres;
+CREATE TRIGGER trg_update_deposits_updated_at
+    BEFORE UPDATE ON deposits
+    FOR EACH ROW
+    EXECUTE PROCEDURE update_updated_at_column();
 
-create trigger trg_update_deposits_updated_at
-    before update
-    on deposits
-    for each row
-execute procedure update_updated_at_column();
-
-create table withdrawals
-(
-    id           serial
-        primary key,
-    user_id      integer        not null
-        references users
-            on delete cascade,
-    amount       numeric(18, 2) not null,
-    method       varchar(50),
-    phone_number varchar(20),
-    status       varchar(20) default 'PENDING'::character varying,
-    created_at   timestamp   default CURRENT_TIMESTAMP,
-    updated_at   timestamp   default CURRENT_TIMESTAMP,
-    constraint chk_withdrawals_phone_number_required
-        check (((method)::text <> 'Mobile Money'::text) OR
-               ((phone_number IS NOT NULL) AND ((phone_number)::text <> ''::text)))
+-- WITHDRAWALS
+CREATE TABLE withdrawals (
+                             id           SERIAL PRIMARY KEY,
+                             user_id      INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
+                             amount       NUMERIC(18, 2) NOT NULL,
+                             method       VARCHAR(50),
+                             phone_number VARCHAR(20),
+                             status       VARCHAR(20) DEFAULT 'PENDING',
+                             created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                             updated_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                             CONSTRAINT chk_withdrawals_phone_number_required
+                                 CHECK ((method <> 'Mobile Money') OR (phone_number IS NOT NULL AND phone_number <> ''))
 );
 
-alter table withdrawals
-    owner to postgres;
+CREATE TRIGGER trg_update_withdrawals_updated_at
+    BEFORE UPDATE ON withdrawals
+    FOR EACH ROW
+    EXECUTE PROCEDURE update_updated_at_column();
 
-create trigger trg_update_withdrawals_updated_at
-    before update
-    on withdrawals
-    for each row
-execute procedure update_updated_at_column();
+-- USER KYC (for storing KYC info)
+CREATE TABLE user_kyc (
+                          id                SERIAL PRIMARY KEY,
+                          user_id           INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
+                          citizenship       VARCHAR(50),
+                          legal_first_name  VARCHAR(50),
+                          legal_last_name   VARCHAR(50),
+                          date_of_birth     DATE,
+                          address           VARCHAR(255),
+                          kyc_status        VARCHAR(20) DEFAULT 'PENDING',
+                          created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          updated_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TRIGGER trg_update_user_kyc_updated_at
+    BEFORE UPDATE ON user_kyc
+    FOR EACH ROW
+    EXECUTE PROCEDURE update_updated_at_column();
+
+-- USER DOCUMENTS (file storage references for KYC - images)
+CREATE TABLE user_documents (
+                                id           SERIAL PRIMARY KEY,
+                                user_id      INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
+                                doc_type     VARCHAR(50), -- e.g. 'ID_CARD', 'PASSPORT', 'UTILITY_BILL'
+                                doc_url      VARCHAR(255) NOT NULL,
+                                uploaded_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ONBOARDING STEPS (for tracking multistep onboarding flow)
+CREATE TABLE onboarding_steps (
+                                  id           SERIAL PRIMARY KEY,
+                                  user_id      INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
+                                  step         VARCHAR(50) NOT NULL,
+                                  completed    BOOLEAN DEFAULT FALSE,
+                                  completed_at TIMESTAMP
+);
+
+-- If not already present, add the timestamp trigger function (required by triggers above)
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+    RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 

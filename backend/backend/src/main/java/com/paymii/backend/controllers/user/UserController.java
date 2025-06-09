@@ -1,54 +1,41 @@
 package com.paymii.backend.controllers.user;
 
-import com.paymii.backend.dtos.user.ChangePasswordRequest;
-import com.paymii.backend.dtos.user.UpdateUserRequest;
+import com.google.firebase.auth.FirebaseToken;
+import com.paymii.backend.dtos.user.RegisterUserRequest;
 import com.paymii.backend.dtos.user.UserDto;
 import com.paymii.backend.services.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
-
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping(value = "/api/users", produces = "application/json")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-
     private final UserService userService;
 
+    @PostMapping("/register")
+    public UserDto register(@AuthenticationPrincipal FirebaseToken token,
+                            @RequestBody RegisterUserRequest request) {
+        return userService.registerUser(token, request);
+    }
+    // Get all users
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-
-        return ResponseEntity.ok(userService.getAllUsers());
+    public List<UserDto> getAllUsers() {
+        return userService.getAllUsers();
     }
 
+    // Get user by ID
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+    public UserDto getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest request) {
-        return ResponseEntity.ok(userService.update(id, request));
+    // Optionally, get user by email (as a query parameter)
+    @GetMapping("/by-email")
+    public UserDto getUserByEmail(@RequestParam String email) {
+        return userService.getUserByEmail(email);
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{id}/change-password")
-    public ResponseEntity<?> changePassword(
-            @PathVariable Long id,
-            @Valid @RequestBody ChangePasswordRequest request) {
-        userService.changePassword(id, request);
-        return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
-    }
-
 }

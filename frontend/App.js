@@ -3,6 +3,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import StackNavigator from "./src/navigation/StackNavigator"; // Auth screens
 import TabNavigator from "./src/navigation/TabNavigator"; // Main app
 import { AuthProvider, AuthContext } from "./src/context/AuthContext";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 // This component decides what navigator to show based on login state
 function Main() {
@@ -11,10 +13,13 @@ function Main() {
   if (isLoggedIn === null) return null; // Loading state (can show splash here)
 
   return (
-    <NavigationContainer>
-      {/* {isLoggedIn ? <TabNavigator /> : <StackNavigator />} */}
-      <StackNavigator />
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        {/* {isLoggedIn ? <TabNavigator /> : <StackNavigator />} */}
+        <StackNavigator />
+        <StatusBar style="dark" />
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
 
