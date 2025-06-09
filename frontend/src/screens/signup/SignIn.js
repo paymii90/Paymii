@@ -3,19 +3,19 @@ import { Text, StyleSheet, View, Alert } from "react-native";
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
 import { AuthContext } from "../../context/AuthContext";
-import axios from "axios";
 
-const API_BASE_URL = "http://10.30.22.120:8080/api/auth";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  
+
 
   const { login } = useContext(AuthContext);
 
   const handleSubmit = async () => {
-    navigation.replace('Main')
     setError("");
     if (!email || !password) {
       setError("Email and Password are required!");
@@ -28,22 +28,9 @@ const SignIn = ({ navigation }) => {
 
     if (!error) {
       navigation.replace('Main')
+      login(email, password);
     }
 
-    // try {
-    //   const response = await axios.post(`${API_BASE_URL}/login`, {
-    //     email,
-    //     password,
-    //   });
-    //   Alert.alert("Login successful!", "Welcome back!");
-    //   await login(response.data.token || "loggedin");
-    //   // No need for navigation.replace!
-    // } catch (err) {
-    //   setError(
-    //     err.response?.data?.message || "Login failed. Try again."
-    //   );
-    //   console.log("Login error:", err);
-    // }
   };
 
   return (
