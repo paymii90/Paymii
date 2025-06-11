@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     paddingTop: 20,
     paddingHorizontal: 20, // sets both left and right
-    paddingBottom: "25%",
+    paddingBottom: "5%",
     backgroundColor: "#fff",
   },
 });

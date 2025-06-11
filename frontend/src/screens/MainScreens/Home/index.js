@@ -42,9 +42,9 @@ import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
   const navigation = useNavigation();
-  const [activeButton, setActiveButton] = useState(null);
+  const [activeButton, setActiveButton] = useState("Watchlist");
   const [coins, setCoins] = useState([]);
-  const [exchangeRate, setExchangeRate] = useState(11); // Default rate
+  const [exchangeRate, setExchangeRate] = useState(11);
   const [loading, setLoading] = useState(false);
   const [buySellPopupVisible, setBuySellPopupVisible] = useState(false);
   const [transferPopupVisible, setTransferPopupVisible] = useState(false);
@@ -78,19 +78,10 @@ const Home = () => {
       try {
         const rate = await fetchExchangeRate();
         setExchangeRate(rate || 11);
-
-        // const coinData = await getMarketCoins();
         setCoins(selectedData);
-
-        // if (Array.isArray(coinData)) {
-
-        // } else {
-        //   console.warn("Coin data is not an array:", coinData);
-        //   setCoins([]); // fallback to empty array
-        // }
       } catch (error) {
         console.error("Error fetching data:", error);
-        setCoins([]); // fallback on error
+        setCoins([]);
       } finally {
         setLoading(false);
       }
@@ -110,6 +101,7 @@ const Home = () => {
           <ChatIcon style={{ marginRight: 30 }} width={30} height={30} />
         </Pressable>
       </BlurView>
+
       <ScrollView showsVerticalScrollIndicator={false}>
         <Spacer height={80} />
         <View style={styles.logoCont}>
@@ -149,7 +141,7 @@ const Home = () => {
           ))}
         </ScrollView>
         <Spacer />
-        {/* 👉 This shows only after a filter is selected */}
+
         {activeButton && (
           <View style={{ marginTop: 20 }}>
             <Text style={{ fontSize: 16, color: "#333" }}>
@@ -158,7 +150,7 @@ const Home = () => {
             </Text>
             {loading ? (
               <View style={styles.loader}>
-                <ActivityIndicator size="medium" color="#000000" />
+                <ActivityIndicator size="large" color="#000000" />
               </View>
             ) : (
               <View>
@@ -188,7 +180,6 @@ const Home = () => {
                     </Text>
                   </View>
                 ))}
-                {/* /> */}
               </View>
             )}
           </View>
@@ -207,9 +198,6 @@ const Home = () => {
             labelStyle={{ fontWeight: 600 }}
             action={() => setBuySellPopupVisible(true)}
           />
-
-          {/* Popup to show  */}
-
           <BuyCryptoPopup
             isVisible={buySellPopupVisible}
             onClose={() => setBuySellPopupVisible(false)}
@@ -227,8 +215,6 @@ const Home = () => {
             labelStyle={{ fontWeight: 600 }}
             action={() => setTransferPopupVisible(true)}
           />
-          {/* Popup to show  */}
-
           <TransferPopup
             isVisible={transferPopupVisible}
             onClose={() => setTransferPopupVisible(false)}
