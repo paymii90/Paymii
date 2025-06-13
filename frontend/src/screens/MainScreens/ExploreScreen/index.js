@@ -1,22 +1,39 @@
-import { StyleSheet, Text, View } from "react-native";
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import React from "react";
+import { View, FlatList, StyleSheet, Text } from "react-native";
+import SafeAreaWrapper from "../../../Components/SafeAreaWrapper";
+import TopMovers from "./TopMovers";
+import TopAssets from "./TopAssets";
+import TopPicks from "./TopPicks";
+import BottomActionButtons from "./BottomButtons";
 
 const ExploreScreen = () => {
   return (
-    <View style={styles.container}>
-      <Text>ExploreScreen</Text>
-    </View>
+    <SafeAreaWrapper style={styles.container}>
+      <Text style={{ fontSize: 30, fontWeight: "bold", marginLeft: 20 }}>
+        Explore
+      </Text>
+      <FlatList
+        data={[]}
+        ListHeaderComponent={
+          <>
+            <TopMovers />
+            <TopAssets />
+            <TopPicks />
+          </>
+        }
+        keyExtractor={(item, index) => index.toString()}
+        showsVerticalScrollIndicator={false}
+      />
+      <BottomActionButtons />
+    </SafeAreaWrapper>
   );
 };
 
 export default ExploreScreen;
 
 const styles = StyleSheet.create({
-container: {
+  container: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: "#fff",
-    justifyContent: 'center',
   },
 });

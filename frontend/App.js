@@ -1,16 +1,16 @@
 import React, { useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import StackNavigator from "./src/navigation/StackNavigator"; // Auth screens
-import TabNavigator from "./src/navigation/TabNavigator"; // Main app
+import StackNavigator from "./src/navigation/StackNavigator";
+import TabNavigator from "./src/navigation/TabNavigator";
 import { AuthProvider, AuthContext } from "./src/context/AuthContext";
+import { CoinProvider } from './src/context/CoinContext'; 
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-// This component decides what navigator to show based on login state
 function Main() {
   const { isLoggedIn } = useContext(AuthContext);
 
-  if (isLoggedIn === null) return null; // Loading state (can show splash here)
+  if (isLoggedIn === null) return null;
 
   return (
     <SafeAreaProvider>
@@ -26,7 +26,9 @@ function Main() {
 export default function App() {
   return (
     <AuthProvider>
-      <Main />
+      <CoinProvider> 
+        <Main />
+      </CoinProvider>
     </AuthProvider>
   );
 }
