@@ -13,12 +13,14 @@ const Screen2 = ({ navigation }) => {
           label="Get Started"
           backgroundColor="white"
           color="#B28143"
+          style={{ marginBottom: 10 }}
         />
         <Button
           action={() => navigation.navigate("SignIn")}
           label="Sign In"
           backgroundColor="white"
           color="#B28143"
+          style={{ marginBottom: 10 }}
         />
       </View>
     </View>

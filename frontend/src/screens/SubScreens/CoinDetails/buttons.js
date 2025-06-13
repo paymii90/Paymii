@@ -39,31 +39,41 @@ export default Buttons;
 
 const styles = StyleSheet.create({
   buttonRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    // flexDirection: "row",
+    // justifyContent: "space-between",
 
-    position: "absolute",
-    bottom: "1%",
-    left: "5%",
-    right: "5%",
+    // position: "absolute",
+    // bottom: "1%",
+    // left: "5%",
+    // right: "5%",
     // backgroundColor: "red",
 
-
     //shadow
-     // iOS shadow
-  shadowColor: "#000",
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.2,
-  shadowRadius: 4,
+    // iOS shadow
+    // shadowColor: "#000",
+    // shadowOffset: { width: 0, height: 4 },
+    // shadowOpacity: 0.2,
+    // shadowRadius: 4,
 
-  // Android shadow
-  // iOS shadow
-  shadowColor: "#000",
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.3,
-  shadowRadius: 4,
+    // Android shadow
+    // iOS shadow
+    // shadowColor: "#000",
+    // shadowOffset: { width: 0, height: 4 },
+    // shadowOpacity: 0.3,
+    // shadowRadius: 4,
 
-  // Android shadow
-  elevation: 5,
+    // Android shadow
+    // elevation: 5,
+
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 8,
   },
 });
