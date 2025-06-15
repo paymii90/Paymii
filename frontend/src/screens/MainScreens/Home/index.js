@@ -102,12 +102,6 @@ const Home = () => {
       style={styles.container}
       edges={["top", "bottom", "left", "right"]}
     >
-      {/* <BlurView intensity={80} tint="light" style={styles.iconsCont}>
-        <SearchIcon style={{ marginLeft: 30 }} width={30} height={30} />
-        <Pressable onPress={() => navigation.navigate("Chat")}>
-          <ChatIcon style={{ marginRight: 30 }} width={30} height={30} />
-        </Pressable>
-      </BlurView> */}
       <ScrollView showsVerticalScrollIndicator={false}>
         <Spacer height={80} />
         <View style={styles.logoCont}>
