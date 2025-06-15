@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from "react-native-vector-icons/MaterialIcons";
 import React from "react";
 
 const ExploreScreen = () => {
@@ -13,10 +13,10 @@ const ExploreScreen = () => {
 export default ExploreScreen;
 
 const styles = StyleSheet.create({
-container: {
+  container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     backgroundColor: "#fff",
-    justifyContent: 'center',
+    justifyContent: "center",
   },
 });
