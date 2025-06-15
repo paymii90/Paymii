@@ -16,8 +16,6 @@ import Spacer from "../../../Components/Spacer";
 import { BlurView } from "expo-blur";
 
 //importing assets
-import SearchIcon from "../../../../assets/search";
-import ChatIcon from "../../../../assets/chatIcon";
 import Logo from "../../../../assets/logo.svg";
 import Button from "../../../Components/Button";
 import ButtonsInfo from "../../../../assets/configs/HomeButtons";
@@ -104,12 +102,12 @@ const Home = () => {
       style={styles.container}
       edges={["top", "bottom", "left", "right"]}
     >
-      <BlurView intensity={80} tint="light" style={styles.iconsCont}>
+      {/* <BlurView intensity={80} tint="light" style={styles.iconsCont}>
         <SearchIcon style={{ marginLeft: 30 }} width={30} height={30} />
         <Pressable onPress={() => navigation.navigate("Chat")}>
           <ChatIcon style={{ marginRight: 30 }} width={30} height={30} />
         </Pressable>
-      </BlurView>
+      </BlurView> */}
       <ScrollView showsVerticalScrollIndicator={false}>
         <Spacer height={80} />
         <View style={styles.logoCont}>
