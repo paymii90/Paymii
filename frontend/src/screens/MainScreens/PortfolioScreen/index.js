@@ -15,6 +15,7 @@ import Button from "../../../Components/Button";
 //importing porfolio from mock coins
 import { portfolio } from "../../../../assets/configs/mockCoinCategories";
 import { totalValue } from "../../../../assets/configs/mockCoinCategories";
+import FooterButtons from "../../../Components/FooterButtons";
 
 const PortfolioScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState("Crypto");
@@ -60,6 +61,11 @@ const PortfolioScreen = ({ navigation }) => {
         </View>
         {activeTab === "Crypto" ? (
           <View>
+            <View style={styles.title}>
+              <Text style={styles.titleHeader}>Coin</Text>
+              <Text style={styles.titleHeader}>Price</Text>
+              <Text style={styles.titleHeader}>Quantity</Text>
+            </View>
             <FlatList
               keyExtractor={(item) => item.name}
               data={portfolio}
@@ -91,6 +97,7 @@ const PortfolioScreen = ({ navigation }) => {
         ) : (
           <Text>Not yet</Text>
         )}
+        <FooterButtons />
       </View>
     </View>
   );
@@ -137,7 +144,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     display: "block",
-    marginVertical: 20,
+    marginTop: 20,
+    marginBottom: 10,
   },
   coinContainer: {
     flex: 1,
@@ -164,6 +172,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   amount: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  title: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginStart: "20%",
+  },
+  titleHeader: {
     fontSize: 16,
     fontWeight: "bold",
   },
