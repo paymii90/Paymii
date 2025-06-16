@@ -15,6 +15,7 @@ import PhoneAuthentication from "../screens/signup/PhoneAuthentication";
 import Citizenship from "../screens/signup/Citizenship";
 import IdentityVerification from "../screens/signup/IdentityVerification";
 import PersonalInformation from "../screens/signup/PersonalInformation";
+import CoinStack from '../screens/MainStacks/CoinStack';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,7 @@ const StackNavigator = () => (
     <Stack.Screen name="Citizenship" component={Citizenship} />
     <Stack.Screen name="Verification" component={IdentityVerification} />
     <Stack.Screen name="Information" component={PersonalInformation} />
+    <Stack.Screen name="CoinStack" component={CoinStack} />
   </Stack.Navigator>
 );
 
