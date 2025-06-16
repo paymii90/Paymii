@@ -11,6 +11,7 @@ const HomeStack = () => (
   <Stack.Navigator screenOptions={{ header: () => <Searchbar /> }}>
     <Stack.Screen name="HomeMain" component={Home} />
     <Stack.Screen name="Chat" component={Chat} />
+    {/* <Stack.Screen name="CoinDetails" component={CoinDetails} /> */}
   </Stack.Navigator>
 );
 
