@@ -34,6 +34,12 @@ export default ExploreScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+<<<<<<< HEAD
+    alignItems: "center",
     backgroundColor: "#fff",
+    justifyContent: "center",
+=======
+    backgroundColor: "#fff",
+>>>>>>> origin/main
   },
 });

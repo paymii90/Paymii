@@ -1,5 +1,5 @@
 import TextRecognition from "react-native-text-recognition";
-import { camera } from "expo-camera";
+import { Camera } from "expo-camera";
 import { View, StyleSheet, Text } from "react-native";
 import { useRef, useState } from "react";
 

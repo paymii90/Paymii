@@ -22,7 +22,8 @@ export const trendingCoins = [
     id: "pepe",
     name: "Pepe",
     symbol: "pepe",
-    image: "https://assets.coingecko.com/coins/images/29850/large/pepe-token.jpeg",
+    image:
+      "https://assets.coingecko.com/coins/images/29850/large/pepe-token.jpeg",
     current_price: 67.2,
     price_change_percentage_24h: 9.1,
   },
@@ -30,7 +31,8 @@ export const trendingCoins = [
     id: "floki",
     name: "Floki",
     symbol: "floki",
-    image: "https://assets.coingecko.com/coins/images/16746/large/Floki-Inu-Logo.png",
+    image:
+      "https://assets.coingecko.com/coins/images/16746/large/Floki-Inu-Logo.png",
     current_price: 0.28,
     price_change_percentage_24h: 6.7,
   },
@@ -92,7 +94,8 @@ export const topLosers = [
     id: "arbitrum",
     name: "Arbitrum",
     symbol: "arb",
-    image: "https://assets.coingecko.com/coins/images/16547/large/photo_2023-03-29_21.47.00.jpeg",
+    image:
+      "https://assets.coingecko.com/coins/images/16547/large/photo_2023-03-29_21.47.00.jpeg",
     current_price: 1.3,
     price_change_percentage_24h: -7.2,
   },
@@ -103,7 +106,8 @@ export const mostBuyers = [
     id: "bitcoin-cash",
     name: "Bitcoin Cash",
     symbol: "bch",
-    image: "https://assets.coingecko.com/coins/images/780/large/bitcoin-cash-circle.png",
+    image:
+      "https://assets.coingecko.com/coins/images/780/large/bitcoin-cash-circle.png",
     current_price: 540,
     price_change_percentage_24h: 6.3,
   },
@@ -151,3 +155,49 @@ export const mostSearched = [
     price_change_percentage_24h: 5.2,
   },
 ];
+
+export const portfolio = [
+  {
+    name: "Bitcoin",
+    symbol: "BTC",
+    amount: 0.5,
+    price: 30000,
+    value: 15000.0,
+    image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
+  },
+  {
+    name: "Ethereum",
+    symbol: "ETH",
+    amount: 3,
+    price: 2000,
+    value: 6000,
+    image: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
+  },
+  {
+    name: "Solana",
+    symbol: "SOL",
+    amount: 10,
+    price: 100,
+    value: 1000,
+    image: "https://assets.coingecko.com/coins/images/4128/large/solana.png",
+  },
+  {
+    name: "Cardano",
+    symbol: "ADA",
+    amount: 1000,
+    price: 0.5,
+    value: 500.0,
+    image:
+      "https://assets.coingecko.com/coins/images/29850/large/pepe-token.jpeg",
+  },
+  {
+    name: "Dogecoin",
+    symbol: "DOGE",
+    amount: 2000,
+    price: 0.1,
+    value: 200.0,
+    image: "https://assets.coingecko.com/coins/images/5/large/dogecoin.png",
+  },
+];
+
+export const totalValue = 22700.0;

@@ -1,14 +1,14 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ExploreScreen from "../MainScreens/ExploreScreen";
-// import CoinDetailScreen from "../SubScreens/CoinDetails";
+import CoinDetailScreen from "../SubScreens/CoinDetails";
+import Searchbar from "../../Components/Searchbar";
 
 const Stack = createNativeStackNavigator();
 
 const ExploreStack = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
+  <Stack.Navigator screenOptions={{ header: () => <Searchbar /> }}>
     <Stack.Screen name="ExploreMain" component={ExploreScreen} />
-    {/* <Stack.Screen name="CoinDetails" component={CoinDetailScreen} /> */}
     {/* Add more screens like Categories, Trending, etc. here */}
   </Stack.Navigator>
 );
