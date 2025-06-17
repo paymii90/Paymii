@@ -26,7 +26,7 @@ const timeRanges = ["1H", "1D", "1W", "1M", "1Y", "All"];
 const CoinDetailScreen = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-  const [selectedRange, setSelectedRange] = useState("1D");
+  const [selectedRange, setSelectedRange] = useState("1M");
   const [selectedTab, setSelectedTab] = useState("Balance");
 
   const route = useRoute();
@@ -81,7 +81,7 @@ const CoinDetailScreen = () => {
 
         {/* Actions */}
       </ScrollView>
-      <Buttons />
+      <Buttons navigation={navigation} singleCoinItem={coin}/>
     </View>
   );
 };

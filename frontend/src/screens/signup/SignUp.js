@@ -17,6 +17,7 @@ const SignUp = ({ navigation }) => {
   const { signUp, authError, loading } = useContext(AuthContext);
 
   const handleSubmit = async () => {
+    navigation.navigate("Email");
     setFormError("");
     setPasswordError("");
 
@@ -44,7 +45,6 @@ const SignUp = ({ navigation }) => {
     if (!formError && !passwordError) {
       navigation.navigate("Email");
     }
-    
   };
 
   return (
