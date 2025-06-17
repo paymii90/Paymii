@@ -46,6 +46,7 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [buySellPopupVisible, setBuySellPopupVisible] = useState(false);
   const [transferPopupVisible, setTransferPopupVisible] = useState(false);
+  let selectedData = {};
 
   switch (activeButton) {
     case "Watchlist":
@@ -74,7 +75,7 @@ const Home = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const rate = await fetchExchangeRate();
+        // const rate = await fetchExchangeRate();
         setExchangeRate(rate || 11);
         setCoins(selectedData);
       } catch (error) {
@@ -221,20 +222,17 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "#f5f5f5",
     marginLeft: 12,
     marginRight: 12,
-    // width: '90%'
   },
   iconsCont: {
-    position: "absolute", // Fixes at the top
+    position: "absolute",
     top: 10,
     left: 0,
     right: 0,
-    height: 90, // Fixed height
+    height: 90,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -243,10 +241,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.1,
     marginLeft: -20,
     marginRight: -20,
-    zIndex: 1000, // Keeps header on top
+    zIndex: 1000,
   },
   logoCont: {
-    // backgroundColor: 'blue',
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
@@ -258,15 +255,14 @@ const styles = StyleSheet.create({
   },
   intro: {
     fontSize: 30,
-    fontWeight: 800,
+    fontWeight: "800",
     color: "#111111",
   },
   subIntro: {
     fontSize: 18,
-    fontWeight: 500,
+    fontWeight: "500",
     color: "#414141",
   },
-  //scrooooll
   scrollContainer: {
     paddingHorizontal: 16,
   },
@@ -274,7 +270,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    // backgroundColor: "red",
   },
   plus: {
     zIndex: -1,
