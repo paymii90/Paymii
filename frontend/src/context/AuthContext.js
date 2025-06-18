@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
       console.log("ID Token:", idToken);
 
       // 5. Register user in your backend
-      const registerResp = await fetch("http://192.168.22.205:8080/api/users/register", {
+      const registerResp = await fetch("http://10.30.22.215:8080/api/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

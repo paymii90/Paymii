@@ -11,7 +11,6 @@ public interface UserService {
    UserDto getOrCreateUserByFirebaseToken(com.google.firebase.auth.FirebaseToken token);
     Long getUserIdFromFirebaseUid(String uid);
     UserDto registerUser(FirebaseToken token, RegisterUserRequest request);
-    //UserDto getOrCreateUserByFirebaseToken(FirebaseToken token);
     UserDto updateUserProfile(FirebaseToken token, UpdateUserProfileRequest request);
     List<UserDto> getAllUsers();
     UserDto getUserById(Long id);

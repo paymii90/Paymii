@@ -17,7 +17,6 @@ const SignUp = ({ navigation }) => {
   const { signUp, authError, loading } = useContext(AuthContext);
 
   const handleSubmit = async () => {
-    navigation.navigate("Email");
     setFormError("");
     setPasswordError("");
 
@@ -40,11 +39,9 @@ const SignUp = ({ navigation }) => {
     }
 
     // Only proceed if form validation passes
-    // await signUp(firstName, lastName, email, password);
+    await signUp(firstName, lastName, email, password);
     // Do NOT navigate yet! Wait until email is verified.
-    if (!formError && !passwordError) {
-      navigation.navigate("Email");
-    }
+    // navigation.navigate("Email"); // Consider showing this only after successful signup
   };
 
   return (
@@ -72,12 +69,12 @@ const SignUp = ({ navigation }) => {
           action={setEmail}
           keyboard="email-address"
         />
-        {/* Show form error or auth error under email field
+        {/* Show form error or auth error under email field */}
         {formError ? (
           <Text style={styles.error}>{formError}</Text>
         ) : authError ? (
           <Text style={styles.error}>{authError}</Text>
-        ) : null} */}
+        ) : null}
       </View>
       <View>
         <Input
@@ -88,9 +85,7 @@ const SignUp = ({ navigation }) => {
           keyboard="default"
           visibility
         />
-        {passwordError ? (
-          <Text style={styles.error}>{passwordError}</Text>
-        ) : null}
+        {passwordError ? <Text style={styles.error}>{passwordError}</Text> : null}
       </View>
       <Checkbox
         style={styles.checkboxText}
