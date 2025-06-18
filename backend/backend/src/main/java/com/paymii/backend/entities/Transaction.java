@@ -3,60 +3,66 @@ package com.paymii.backend.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
-@Table(name = "transactions")
+@Table(name = "transaction")
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    @JoinColumn(name = "sender_id")
-    private User sender;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    @JoinColumn(name = "receiver_id")
-    private User receiver;
+    private Long id;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "coin_symbol", nullable = false, referencedColumnName = "symbol")
-    private Coin coinSymbol;
-
-    @NotNull
-    @Column(name = "amount", precision = 18, scale = 8)
+    @Column(name = "amount", nullable = false, precision = 20, scale = 8)
     private BigDecimal amount;
 
-    @Size(max = 20)
+    @Size(max = 255)
+    @Column(name = "details")
+    private String details;
+
     @NotNull
-    @Column(name = "transaction_type", nullable = false, length = 20)
-    private String transactionType;
+    @Column(name = "\"timestamp\"", nullable = false)
+    private Instant timestamp;
 
-    @Size(max = 20)
-    @ColumnDefault("'PENDING'")
-    @Column(name = "status", length = 20)
-    private String status;
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "type", nullable = false)
+    private String type;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at")
-    private Instant createdAt;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "updated_at")
-    private Instant updatedAt;
+    // The coin fields from frontend:
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "coin_id", nullable = false)
+    private String coinId;
 
+    @Size(max = 255)
+    @Column(name = "coin_name")
+    private String coinName;
+
+    @Size(max = 255)
+    @Column(name = "coin_symbol")
+    private String coinSymbol;
+
+    @Size(max = 255)
+    @Column(name = "coin_image")
+    private String coinImage;
+
+    @Column(name = "coin_price", precision = 20, scale = 8)
+    private BigDecimal coinPrice;
 }
