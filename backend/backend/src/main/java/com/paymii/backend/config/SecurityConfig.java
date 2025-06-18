@@ -17,6 +17,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/public/**",
                                 "/api/test/firebase",
+                                "/api/coins/**",
+                                "/api/transaction/**",
                                 "/api/users/**" )
                         .permitAll()  // Use requestMatchers
                         .anyRequest().authenticated()

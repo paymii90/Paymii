@@ -36,6 +36,7 @@ public class User {
     private String lastName;
 
     @Size(max = 100)
+
     @Column(name = "email", length = 100)
     private String email;
 

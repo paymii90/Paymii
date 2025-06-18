@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JpaBuddyIdeaProjectConfig">
-    <option name="reLastEntityCreationPackage" value="backend/src/main/java/com/paymii/backend/entities" />
+    <option name="reLastEntityCreationPackage" value="src/main/java/com/paymii/backend/entities" />
     <option name="reverseEngineeringLastDbConnectionId" value="3b713a8e-bfc5-4537-afb4-d643ad6b6dbf" />
   </component>
 </project>
