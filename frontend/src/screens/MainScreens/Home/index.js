@@ -76,7 +76,7 @@ const Home = () => {
       setLoading(true);
       try {
         // const rate = await fetchExchangeRate();
-        // setExchangeRate(rate || 11);
+        // setExchangeRate(rate || 11);d
         setCoins(selectedData);
       } catch (error) {
         console.error("Error fetching data:", error);
