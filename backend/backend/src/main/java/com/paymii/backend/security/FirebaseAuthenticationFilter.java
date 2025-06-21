@@ -37,7 +37,6 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
         }
-
         filterChain.doFilter(request, response);
     }
 }
