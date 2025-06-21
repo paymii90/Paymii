@@ -8,6 +8,5 @@ public interface CoinService {
     CoinDto getCoinById(Integer id);
     CoinDto addCoin(CoinDto coinDto);
     void refreshFromCoinGecko();
-
     void populateCoinsFromCoinGecko();
 }

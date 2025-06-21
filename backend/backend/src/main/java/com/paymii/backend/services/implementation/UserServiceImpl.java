@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        return usersMapper.toDto(user);
+        return toDto(user);
     }
 }
 
