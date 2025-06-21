@@ -19,3 +19,10 @@ spring:
 
 jwt:
   secret: Hq5Ga/QMogIp8yYaaAM2+xZhp8bnjCu9rQwsD8q4NEnelTS4rpSXDNyd9H5IKpWbthtXpNZv30IoOrk7rM1ztw==
+
+
+logging:
+    level:
+      org:
+        springframework:
+          security: DEBUG

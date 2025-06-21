@@ -21,9 +21,8 @@ const BuySingleCoin = () => {
   const { coin } = route.params;
 
   const [amount, setAmount] = useState("");
-  const [balance, setBalance] = useState(10000); // GH₵10,000 dummy balance
+  const [balance, setBalance] = useState(1000000); // GH₵10,00000 dummy balance
   const [showModal, setShowModal] = useState(false);
-  let selectedCoin = coin;
 
   const handleKeyPress = (key) => {
     if (key === "⌫") {
@@ -66,7 +65,6 @@ const BuySingleCoin = () => {
         <Text style={styles.label}>Enter Amount in GHC</Text>
         <Text style={styles.amount}>GH₵ {amount || "0"}</Text>
         <Text style={styles.range}>Current Price: GH₵{coin.current_price}</Text>
-
         <Text style={styles.balance}>Current Balance: ₵10,000</Text>
 
         <View style={styles.percentRow}>
@@ -83,13 +81,8 @@ const BuySingleCoin = () => {
             );
           })}
         </View>
-        <View
-          style={{
-            justifyContent: "flex-end",
-            flex: 1,
-            // backgroundColor: "red",
-          }}
-        >
+
+        <View style={{ flex: 1, justifyContent: "flex-end" }}>
           <View style={styles.keypad}>
             {keypad.map((row, i) => (
               <View key={i} style={styles.keypadRow}>
@@ -110,10 +103,8 @@ const BuySingleCoin = () => {
             style={styles.Btn}
             onPress={() => {
               if (amount <= 0) {
-                setShowModal(false);
                 alert("Enter Amount");
               } else if (amount > balance) {
-                setShowModal(false);
                 alert("Insufficient balance");
               } else {
                 setShowModal(true);
@@ -122,15 +113,17 @@ const BuySingleCoin = () => {
           >
             <Text style={styles.previewText}>PREVIEW BUY</Text>
           </TouchableOpacity>
-          <BuyPreviewModal
-            visible={showModal}
-            onClose={() => setShowModal(false)}
-            coin={selectedCoin}
-            amount={amount}
-            // exchangeRate={exchangeRate}
-            // onBuy={handleBuy}
-          />
         </View>
+
+        <BuyPreviewModal
+          visible={showModal}
+          onClose={() => setShowModal(false)}
+          coin={coin}
+          amount={amount}
+          balance={balance}
+          setBalance={setBalance}
+        />
+
       </View>
     </SafeAreaWrapper>
   );
@@ -229,7 +222,6 @@ const styles = StyleSheet.create({
   key: {
     width: width / 3.5,
     padding: "3%",
-    // aspectRatio: 1,
     backgroundColor: "rgba(61, 61, 61, 0.24)",
     justifyContent: "center",
     alignItems: "center",

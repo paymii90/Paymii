@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -40,10 +41,15 @@ public class Transaction {
     @Column(name = "type", nullable = false)
     private String type;
 
+    @JsonIgnore
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "coin_quantity", precision = 20, scale = 8)
+    private BigDecimal coinQuantity;
+
 
     // The coin fields from frontend:
     @Size(max = 255)
