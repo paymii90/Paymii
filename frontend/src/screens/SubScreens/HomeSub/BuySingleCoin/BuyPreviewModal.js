@@ -9,20 +9,67 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { BlurView } from "expo-blur";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FIREBASE_AUTH } from "../../../../../firebaseConfig";
+import { buyCoin } from "../../../../api/transactionApi";
+import { useNavigation } from "@react-navigation/native";
 
-const BuyPreviewModal = ({ visible, onClose, coin, amount }) => {
+const BuyPreviewModal = ({ visible, onClose, coin, amount, balance, setBalance }) => {
+
+  const navigation = useNavigation();
   const coinValue = (amount / coin?.current_price).toFixed(6);
 
+  const handleBuy = async () => {
+    try {
+      const user = JSON.parse(await AsyncStorage.getItem("user"));
+      let token = await AsyncStorage.getItem("token");
+
+      if (!token) {
+        const currentUser = FIREBASE_AUTH.currentUser;
+        if (currentUser) {
+          token = await currentUser.getIdToken(true);
+          await AsyncStorage.setItem("token", token);
+        } else {
+          alert("You're not logged in. Please log in again.");
+          return;
+        }
+      }
+
+    const buyData = {
+      userId: user?.id,
+      coinId: coin?.id || coin?.symbol,
+      coinName: coin.name,
+      coinSymbol: coin.symbol,
+      coinImage: coin.image,
+      coinPrice: coin.current_price,
+      amount: parseFloat(amount),
+      coinQuantity: parseFloat(coinValue),
+      paymentMethod: "Mobile Money",
+};
+
+      const result = await buyCoin(buyData, token);
+      console.log("✅ Buy result:", result);
+
+      // alert("Purchase successful!");
+      onClose();
+      setTimeout(() => {
+      navigation.navigate("SuccessScreen", { coinName: coin.name });
+    }, 400);
+
+setBalance((prev) => prev - parseFloat(amount));
+
+
+
+    } catch (err) {
+      console.log("❌ Buy error:", err);
+      alert("Buy failed. Try again.");
+    }
+  };
+
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      transparent
-      onRequestClose={onClose}
-    >
+    <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.fullscreen}>
-          {/* Fullscreen Blur */}
           <BlurView intensity={15} tint="light" style={StyleSheet.absoluteFill} />
 
           <TouchableWithoutFeedback>
@@ -48,7 +95,7 @@ const BuyPreviewModal = ({ visible, onClose, coin, amount }) => {
                 </View>
               </View>
 
-              <TouchableOpacity style={styles.buyButton}>
+              <TouchableOpacity style={styles.buyButton} onPress={handleBuy}>
                 <Text style={styles.buyText}>Buy Now</Text>
               </TouchableOpacity>
 
@@ -64,7 +111,6 @@ const BuyPreviewModal = ({ visible, onClose, coin, amount }) => {
 };
 
 export default BuyPreviewModal;
-
 
 const styles = StyleSheet.create({
   fullscreen: {
@@ -133,4 +179,3 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
 });
-

@@ -30,10 +30,12 @@ public class TransactionService {
         tx.setCoinPrice(req.coinPrice);
         tx.setAmount(req.amount.abs());
         tx.setDetails("Payment Method: " + req.paymentMethod);
+        tx.setCoinQuantity(req.getCoinQuantity());
         tx.setType("BUY");
-        tx.setTimestamp(Instant.from(LocalDateTime.now()));
+        tx.setTimestamp(Instant.now());
         return transactionRepository.save(tx);
     }
+
 
     public Transaction sell(SellRequest req) {
         User user = userRepository.findById(req.userId).orElseThrow();

@@ -41,7 +41,7 @@ const SignUp = ({ navigation }) => {
     // Only proceed if form validation passes
     await signUp(firstName, lastName, email, password);
     // Do NOT navigate yet! Wait until email is verified.
-    // navigation.navigate("Email"); // Consider showing this only after successful signup
+    navigation.navigate("Email"); // Consider showing this only after successful signup
   };
 
   return (

@@ -33,7 +33,6 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-    // Optionally, get user by email (as a query parameter)
     @GetMapping("/by-email")
     public UserDto getUserByEmail(@RequestParam String email) {
         return userService.getUserByEmail(email);

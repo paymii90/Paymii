@@ -10,6 +10,7 @@ import Receive from "../SubScreens/HomeSub/Recieve";
 import Deposit from "../SubScreens/HomeSub/Deposit";
 import Withdraw from "../SubScreens/HomeSub/Withdraw";
 import BuySingleCoin from "../SubScreens/HomeSub/BuySingleCoin";
+import SuccessScreen from "../SubScreens/HomeSub/SuccessScreen";
 const Stack = createNativeStackNavigator();
 
 const CoinStack = () => (
@@ -23,6 +24,10 @@ const CoinStack = () => (
     <Stack.Screen name="Deposit" component={Deposit} />
     <Stack.Screen name="Withdraw" component={Withdraw} />
     <Stack.Screen name="BuySingleCoin" component={BuySingleCoin} />
+<<<<<<< HEAD
+=======
+    <Stack.Screen name="SuccessScreen" component={SuccessScreen} />
+>>>>>>> 460128f3b94239e4d5254f32650f7779896ef216
   </Stack.Navigator>
 );
 
