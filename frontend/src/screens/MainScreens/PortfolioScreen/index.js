@@ -79,10 +79,15 @@ const PortfolioScreen = ({ navigation }) => {
                     <View>
                       <Text style={styles.coinName}>{item.name}</Text>
                       <Text style={styles.coinSymbol}>{item.symbol}</Text>
-                    </View>
+                    </View>{" "}
+                    */
                   </View>
-                  <Text style={styles.price}>{item.price}</Text>
-                  <Text style={styles.amount}>{item.amount}</Text>
+                  <TouchableOpacity
+                    activeOpacity={0.1}
+                    style={styles.buyButton}
+                  >
+                    <Text style={styles.buyButtonText}>Buy</Text>
+                  </TouchableOpacity>
                 </View>
               )}
             />
@@ -95,10 +100,47 @@ const PortfolioScreen = ({ navigation }) => {
             />
           </View>
         ) : (
-          <Text>Not yet</Text>
+          <View>
+            <FlatList
+              keyExtractor={(item) => item.name}
+              data={portfolio}
+              renderItem={({ item }) => (
+                <View>
+                  <TouchableOpacity
+                    activeOpacity={0.1}
+                    style={styles.coinContainer}
+                  >
+                    <View style={styles.coin}>
+                      <Image
+                        source={{ uri: item.image }}
+                        style={styles.coinImage}
+                      />
+                      <View style={styles.coinName}>
+                        <Text style={styles.Name}>{item.name}</Text>
+                        <Text>{item.symbol}</Text>
+                      </View>
+                    </View>
+                    <View>
+                      <Text style={styles.value}>{item.value}</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
+          </View>
         )}
-        <FooterButtons />
+        <Button
+          color="white"
+          backgroundColor="#052644"
+          label="Deposit Cash"
+          action={() =>
+            navigation.navigate("CoinStack", {
+              screen: "Buy",
+            })
+          }
+        />
       </View>
+      <FooterButtons />
     </View>
   );
 };
@@ -159,19 +201,19 @@ const styles = StyleSheet.create({
   },
   coinImage: { width: 40, height: 40, marginRight: 12 },
   coinName: {
-    fontSize: 16,
-    fontWeight: "bold",
+    // fontSize: 16,
+    // fontWeight: "bold",
   },
   coinSymbol: {
     fontSize: 14,
     fontWeight: "bold",
     color: "#CFAFAF",
   },
+  titleHeader,
+  buyButtonText,
+  value,
+  Name,
   price: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  amount: {
     fontSize: 16,
     fontWeight: "bold",
   },
@@ -182,8 +224,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginStart: "20%",
   },
-  titleHeader: {
-    fontSize: 16,
-    fontWeight: "bold",
+  buyButton: {
+    backgroundColor: "#111111",
+    opacity: "80%",
   },
 });
