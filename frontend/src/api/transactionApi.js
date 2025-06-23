@@ -1,5 +1,5 @@
 export const buyCoin = async (data, token) => {
-  const res = await fetch("http://10.80.32.185:8080/api/transactions/buy", {
+  const res = await fetch("http://10.74.94.254:8080/api/transactions/buy", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
