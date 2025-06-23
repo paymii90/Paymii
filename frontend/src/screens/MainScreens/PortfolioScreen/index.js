@@ -10,12 +10,13 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import Searchbar from "../../../Components/Searchbar";
-import { BottomTabBarHeightCallbackContext } from "@react-navigation/bottom-tabs";
+//import { BottomTabBarHeightCallbackContext } from "@react-navigation/bottom-tabs";
 import Button from "../../../Components/Button";
 //importing porfolio from mock coins
 import { portfolio } from "../../../../assets/configs/mockCoinCategories";
 import { totalValue } from "../../../../assets/configs/mockCoinCategories";
 import FooterButtons from "../../../Components/FooterButtons";
+import BottomActionButtons from "../ExploreScreen/BottomButtons";
 
 const PortfolioScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState("Crypto");
@@ -61,11 +62,6 @@ const PortfolioScreen = ({ navigation }) => {
         </View>
         {activeTab === "Crypto" ? (
           <View>
-            <View style={styles.title}>
-              <Text style={styles.titleHeader}>Coin</Text>
-              <Text style={styles.titleHeader}>Price</Text>
-              <Text style={styles.titleHeader}>Quantity</Text>
-            </View>
             <FlatList
               keyExtractor={(item) => item.name}
               data={portfolio}
@@ -78,13 +74,21 @@ const PortfolioScreen = ({ navigation }) => {
                     />
                     <View>
                       <Text style={styles.coinName}>{item.name}</Text>
-                      <Text style={styles.coinSymbol}>{item.symbol}</Text>
+                      <Text style={styles.coinSymbol}>
+                        {item.symbol.toUpperCase()}
+                      </Text>
                     </View>{" "}
                     */
                   </View>
                   <TouchableOpacity
                     activeOpacity={0.1}
                     style={styles.buyButton}
+                    onPress={() => {
+                      navigation.navigate("CoinStack", {
+                        screen: "CoinDetails",
+                        params: { coin: item },
+                      });
+                    }}
                   >
                     <Text style={styles.buyButtonText}>Buy</Text>
                   </TouchableOpacity>
@@ -109,6 +113,13 @@ const PortfolioScreen = ({ navigation }) => {
                   <TouchableOpacity
                     activeOpacity={0.1}
                     style={styles.coinContainer}
+                    onPress={() => {
+                      navigation.navigate("CoinStack", {
+                        screen: "CoinDetails",
+                        params: { coin: item },
+                      });
+                      console.log("navigating to coin screen");
+                    }}
                   >
                     <View style={styles.coin}>
                       <Image
@@ -117,7 +128,9 @@ const PortfolioScreen = ({ navigation }) => {
                       />
                       <View style={styles.coinName}>
                         <Text style={styles.Name}>{item.name}</Text>
-                        <Text>{item.symbol}</Text>
+                        <Text style={styles.coinSymbol}>
+                          {item.symbol.toUpperCase()}
+                        </Text>
                       </View>
                     </View>
                     <View>
@@ -127,20 +140,20 @@ const PortfolioScreen = ({ navigation }) => {
                 </View>
               )}
             />
+            <Button
+              color="white"
+              backgroundColor="#052644"
+              label="Deposit Cash"
+              action={() =>
+                navigation.navigate("CoinStack", {
+                  screen: "Buy",
+                })
+              }
+            />
           </View>
         )}
-        <Button
-          color="white"
-          backgroundColor="#052644"
-          label="Deposit Cash"
-          action={() =>
-            navigation.navigate("CoinStack", {
-              screen: "Buy",
-            })
-          }
-        />
       </View>
-      <FooterButtons />
+      <FooterButtons style={styles.BottomActionButtons} />;
     </View>
   );
 };
@@ -209,10 +222,20 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#CFAFAF",
   },
-  titleHeader,
-  buyButtonText,
-  value,
-  Name,
+
+  buyButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "white",
+  },
+  value: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  Name: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
   price: {
     fontSize: 16,
     fontWeight: "bold",
@@ -227,5 +250,7 @@ const styles = StyleSheet.create({
   buyButton: {
     backgroundColor: "#111111",
     opacity: "80%",
+    padding: 5,
+    borderRadius: 5,
   },
 });

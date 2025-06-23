@@ -30,7 +30,7 @@ const FooterButtons = () => {
       />
       <Button
         label="Transfer"
-        backgroundColor="#011D5C"
+        backgroundColor="#1e3c8a"
         color="white"
         style={styles.button}
         labelStyle={{ fontWeight: 600 }}
@@ -48,19 +48,22 @@ const FooterButtons = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    width: "100%",
     flexDirection: "row",
     justifyContent: "space-around",
-    alignSelf: "center",
-    position: "absolute",
-    // top: 100,
-    bottom: -170,
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   button: {
-    borderRadius: 60,
-    width: "40%",
-    // transform: [{ translateX: 30 }],
+    flex: 1,
+    // paddingVertical: 10,
+    borderRadius: 25,
+    alignItems: "center",
+    marginHorizontal: 5,
   },
 });
 

@@ -1,20 +1,17 @@
-import { useContext } from "react";
-import { AuthContext } from "../../../context/AuthContext";
-import { Button, View } from "react-native";
+//import { useContext } from "react";
+//import { AuthContext } from "../../../context/AuthContext";
+import { Button, View, ScrollView } from "react-native";
 
-
-const SettingsScreen = ({navigation}) => {
-  const { logout } = useContext(AuthContext);
+const SettingsScreen = () => {
+  // const { logout } = useContext(AuthContext);
   return (
-    <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}> 
-     <Button title="Logout" onPress={logout} />
-    </View>
+    <ScrollView>
+      <View>
+        <Text>useremail@gmail.com</Text>
+        <View>USERNAME</View>
+      </View>
+    </ScrollView>
   );
-}
+};
 
 export default SettingsScreen;
-
-
-
-
-
