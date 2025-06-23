@@ -2,9 +2,11 @@ package com.paymii.backend.controllers.transaction;
 
 import com.google.firebase.auth.FirebaseToken;
 import com.paymii.backend.dtos.transaction.*;
+import com.paymii.backend.entities.Portfolio;
 import com.paymii.backend.entities.Transaction;
 import com.paymii.backend.entities.User;
 import com.paymii.backend.mappers.TransactionMapper;
+import com.paymii.backend.repositories.PortfolioRepository;
 import com.paymii.backend.repositories.TransactionRepository;
 import com.paymii.backend.repositories.UserRepository;
 import com.paymii.backend.services.TransactionService;
@@ -16,8 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -35,10 +41,13 @@ public class TransactionController {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private PortfolioRepository  portfolioRepository;
+
     private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
 
     @PostMapping("/buy")
-    public ResponseEntity<Transaction> buy(@RequestBody BuyRequest req) {
+    public ResponseEntity<?> buy(@RequestBody BuyRequest req) {
         try {
             FirebaseToken token = (FirebaseToken) SecurityContextHolder
                     .getContext()
@@ -50,6 +59,16 @@ public class TransactionController {
             User user = userRepository.findByFirebaseUid(firebaseUid)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
+            // ✅ Check user balance before buying
+            if (user.getBalance().compareTo(req.amount) < 0) {
+                return ResponseEntity.badRequest().body("Insufficient balance");
+            }
+
+            // ✅ Deduct balance and save user
+            user.setBalance(user.getBalance().subtract(req.amount));
+            userRepository.save(user);
+
+            // ✅ Save the transaction
             Transaction tx = new Transaction();
             tx.setUser(user);
             tx.setCoinId(req.coinId);
@@ -65,10 +84,35 @@ public class TransactionController {
 
             Transaction savedTx = transactionRepository.save(tx);
 
-            return ResponseEntity.ok(savedTx);
+            // ✅ Update or create portfolio entry
+            Optional<Portfolio> portfolioOpt = portfolioRepository.findByUserAndCoinId(user, req.coinId);
+
+            Portfolio portfolio = portfolioOpt.orElseGet(() -> {
+                Portfolio newPortfolio = new Portfolio();
+                newPortfolio.setUser(user);
+                newPortfolio.setCoinId(req.coinId);
+                newPortfolio.setAmount(BigDecimal.ZERO);
+                return newPortfolio;
+            });
+
+            if (portfolio.getAmount() == null) {
+                portfolio.setAmount(BigDecimal.ZERO);
+            }
+
+            portfolio.setAmount(portfolio.getAmount().add(req.getCoinQuantity()));
+            portfolioRepository.save(portfolio);
+
+            // ✅ Optional: return updated balance with the transaction
+            Map<String, Object> response = new HashMap<>();
+            response.put("transaction", savedTx);
+            response.put("updatedBalance", user.getBalance());
+
+            return ResponseEntity.ok(response);
+
         } catch (Exception e) {
             logger.error("Error in /buy endpoint", e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Buy failed: " + e.getMessage());
         }
     }
 
