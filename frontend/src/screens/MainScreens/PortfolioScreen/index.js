@@ -7,8 +7,9 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  RefreshControl,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Searchbar from "../../../Components/Searchbar";
 //import { BottomTabBarHeightCallbackContext } from "@react-navigation/bottom-tabs";
 import Button from "../../../Components/Button";
@@ -20,6 +21,35 @@ import BottomActionButtons from "../ExploreScreen/BottomButtons";
 
 const PortfolioScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState("Crypto");
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await fetch("https://apiendpont.com/data");
+      const json = await response.json();
+      setData(json);
+    } catch (error) {
+      console.error("Error: ", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchData();
+  }, [fetchData]);
+
+  if (loading && !refreshing) {
+    return <Text>Loading...</Text>;
+  }
 
   return (
     <View style={styles.container}>
@@ -65,6 +95,9 @@ const PortfolioScreen = ({ navigation }) => {
             <FlatList
               keyExtractor={(item) => item.name}
               data={portfolio}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
               renderItem={({ item }) => (
                 <View style={styles.coinContainer}>
                   <View style={styles.coin}>
@@ -108,6 +141,9 @@ const PortfolioScreen = ({ navigation }) => {
             <FlatList
               keyExtractor={(item) => item.name}
               data={portfolio}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
               renderItem={({ item }) => (
                 <View>
                   <TouchableOpacity
