@@ -7,18 +7,49 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  RefreshControl,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Searchbar from "../../../Components/Searchbar";
-import { BottomTabBarHeightCallbackContext } from "@react-navigation/bottom-tabs";
+//import { BottomTabBarHeightCallbackContext } from "@react-navigation/bottom-tabs";
 import Button from "../../../Components/Button";
 //importing porfolio from mock coins
 import { portfolio } from "../../../../assets/configs/mockCoinCategories";
 import { totalValue } from "../../../../assets/configs/mockCoinCategories";
 import FooterButtons from "../../../Components/FooterButtons";
+import BottomActionButtons from "../ExploreScreen/BottomButtons";
 
 const PortfolioScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState("Crypto");
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await fetch("https://apiendpont.com/data");
+      const json = await response.json();
+      setData(json);
+    } catch (error) {
+      console.error("Error: ", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchData();
+  }, [fetchData]);
+
+  if (loading && !refreshing) {
+    return <Text>Loading...</Text>;
+  }
 
   return (
     <View style={styles.container}>
@@ -61,14 +92,12 @@ const PortfolioScreen = ({ navigation }) => {
         </View>
         {activeTab === "Crypto" ? (
           <View>
-            <View style={styles.title}>
-              <Text style={styles.titleHeader}>Coin</Text>
-              <Text style={styles.titleHeader}>Price</Text>
-              <Text style={styles.titleHeader}>Quantity</Text>
-            </View>
             <FlatList
               keyExtractor={(item) => item.name}
               data={portfolio}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
               renderItem={({ item }) => (
                 <View style={styles.coinContainer}>
                   <View style={styles.coin}>
@@ -78,11 +107,24 @@ const PortfolioScreen = ({ navigation }) => {
                     />
                     <View>
                       <Text style={styles.coinName}>{item.name}</Text>
-                      <Text style={styles.coinSymbol}>{item.symbol}</Text>
-                    </View>
+                      <Text style={styles.coinSymbol}>
+                        {item.symbol.toUpperCase()}
+                      </Text>
+                    </View>{" "}
+                    */
                   </View>
-                  <Text style={styles.price}>{item.price}</Text>
-                  <Text style={styles.amount}>{item.amount}</Text>
+                  <TouchableOpacity
+                    activeOpacity={0.1}
+                    style={styles.buyButton}
+                    onPress={() => {
+                      navigation.navigate("CoinStack", {
+                        screen: "CoinDetails",
+                        params: { coin: item },
+                      });
+                    }}
+                  >
+                    <Text style={styles.buyButtonText}>Buy</Text>
+                  </TouchableOpacity>
                 </View>
               )}
             />
@@ -95,10 +137,59 @@ const PortfolioScreen = ({ navigation }) => {
             />
           </View>
         ) : (
-          <Text>Not yet</Text>
+          <View>
+            <FlatList
+              keyExtractor={(item) => item.name}
+              data={portfolio}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              renderItem={({ item }) => (
+                <View>
+                  <TouchableOpacity
+                    activeOpacity={0.1}
+                    style={styles.coinContainer}
+                    onPress={() => {
+                      navigation.navigate("CoinStack", {
+                        screen: "CoinDetails",
+                        params: { coin: item },
+                      });
+                      console.log("navigating to coin screen");
+                    }}
+                  >
+                    <View style={styles.coin}>
+                      <Image
+                        source={{ uri: item.image }}
+                        style={styles.coinImage}
+                      />
+                      <View style={styles.coinName}>
+                        <Text style={styles.Name}>{item.name}</Text>
+                        <Text style={styles.coinSymbol}>
+                          {item.symbol.toUpperCase()}
+                        </Text>
+                      </View>
+                    </View>
+                    <View>
+                      <Text style={styles.value}>{item.value}</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
+            <Button
+              color="white"
+              backgroundColor="#052644"
+              label="Deposit Cash"
+              action={() =>
+                navigation.navigate("CoinStack", {
+                  screen: "Buy",
+                })
+              }
+            />
+          </View>
         )}
-        <FooterButtons />
       </View>
+      <FooterButtons style={styles.BottomActionButtons} />;
     </View>
   );
 };
@@ -159,19 +250,29 @@ const styles = StyleSheet.create({
   },
   coinImage: { width: 40, height: 40, marginRight: 12 },
   coinName: {
-    fontSize: 16,
-    fontWeight: "bold",
+    // fontSize: 16,
+    // fontWeight: "bold",
   },
   coinSymbol: {
     fontSize: 14,
     fontWeight: "bold",
     color: "#CFAFAF",
   },
-  price: {
+
+  buyButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "white",
+  },
+  value: {
     fontSize: 16,
     fontWeight: "bold",
   },
-  amount: {
+  Name: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  price: {
     fontSize: 16,
     fontWeight: "bold",
   },
@@ -182,8 +283,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginStart: "20%",
   },
-  titleHeader: {
-    fontSize: 16,
-    fontWeight: "bold",
+  buyButton: {
+    backgroundColor: "#111111",
+    opacity: "80%",
+    padding: 5,
+    borderRadius: 5,
   },
 });

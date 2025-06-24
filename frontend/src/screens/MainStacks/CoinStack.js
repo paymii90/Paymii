@@ -24,10 +24,7 @@ const CoinStack = () => (
     <Stack.Screen name="Deposit" component={Deposit} />
     <Stack.Screen name="Withdraw" component={Withdraw} />
     <Stack.Screen name="BuySingleCoin" component={BuySingleCoin} />
-<<<<<<< HEAD
-=======
     <Stack.Screen name="SuccessScreen" component={SuccessScreen} />
->>>>>>> 460128f3b94239e4d5254f32650f7779896ef216
   </Stack.Navigator>
 );
 
