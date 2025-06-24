@@ -37,6 +37,8 @@ import {
 import { getMarketCoins, fetchExchangeRate } from "../../../api/coinGecko";
 import TransferPopup from "./TransferPopup.js";
 import { useNavigation } from "@react-navigation/native";
+import BottomActionButtons from "../ExploreScreen/BottomButtons.js";
+import FooterButtons from "../../../Components/FooterButtons.js";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -177,7 +179,7 @@ const Home = () => {
           </View>
         )}
         <Spacer height={40} />
-        <View style={styles.footButts}>
+        {/* <View style={styles.footButts}>
           <Button
             label="Buy & Sell"
             backgroundColor="#052644"
@@ -193,9 +195,9 @@ const Home = () => {
           <BuyCryptoPopup
             isVisible={buySellPopupVisible}
             onClose={() => setBuySellPopupVisible(false)}
-          />
-          <Image source={Plus} style={styles.plus} />
-          <Button
+          /> */}
+        {/* <Image source={Plus} style={styles.plus} /> */}
+        {/* <Button
             label="Transfer"
             backgroundColor="#011D5C"
             color="white"
@@ -211,8 +213,9 @@ const Home = () => {
             isVisible={transferPopupVisible}
             onClose={() => setTransferPopupVisible(false)}
           />
-        </View>
+        </View> */}
       </ScrollView>
+      <FooterButtons />
     </SafeAreaView>
   );
 };
