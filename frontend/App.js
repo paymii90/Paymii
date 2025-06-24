@@ -8,6 +8,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import ExploreStack from "./src/screens/MainStacks/ExploreStack";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { PortfolioProvider } from "./src/context/portfolioContext";
 
 function Main() {
   // const { isLoggedIn } = useContext(AuthContext);
@@ -33,7 +34,9 @@ export default function App() {
   return (
     <AuthProvider>
       <CoinProvider>
+        <PortfolioProvider>
         <Main />
+        </PortfolioProvider>
       </CoinProvider>
     </AuthProvider>
   );
