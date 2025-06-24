@@ -20,6 +20,8 @@ import Buttons from "./buttons";
 import TabToggle from "./tabToggle";
 import WalletCard from "./walletCard";
 import CoinInsights from "./coinInsights";
+import BuyCryptoPopup from "./BuyCryptoPopup";
+import TransferPopup from "./TransferPopup";
 
 const timeRanges = ["1H", "1D", "1W", "1M", "1Y", "All"];
 
@@ -28,6 +30,8 @@ const CoinDetailScreen = () => {
   const insets = useSafeAreaInsets();
   const [selectedRange, setSelectedRange] = useState("1M");
   const [selectedTab, setSelectedTab] = useState("Balance");
+  const [buySellPopupVisible, setBuySellPopupVisible] = useState(false);
+  const [transferPopupVisible, setTransferPopupVisible] = useState(false);
 
   const route = useRoute();
   const { coin } = route.params;
@@ -73,15 +77,29 @@ const CoinDetailScreen = () => {
         <TabToggle selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
 
         {selectedTab === "Balance" ? (
-          <WalletCard image={image} name={name} symbol={symbol} /> 
+          <WalletCard image={image} name={name} symbol={symbol} />
         ) : (
-          <CoinInsights coin={coin}/> // Render coin info/description
+          <CoinInsights coin={coin} /> // Render coin info/description
         )}
-       
 
         {/* Actions */}
       </ScrollView>
-      <Buttons navigation={navigation} singleCoinItem={coin}/>
+      <Buttons
+        navigation={navigation}
+        singleCoinItem={coin}
+        setBuySellPopupVisible={setBuySellPopupVisible}
+        setTransferPopupVisible={setTransferPopupVisible}
+      />
+      <BuyCryptoPopup
+        isVisible={buySellPopupVisible}
+        onClose={() => setBuySellPopupVisible(false)}
+        singleCoinItem={coin}
+      />
+      <TransferPopup
+        isVisible={transferPopupVisible}
+        onClose={() => setTransferPopupVisible(false)}
+        singleCoinItem={coin}
+      />
     </View>
   );
 };

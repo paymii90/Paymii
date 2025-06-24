@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import ChatIcon from "../../assets/chatIcon.svg";
-import Search from "../../assets/search.svg";
+import ChatIcon from "../../assets/ChatIcon.svg";
+import Search from "../../assets/Search.svg";
 
 const Searchbar = () => {
   return (

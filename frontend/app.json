@@ -18,14 +18,20 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo1.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.CAMERA"
+      ],
+      "package": "com.eowusu294.paymii"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-barcode-scanner"
     ]
   }
 }

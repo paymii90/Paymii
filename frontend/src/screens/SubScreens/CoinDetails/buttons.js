@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Button from "../../../Components/Button";
 
-const Buttons = ({ navigation, singleCoinItem }) => {
+const Buttons = ({ navigation, singleCoinItem, setBuySellPopupVisible, setTransferPopupVisible }) => {
   return (
     <View style={styles.buttonRow}>
       <Button
@@ -14,12 +14,7 @@ const Buttons = ({ navigation, singleCoinItem }) => {
           width: "48%",
         }}
         labelStyle={{ fontWeight: 600 }}
-        action={() =>
-          navigation.navigate("CoinStack", {
-            screen: "BuySingleCoin",
-            params: { coin: singleCoinItem },
-          })
-        }
+        action={() => setBuySellPopupVisible(true)}
       />
       <Button
         label="Transfer"
@@ -30,7 +25,7 @@ const Buttons = ({ navigation, singleCoinItem }) => {
           width: "48%",
         }}
         labelStyle={{ fontWeight: 600 }}
-        // action={() => setBuySellPopupVisible(true)}
+        action={() => setTransferPopupVisible(true)}
       />
     </View>
   );
