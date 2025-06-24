@@ -5,5 +5,6 @@
     <file url="file://$PROJECT_DIR$/backend/src/main/resources/db/migration/V1__initial_migration.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/backend/src/main/resources/db/migration/V2__alter_onboarding_table.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/backend/src/main/resources/db/migration/V6__added_coin_quantity.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/backend/src/main/resources/db/migration/V7__added_portfolio_table.sql" dialect="PostgreSQL" />
   </component>
 </project>

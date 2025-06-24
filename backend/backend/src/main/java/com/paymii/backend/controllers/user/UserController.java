@@ -3,11 +3,16 @@ package com.paymii.backend.controllers.user;
 import com.google.firebase.auth.FirebaseToken;
 import com.paymii.backend.dtos.user.RegisterUserRequest;
 import com.paymii.backend.dtos.user.UserDto;
+import com.paymii.backend.entities.User;
+import com.paymii.backend.repositories.UserRepository;
 import com.paymii.backend.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -15,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @PostMapping("/register")
     public UserDto register(@AuthenticationPrincipal FirebaseToken token,
@@ -37,4 +43,19 @@ public class UserController {
     public UserDto getUserByEmail(@RequestParam String email) {
         return userService.getUserByEmail(email);
     }
+
+    @PostMapping("/top-up")
+    public ResponseEntity<?> topUp(@RequestParam BigDecimal amount) {
+        FirebaseToken token = (FirebaseToken) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String uid = token.getUid();
+
+        User user = userRepository.findByFirebaseUid(uid)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setBalance(user.getBalance().add(amount));
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Balance updated");
+    }
+
 }

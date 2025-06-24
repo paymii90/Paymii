@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Builder
@@ -43,6 +44,10 @@ public class User {
     @Size(max = 255)
     @Column(name = "profile_photo")
     private String profilePhoto;
+
+    @Column(nullable = false, precision = 20, scale = 2)
+    private BigDecimal balance = BigDecimal.valueOf(100000.000);
+
 
     private boolean verified;
 

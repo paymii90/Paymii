@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
 
   // 🔗 Fetch backend user by email
   const getUserByEmail = async (email) => {
-    const res = await fetch(`http://10.80.32.185:8080/api/users/by-email?email=${email}`);
+    const res = await fetch(`http://10.80.33.17:8080/api/users/by-email?email=${email}`);
     if (!res.ok) throw new Error("User not found in backend");
     return res.json();
   };
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
       await AsyncStorage.setItem("token", idToken); // ✅ store token too
 
       // Register in backend
-      const registerResp = await fetch("http://10.80.32.185:8080/api/users/register", {
+      const registerResp = await fetch("http://10.80.33.17:8080/api/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
