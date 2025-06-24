@@ -20,10 +20,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/users/register",
+                                "/api/users/**",
                                 "/api/users/by-email",
                                 "/api/test/firebase",
-                                "/api/coins/**"
+                                "/api/coins/**",
+                                "/api/portfolio"
                         ).permitAll()
                         .requestMatchers("/api/transactions/**").authenticated() // ✅ Require auth here
                         .anyRequest().authenticated()
