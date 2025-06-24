@@ -18,7 +18,7 @@ import Button from "../../../Components/Button";
 //import { totalValue } from "../../../../assets/configs/mockCoinCategories";
 import FooterButtons from "../../../Components/FooterButtons";
 import BottomActionButtons from "../ExploreScreen/BottomButtons";
-import AsyncStorage from "@react-native-aync-storage/astync-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PortfolioScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState("Crypto");
