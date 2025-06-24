@@ -11,7 +11,7 @@ import {
 import ModalComponent from "react-native-modal";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
-const BuyCryptoPopup = ({ isVisible, onClose }) => {
+const BuyCryptoPopup = ({ isVisible, onClose, screen }) => {
   const navigation = useNavigation();
   return (
     <ModalComponent
