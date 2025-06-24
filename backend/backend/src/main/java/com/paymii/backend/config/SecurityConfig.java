@@ -19,8 +19,10 @@ public class SecurityConfig {
                                 "/api/public/**",
                                 "/api/test/firebase",
                                 "/api/coins/**",
-                                "/api/transaction/**",
+                                "/api/transactions/**",
+                                "api/portfolio",
                                 "/api/users/**" )
+
                         .permitAll()  // Use requestMatchers
                         .anyRequest().authenticated()
                 )

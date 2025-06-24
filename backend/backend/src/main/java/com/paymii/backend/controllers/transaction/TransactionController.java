@@ -20,10 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -32,12 +29,6 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
-<<<<<<< HEAD
-    @PostMapping("/buy")
-    public Transaction buy(@RequestBody BuyRequest req) {
-
-        return transactionService.buy(req);
-=======
     @Autowired
     private TransactionMapper transactionMapper;
 
@@ -48,7 +39,7 @@ public class TransactionController {
     private TransactionRepository transactionRepository;
 
     @Autowired
-    private PortfolioRepository  portfolioRepository;
+    private PortfolioRepository portfolioRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
 
@@ -120,15 +111,10 @@ public class TransactionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Buy failed: " + e.getMessage());
         }
->>>>>>> 460128f3b94239e4d5254f32650f7779896ef216
     }
 
     @PostMapping("/sell")
     public Transaction sell(@RequestBody SellRequest req) {
-<<<<<<< HEAD
-
-=======
->>>>>>> 460128f3b94239e4d5254f32650f7779896ef216
         return transactionService.sell(req);
     }
 
@@ -153,12 +139,7 @@ public class TransactionController {
     }
 
     @GetMapping("/history/{userId}")
-<<<<<<< HEAD
-    public List<Transaction> history(@PathVariable Long userId){
-
-=======
     public List<Transaction> history(@PathVariable Long userId) {
->>>>>>> 460128f3b94239e4d5254f32650f7779896ef216
         return transactionService.getHistory(userId);
     }
 }
