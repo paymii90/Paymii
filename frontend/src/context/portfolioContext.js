@@ -1,5 +1,12 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IpContext } from "./IpContext";
 
 // Create context
 const PortfolioContext = createContext();
@@ -8,11 +15,12 @@ const PortfolioContext = createContext();
 export const PortfolioProvider = ({ children }) => {
   const [portfolio, setPortfolio] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { ipAddress } = useContext(IpContext);
 
   const fetchPortfolio = useCallback(async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-      const response = await fetch("http://10.80.33.17:8080/api/portfolio", {
+      const response = await fetch(`${ipAddress}/api/portfolio`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -9,6 +9,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import ExploreStack from "./src/screens/MainStacks/ExploreStack";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { PortfolioProvider } from "./src/context/portfolioContext";
+import { IpContext, IpProvider } from "./src/context/IpContext";
 
 function Main() {
   // const { isLoggedIn } = useContext(AuthContext);
@@ -32,12 +33,14 @@ function Main() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <CoinProvider>
-        <PortfolioProvider>
-        <Main />
-        </PortfolioProvider>
-      </CoinProvider>
-    </AuthProvider>
+    <IpProvider>
+      <AuthProvider>
+        <CoinProvider>
+          <PortfolioProvider>
+            <Main />
+          </PortfolioProvider>
+        </CoinProvider>
+      </AuthProvider>
+    </IpProvider>
   );
 }
