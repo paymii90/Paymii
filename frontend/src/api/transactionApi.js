@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { IpContext } from "../context/IpContext";
 
-const { ipAddress } = useState(IpContext);
-
 export const buyCoin = async (data, token) => {
+  const { ipAddress } = useState(IpContext);
   const res = await fetch(`${ipAddress}/api/transactions/buy`, {
     method: "POST",
     headers: {
@@ -13,7 +12,7 @@ export const buyCoin = async (data, token) => {
     body: JSON.stringify(data),
   });
 
-  const text = await res.text(); // 
+  const text = await res.text(); //
   console.log("📦 Raw backend response text:", text);
   console.log("📦 Status code:", res.status);
 
