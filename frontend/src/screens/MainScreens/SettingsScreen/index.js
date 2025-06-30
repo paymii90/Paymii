@@ -18,6 +18,8 @@
 
 import React from "react";
 import { Text, View, StyleSheet, ScrollView } from "react-native";
+import Button from "../../../Components/Button";
+import SearchList from "../../../Components/SearchList";
 
 const SettingsScreen = () => {
   return (
@@ -25,6 +27,34 @@ const SettingsScreen = () => {
       <View>
         <Text style={styles.email}>useremail@gmail.com</Text>
         <Text style={styles.username}>USERNAME</Text>
+      </View>
+      <View style={styles.PaymentSection}>
+        <Text>Payment Methods</Text>
+        <Button
+          backgroundColor="#052644"
+          color="white"
+          label="Add a payment method"
+        />
+      </View>
+      <View style={styles.section}>
+        <Text style={styles.header}>Account</Text>
+        <SearchList type="expand" label="Limits" />
+        <SearchList type="expand" label="Native Currency" />
+        <SearchList type="expand" label="Privacy" />
+        <SearchList type="expand" label="Phone Numbers" />
+        <SearchList type="expand" label="Notification Settings" />
+        <SearchList type="expand" label="Close Account" />
+      </View>
+      <View style={styles.section}>
+        <Text style={styles.header}>Display</Text>
+        <SearchList type="expand" label="Appearance" />
+        <SearchList type="Checkbox" label="Hide balances" opacity={1} />
+      </View>
+      <View style={styles.section}>
+        <Text style={styles.header}>Security</Text>
+        <SearchList type="Checkbox" label="Require Pin" opacity={1} />
+        <SearchList type="expand" label="Pin Settings" />
+        <SearchList type="expand" label="Lock my account" />
       </View>
     </ScrollView>
   );
@@ -46,6 +76,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#111111",
     opacity: 80,
+  },
+  PaymentSection: {
+    gap: 10,
+    marginTop: 10,
+  },
+  header: {
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+  section: {
+    marginTop: 15,
+    marginBottom: 5,
   },
 });
 
