@@ -25,7 +25,6 @@ public class Portfolio {
     private String coinId;
 
     @NotNull
-    @ColumnDefault("0.00000000")
     @Column(name = "amount",precision = 20, scale = 8)
     private BigDecimal amount;
 

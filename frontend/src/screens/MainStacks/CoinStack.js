@@ -32,6 +32,7 @@ const CoinStack = () => (
     <Stack.Screen name="SellSingleCoin" component={SellSingleCoin} />
     <Stack.Screen name="SendCryptoScreen" component={SendCryptoScreen} />
     <Stack.Screen name="ReceiveCryptoScreen" component={ReceiveCryptoScreen} />
+    <Stack.Screen name="SuccessScreen" component={SuccessScreen} />
 
   </Stack.Navigator>
 );

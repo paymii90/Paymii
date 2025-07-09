@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -11,15 +11,17 @@ import {
 import { BlurView } from "expo-blur";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FIREBASE_AUTH } from "../../../../../firebaseConfig";
-import { buyCoin } from "../../../../api/transactionApi";
+import { sellCoin } from "../../../../api/transactionApi";
 import { useNavigation } from "@react-navigation/native";
+import { IpContext } from "../../../../context/IpContext";
 
 const SellPreviewModal = ({ visible, onClose, coin, amount, balance, setBalance }) => {
 
   const navigation = useNavigation();
-  const coinValue = (amount * coin?.current_price).toFixed(6);
+   const { ipAddress } = useContext(IpContext);
+  const coinValue = (amount * coin?.current_price).toFixed(8);
 
-  const handleBuy = async () => {
+  const handleSell = async () => {
     try {
       const user = JSON.parse(await AsyncStorage.getItem("user"));
       let token = await AsyncStorage.getItem("token");
@@ -34,21 +36,23 @@ const SellPreviewModal = ({ visible, onClose, coin, amount, balance, setBalance 
           return;
         }
       }
+      const coinQuantity = parseFloat(amount); // actual amount of coin being sold
+      const ghsValue = parseFloat((coinQuantity * coin?.current_price).toFixed(2)); // GHS value to credit
 
-    const buyData = {
+    const sellData = {
       userId: user?.id,
       coinId: coin?.id || coin?.symbol,
       coinName: coin.name,
       coinSymbol: coin.symbol,
       coinImage: coin.image,
       coinPrice: coin.current_price,
-      amount: parseFloat(amount),
-      coinQuantity: parseFloat(coinValue),
+      amount: ghsValue,
+      coinQuantity: coinQuantity,
       paymentMethod: "Mobile Money",
 };
 
-      const result = await sellCoin(sellData, token);
-      console.log("✅ Buy result:", result);
+      const result = await sellCoin(sellData, token, ipAddress);
+      console.log("✅ Sell result:", result);
 
       // alert("Purchase successful!");
       onClose();
@@ -61,8 +65,8 @@ setBalance((prev) => prev - parseFloat(amount));
 
 
     } catch (err) {
-      console.log("❌ Buy error:", err);
-      alert("Buy failed. Try again.");
+      console.log("❌ Sell error:", err);
+      alert("Sell failed. Try again.");
     }
   };
 
@@ -95,7 +99,7 @@ setBalance((prev) => prev - parseFloat(amount));
                 </View>
               </View>
 
-              <TouchableOpacity style={styles.buyButton} onPress={handleBuy}>
+              <TouchableOpacity style={styles.buyButton} onPress={handleSell}>
                 <Text style={styles.buyText}>Sell Now</Text>
               </TouchableOpacity>
 

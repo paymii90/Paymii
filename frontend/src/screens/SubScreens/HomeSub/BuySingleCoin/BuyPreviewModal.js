@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -13,10 +13,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FIREBASE_AUTH } from "../../../../../firebaseConfig";
 import { buyCoin } from "../../../../api/transactionApi";
 import { useNavigation } from "@react-navigation/native";
+import { IpContext } from "../../../../context/IpContext"; // ✅ Add this
 
 const BuyPreviewModal = ({ visible, onClose, coin, amount, balance, setBalance }) => {
-
   const navigation = useNavigation();
+  const { ipAddress } = useContext(IpContext); // ✅ Use hook inside component
   const coinValue = (amount / coin?.current_price).toFixed(6);
 
   const handleBuy = async () => {
@@ -35,31 +36,27 @@ const BuyPreviewModal = ({ visible, onClose, coin, amount, balance, setBalance }
         }
       }
 
-    const buyData = {
-      userId: user?.id,
-      coinId: coin?.id || coin?.symbol,
-      coinName: coin.name,
-      coinSymbol: coin.symbol,
-      coinImage: coin.image,
-      coinPrice: coin.current_price,
-      amount: parseFloat(amount),
-      coinQuantity: parseFloat(coinValue),
-      paymentMethod: "Mobile Money",
-};
+      const buyData = {
+        userId: user?.id,
+        coinId: coin?.id || coin?.symbol,
+        coinName: coin.name,
+        coinSymbol: coin.symbol,
+        coinImage: coin.image,
+        coinPrice: coin.current_price,
+        amount: parseFloat(amount),
+        coinQuantity: parseFloat(coinValue),
+        paymentMethod: "Mobile Money",
+      };
 
-      const result = await buyCoin(buyData, token);
+      const result = await buyCoin(buyData, token, ipAddress); // ✅ Pass ipAddress
       console.log("✅ Buy result:", result);
 
-      // alert("Purchase successful!");
       onClose();
       setTimeout(() => {
-      navigation.navigate("SuccessScreen", { coinName: coin.name });
-    }, 400);
+        navigation.navigate("SuccessScreen", { coinName: coin.name });
+      }, 400);
 
-setBalance((prev) => prev - parseFloat(amount));
-
-
-
+      setBalance((prev) => prev - parseFloat(amount));
     } catch (err) {
       console.log("❌ Buy error:", err);
       alert("Buy failed. Try again.");
