@@ -2,13 +2,14 @@ package com.paymii.backend.mappers;
 
 import com.paymii.backend.dtos.user.UserDto;
 import com.paymii.backend.entities.User;
-import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-07T18:04:08+0000",
+    date = "2025-06-28T23:03:09+0000",
     comments = "version: 1.6.3, compiler: javac, environment: Java 17.0.15 (Microsoft)"
 )
 @Component
@@ -22,23 +23,6 @@ public class UsersMapperImpl implements UsersMapper {
 
         UserDto userDto = new UserDto();
 
-        userDto.setId( user.getId() );
-        userDto.setFirebaseUid( user.getFirebaseUid() );
-        userDto.setFirstName( user.getFirstName() );
-        userDto.setLastName( user.getLastName() );
-        userDto.setEmail( user.getEmail() );
-        userDto.setProfilePhoto( user.getProfilePhoto() );
-        userDto.setPhoneNumber( user.getPhoneNumber() );
-        userDto.setIsPhoneVerified( user.getIsPhoneVerified() );
-        userDto.setVerified( user.isVerified() );
-        userDto.setIsKycCompleted( user.getIsKycCompleted() );
-        if ( user.getCreatedAt() != null ) {
-            userDto.setCreatedAt( user.getCreatedAt().toString() );
-        }
-        if ( user.getUpdatedAt() != null ) {
-            userDto.setUpdatedAt( user.getUpdatedAt().toString() );
-        }
-
         return userDto;
     }
 
@@ -48,25 +32,22 @@ public class UsersMapperImpl implements UsersMapper {
             return null;
         }
 
-        User.UserBuilder user = User.builder();
+        User user = new User();
 
-        user.id( userDto.getId() );
-        user.firebaseUid( userDto.getFirebaseUid() );
-        user.firstName( userDto.getFirstName() );
-        user.lastName( userDto.getLastName() );
-        user.email( userDto.getEmail() );
-        user.profilePhoto( userDto.getProfilePhoto() );
-        user.verified( userDto.isVerified() );
-        user.phoneNumber( userDto.getPhoneNumber() );
-        user.isPhoneVerified( userDto.getIsPhoneVerified() );
-        user.isKycCompleted( userDto.getIsKycCompleted() );
-        if ( userDto.getCreatedAt() != null ) {
-            user.createdAt( Instant.parse( userDto.getCreatedAt() ) );
-        }
-        if ( userDto.getUpdatedAt() != null ) {
-            user.updatedAt( Instant.parse( userDto.getUpdatedAt() ) );
+        return user;
+    }
+
+    @Override
+    public List<UserDto> toDtoList(List<User> users) {
+        if ( users == null ) {
+            return null;
         }
 
-        return user.build();
+        List<UserDto> list = new ArrayList<UserDto>( users.size() );
+        for ( User user : users ) {
+            list.add( toDto( user ) );
+        }
+
+        return list;
     }
 }
