@@ -46,6 +46,7 @@ const BuySingleCoin = () => {
               onPress={() => {
                 navigation.navigate("CoinStack", {
                   screen: "SellSingleCoin",
+                  params: { coin: coin },
                 });
               }}
             >

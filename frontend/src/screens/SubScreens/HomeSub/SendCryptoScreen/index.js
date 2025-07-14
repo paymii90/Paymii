@@ -35,6 +35,7 @@ const SendCryptoScreen = () => {
       <Text style={styles.screenTitle}>Send {coin.name}</Text>
 
       <View style={styles.card}>
+        {/* Coin Info Row */}
         <View style={styles.coinRow}>
           <Image source={{ uri: coin.image }} style={styles.coinImage} />
           <View style={{ flex: 1 }}>
@@ -46,6 +47,7 @@ const SendCryptoScreen = () => {
           </Text>
         </View>
 
+        {/* Address Input */}
         <View style={styles.inputRow}>
           <TextInput
             placeholder="Enter Address"
@@ -53,22 +55,26 @@ const SendCryptoScreen = () => {
             onChangeText={setAddress}
             style={styles.input}
           />
+          {/* <Ionicons name="qr-code-outline" size={24} color="#333" /> */}
         </View>
 
+        {/* Amount Input */}
         <TextInput
           placeholder="Amount"
           value={amount}
           onChangeText={setAmount}
-          style={styles.input}
+          style={styles.textInput}
         />
 
+        {/* Note Input */}
         <TextInput
           placeholder="Note"
           value={note}
           onChangeText={setNote}
-          style={styles.input}
+          style={styles.textInput}
         />
 
+        {/* Fees */}
         <Text style={styles.fees}>
           Transaction fees: 0.0006 {coin.symbol.toUpperCase()}
         </Text>
@@ -78,11 +84,13 @@ const SendCryptoScreen = () => {
         </Text>
       </View>
 
+      {/* Note under card */}
       <Text style={styles.note}>
         * Block/Time will be calculated after the transaction is generated and
         broadcasted
       </Text>
 
+      {/* Send Button */}
       <TouchableOpacity style={styles.sendBtn}>
         <Text style={styles.sendText}>SEND {coin.symbol.toUpperCase()}</Text>
       </TouchableOpacity>
@@ -143,6 +151,14 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 45,
     fontSize: 14,
+  },
+  textInput: {
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    height: 45,
+    fontSize: 14,
     marginBottom: 12,
   },
   fees: {
@@ -163,6 +179,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
     marginBottom: "6%",
+    justifySelf: "flex-end",
   },
   sendText: {
     fontSize: 16,

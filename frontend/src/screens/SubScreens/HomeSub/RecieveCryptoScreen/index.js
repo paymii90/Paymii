@@ -22,6 +22,7 @@ const ReceiveCryptoScreen = () => {
   const { coin } = route.params;
 
   const dummyAddress = `NCo-${coin?.symbol}yFCpQnRBxV2sVmGUY`;
+  const message = `My Paymii ${coin?.name} address is NCo-${coin?.symbol}yFCpQnRBxV2sVmGUY`;
 
   const handleCopy = () => {
     Clipboard.setStringAsync(dummyAddress);
@@ -30,7 +31,7 @@ const ReceiveCryptoScreen = () => {
 
   const handleShare = () => {
     Share.share({
-      message: dummyAddress,
+      message: message,
     });
   };
 
