@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
     marginBottom: "6%",
-    justifySelf: "flex-end",
+    alignSelf: "flex-end",
   },
   sendText: {
     fontSize: 16,
