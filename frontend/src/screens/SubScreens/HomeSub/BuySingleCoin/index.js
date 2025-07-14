@@ -21,7 +21,7 @@ const BuySingleCoin = () => {
   const { coin } = route.params;
 
   const [amount, setAmount] = useState("");
-  const [balance, setBalance] = useState(1000000); // GH₵10,00000 dummy balance
+  const [balance, setBalance] = useState(10000); // GH₵10,00000 dummy balance
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -63,11 +63,15 @@ const BuySingleCoin = () => {
         <View style={styles.percentRow}>
           {["0%", "10%", "25%", "50%", "75%", "100%"].map((p) => {
             const value = parseInt(p.replace("%", ""));
+
             return (
               <TouchableOpacity
                 key={p}
                 style={styles.percentBtn}
-                onPress={() => setAmount(((balance * value) / 100).toFixed(2))}
+                onPress={() => {
+                  setAmount(((value / 100) * balance).toFixed(2));
+                  console.log(value);
+                }}
               >
                 <Text style={styles.percentText}>{p}</Text>
               </TouchableOpacity>
