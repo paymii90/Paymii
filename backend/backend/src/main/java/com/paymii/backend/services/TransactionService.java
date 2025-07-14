@@ -6,6 +6,7 @@ import com.paymii.backend.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +20,7 @@ public class TransactionService {
     @Autowired
     private UserRepository userRepository;
 
-    public Transaction buy(BuyRequest req) {
+    /*public Transaction buy(BuyRequest req) {
         User user = userRepository.findById(req.userId).orElseThrow();
         Transaction tx = new Transaction();
         tx.setUser(user);
@@ -36,9 +37,11 @@ public class TransactionService {
         return transactionRepository.save(tx);
     }
 
+     */
 
-    public Transaction sell(SellRequest req) {
-        User user = userRepository.findById(req.userId).orElseThrow();
+
+   /* public Transaction sell(SellRequest req) {
+        User user = userRepository.findById(Long.valueOf(req.userId)).orElseThrow();
         Transaction tx = new Transaction();
         tx.setUser(user);
         tx.setCoinId(req.coinId);
@@ -52,6 +55,8 @@ public class TransactionService {
         tx.setTimestamp(Instant.from(LocalDateTime.now()));
         return transactionRepository.save(tx);
     }
+
+    */
 
     public Transaction send(SendRequest req) {
         User user = userRepository.findById(req.userId).orElseThrow();

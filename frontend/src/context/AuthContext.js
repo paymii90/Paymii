@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -7,6 +7,7 @@ import {
 } from "firebase/auth";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IpContext } from "./IpContext";
 
 export const AuthContext = createContext();
 
@@ -15,16 +16,19 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [authError, setAuthError] = useState("");
   const auth = FIREBASE_AUTH;
+  const { ipAddress } = useContext(IpContext);
 
   // 🔗 Fetch backend user by email
   const getUserByEmail = async (email) => {
-    const res = await fetch(`http://10.80.32.185:8080/api/users/by-email?email=${email}`);
+    const res = await fetch(`${ipAddress}/api/users/by-email?email=${email}`);
     if (!res.ok) throw new Error("User not found in backend");
     return res.json();
   };
 
   // ✅ LOGIN
   const login = async (email, password) => {
+    // console.log(ipAddress);
+
     setLoading(true);
     setAuthError("");
     try {
@@ -67,7 +71,11 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setAuthError("");
     try {
-      const response = await createUserWithEmailAndPassword(auth, email, password);
+      const response = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
       await updateProfile(response.user, {
         displayName: `${firstName} ${lastName}`,
@@ -78,20 +86,24 @@ export const AuthProvider = ({ children }) => {
       await AsyncStorage.setItem("token", idToken); // ✅ store token too
 
       // Register in backend
-      const registerResp = await fetch("http://10.80.32.185:8080/api/users/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${idToken}`,
-        },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-        }),
-      });
+      const registerResp = await fetch(
+        `${ipAddress}/api/users/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${idToken}`,
+          },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            email,
+          }),
+        }
+      );
 
-      if (!registerResp.ok) throw new Error("Failed to register user in backend");
+      if (!registerResp.ok)
+        throw new Error("Failed to register user in backend");
 
       const backendUser = await getUserByEmail(email);
       await AsyncStorage.setItem("user", JSON.stringify(backendUser));

@@ -12,7 +12,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import SafeAreaWrapper from "../../../../Components/SafeAreaWrapper";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import BuyPreviewModal from "./BuyPreviewModal";
-
+import CustomNumpad from "../../../../Components/customNumpad";
 const { width } = Dimensions.get("window");
 
 const BuySingleCoin = () => {
@@ -23,21 +23,6 @@ const BuySingleCoin = () => {
   const [amount, setAmount] = useState("");
   const [balance, setBalance] = useState(10000); // GH₵10,00000 dummy balance
   const [showModal, setShowModal] = useState(false);
-
-  const handleKeyPress = (key) => {
-    if (key === "⌫") {
-      setAmount((prev) => prev.slice(0, -1));
-    } else {
-      setAmount((prev) => prev + key);
-    }
-  };
-
-  const keypad = [
-    ["1", "2", "3"],
-    ["4", "5", "6"],
-    ["7", "8", "9"],
-    [".", "0", "⌫"],
-  ];
 
   return (
     <SafeAreaWrapper>
@@ -56,7 +41,15 @@ const BuySingleCoin = () => {
               <Ionicons name="arrow-back" size={24} color="#fff" />
             </TouchableOpacity>
             <Text style={styles.coinName}>{coin.name}</Text>
-            <TouchableOpacity style={styles.sellButton}>
+            <TouchableOpacity
+              style={styles.sellButton}
+              onPress={() => {
+                navigation.navigate("CoinStack", {
+                  screen: "SellSingleCoin",
+                  params: { coin: coin },
+                });
+              }}
+            >
               <Text>Sell</Text>
             </TouchableOpacity>
           </View>
@@ -87,21 +80,7 @@ const BuySingleCoin = () => {
         </View>
 
         <View style={{ flex: 1, justifyContent: "flex-end" }}>
-          <View style={styles.keypad}>
-            {keypad.map((row, i) => (
-              <View key={i} style={styles.keypadRow}>
-                {row.map((key) => (
-                  <TouchableOpacity
-                    key={key}
-                    style={styles.key}
-                    onPress={() => handleKeyPress(key)}
-                  >
-                    <Text style={styles.keyText}>{key}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            ))}
-          </View>
+          <CustomNumpad setAmount={setAmount} />
 
           <TouchableOpacity
             style={styles.Btn}
@@ -214,26 +193,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#333",
   },
-  keypad: {
-    marginBottom: 30,
-  },
-  keypadRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 15,
-  },
-  key: {
-    width: width / 3.5,
-    padding: "3%",
-    backgroundColor: "rgba(61, 61, 61, 0.24)",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 12,
-  },
-  keyText: {
-    fontSize: 22,
-    fontWeight: "600",
-  },
+
   Btn: {
     backgroundColor: "#052644",
     paddingVertical: 16,

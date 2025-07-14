@@ -1,3 +1,4 @@
+
 import {
   StyleSheet,
   ScrollView,
@@ -19,43 +20,29 @@ import Button from "../../../Components/Button";
 import FooterButtons from "../../../Components/FooterButtons";
 import BottomActionButtons from "../ExploreScreen/BottomButtons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { usePortfolio } from "../../../context/portfolioContext";
 
 const PortfolioScreen = ({ navigation }) => {
-  const [activeTab, setActiveTab] = useState("Crypto");
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-
-  const fetchData = useCallback(async () => {
-    try {
-      const token = await AsyncStorage.getItem("token");
-      const response = await fetch("https://10.80.33.17:8080/api/portfolio", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const json = await response.json();
-      setData(json);
-    } catch (error) {
-      console.error("Error: ", error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+//useEffect(()=>{})  
+ const [activeTab, setActiveTab] = useState("Crypto");
+  const { portfolio, loading, refreshPortfolio } = usePortfolio();
 
   const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    fetchData();
-  }, [fetchData]);
+    refreshPortfolio();
+  }, [refreshPortfolio]);
 
-  if (loading && !refreshing) {
-    return <Text>Loading...</Text>;
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
+
+  const totalValue = portfolio.reduce((sum, item) => {
+    const value = parseFloat(item.totalValue || 0);
+    return sum + value;
+  }, 0);
 
   return (
     <View style={styles.container}>
@@ -95,37 +82,39 @@ const PortfolioScreen = ({ navigation }) => {
         </View>
         <View style={styles.balanceText}>
           <Text style={styles.balanceText}>
-            GHS{" "}
-            {data.reduce((sum, item) => sum + item.totalValue, 0).toFixed(2)}
+            GHS
+            {portfolio.reduce((sum, item) => sum + item.totalValue, 0).toFixed(2)}
           </Text>
         </View>
         {activeTab === "Crypto" ? (
           <View>
             <FlatList
               keyExtractor={(item) => item.name}
-              data={data}
+              data={portfolio}
               refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                <RefreshControl refreshing={loading} onRefresh={onRefresh} />
               }
               renderItem={({ item }) => (
+                
                 <View style={styles.coinContainer}>
                   <View style={styles.coin}>
                     <Image
-                      source={{ uri: item.image }}
+                      source={{ uri: item.coin_image }}
                       style={styles.coinImage}
                     />
                     <View>
-                      <Text style={styles.coinName}>{item.name}</Text>
+                      <Text style={styles.coinName}>{item.coin_id}</Text>
                       <Text style={styles.coinSymbol}>
                         {item.coin_symbol.toUpperCase()}
                       </Text>
-                    </View>{" "}
-                    */
+                    </View>
+                    
                   </View>
                   <TouchableOpacity
                     activeOpacity={0.1}
                     style={styles.buyButton}
                     onPress={() => {
+                      
                       navigation.navigate("CoinStack", {
                         screen: "CoinDetails",
                         params: { coin: item },
@@ -149,9 +138,9 @@ const PortfolioScreen = ({ navigation }) => {
           <View>
             <FlatList
               keyExtractor={(item) => item.id}
-              data={data}
+              data={portfolio}
               refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                <RefreshControl refreshing={loading} onRefresh={onRefresh} />
               }
               renderItem={({ item }) => (
                 <View>
@@ -168,7 +157,7 @@ const PortfolioScreen = ({ navigation }) => {
                   >
                     <View style={styles.coin}>
                       <Image
-                        source={{ uri: item.image }}
+                        source={{ uri: item.coin_image }}
                         style={styles.coinImage}
                       />
                       <View style={styles.coinName}>
