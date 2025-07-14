@@ -1,4 +1,3 @@
-
 import {
   StyleSheet,
   ScrollView,
@@ -23,8 +22,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { usePortfolio } from "../../../context/portfolioContext";
 
 const PortfolioScreen = ({ navigation }) => {
-//useEffect(()=>{})  
- const [activeTab, setActiveTab] = useState("Crypto");
+  //useEffect(()=>{})
+  const [activeTab, setActiveTab] = useState("Crypto");
   const { portfolio, loading, refreshPortfolio } = usePortfolio();
 
   const onRefresh = useCallback(() => {
@@ -33,7 +32,7 @@ const PortfolioScreen = ({ navigation }) => {
 
   if (loading) {
     return (
-      <View style={styles.centered}>
+      <View style={styles.container1}>
         <Text>Loading...</Text>
       </View>
     );
@@ -46,7 +45,7 @@ const PortfolioScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.subContainer}>
+      <ScrollView style={styles.subContainer} scrollEnabled={false}>
         <Text style={styles.header}>My Assets</Text>
         <View style={styles.tabs}>
           <TouchableOpacity
@@ -83,7 +82,9 @@ const PortfolioScreen = ({ navigation }) => {
         <View style={styles.balanceText}>
           <Text style={styles.balanceText}>
             GHS
-            {portfolio.reduce((sum, item) => sum + item.totalValue, 0).toFixed(2)}
+            {portfolio
+              .reduce((sum, item) => sum + item.totalValue, 0)
+              .toFixed(2)}
           </Text>
         </View>
         {activeTab === "Crypto" ? (
@@ -95,7 +96,6 @@ const PortfolioScreen = ({ navigation }) => {
                 <RefreshControl refreshing={loading} onRefresh={onRefresh} />
               }
               renderItem={({ item }) => (
-                
                 <View style={styles.coinContainer}>
                   <View style={styles.coin}>
                     <Image
@@ -108,13 +108,11 @@ const PortfolioScreen = ({ navigation }) => {
                         {item.coin_symbol.toUpperCase()}
                       </Text>
                     </View>
-                    
                   </View>
                   <TouchableOpacity
                     activeOpacity={0.1}
                     style={styles.buyButton}
                     onPress={() => {
-                      
                       navigation.navigate("CoinStack", {
                         screen: "CoinDetails",
                         params: { coin: item },
@@ -186,7 +184,7 @@ const PortfolioScreen = ({ navigation }) => {
             />
           </View>
         )}
-      </View>
+      </ScrollView>
       <FooterButtons style={styles.BottomActionButtons} />;
     </View>
   );
@@ -200,6 +198,12 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     // justifyContent: "center",
     backgroundColor: "#FFFFFF",
+  },
+  container1: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
   },
   subContainer: {
     paddingTop: "25%",
@@ -233,7 +237,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     display: "block",
-    marginTop: 20,
+    marginTop: 0,
     marginBottom: 10,
   },
   coinContainer: {
@@ -286,5 +290,9 @@ const styles = StyleSheet.create({
     opacity: "80%",
     padding: 5,
     borderRadius: 5,
+  },
+  BottomActionButtons: {
+    justifyContent: "flex-end",
+    height: 20,
   },
 });
