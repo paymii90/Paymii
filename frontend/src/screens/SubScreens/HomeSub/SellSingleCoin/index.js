@@ -13,16 +13,36 @@ import SafeAreaWrapper from "../../../../Components/SafeAreaWrapper";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import SellPreviewModal from "./SellPreviewModal";
 import CustomNumpad from "../../../../Components/customNumpad";
+import { usePortfolio } from "../../../../context/portfolioContext";
+import { useEffect } from "react";
+
 const { width } = Dimensions.get("window");
 
-const BuySingleCoin = () => {
+const SellSingleCoin = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { coin } = route.params;
 
-  const [amount, setAmount] = useState("");
-  const [balance, setBalance] = useState(1000000); // GH₵10,00000 dummy balance
+
+  const { portfolio, loading } = usePortfolio();
+  const [amount, setAmount] = useState("0");
+  const [balance, setBalance] = useState('0'); // GH₵10,00000 dummy balance
   const [showModal, setShowModal] = useState(false);
+
+  console.log("Portfolio Data:", amount);
+
+  
+useEffect(() => {
+  if (portfolio && coin?.id) {
+    const matchedCoin = portfolio.find((item) => item.coin_id === coin.id);
+    if (matchedCoin) {
+      setBalance(matchedCoin.amount.toString());
+    } else {
+      setBalance("0"); // user doesn't hold that coin
+    }
+  }
+}, [portfolio, coin]);
+
 
   return (
     <SafeAreaWrapper>
@@ -58,7 +78,7 @@ const BuySingleCoin = () => {
         <Text style={styles.label}>Enter Amount in crypto</Text>
         <Text style={styles.amount}>{amount || "0"} {coin.symbol.toUpperCase()}</Text>
         {/* <Text style={styles.range}>Current Price: GH₵{coin.current_price}</Text> */}
-        <Text style={styles.balance}>Current Balance: 2.763 {coin.symbol.toUpperCase()}</Text>
+        <Text style={styles.balance}>Current Balance: {balance} {coin.symbol.toUpperCase()}</Text>
 
         <View style={styles.percentRow}>
           {["0%", "10%", "25%", "50%", "75%", "100%"].map((p) => {
@@ -107,7 +127,7 @@ const BuySingleCoin = () => {
   );
 };
 
-export default BuySingleCoin;
+export default SellSingleCoin;
 
 const styles = StyleSheet.create({
   container: {

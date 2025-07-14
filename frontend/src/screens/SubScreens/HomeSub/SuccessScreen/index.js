@@ -25,7 +25,7 @@ const { coinName } = route.params || {};
 
         <Text style={styles.title}>All done</Text>
         <Text style={styles.subtitle}>
-          Congratulations! You have Successfully purchased {coinName} 
+          Congratulations! Your transaction was successful.
         </Text>
       </View>
 
