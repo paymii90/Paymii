@@ -21,7 +21,7 @@ import { Text, View, StyleSheet, ScrollView } from "react-native";
 import Button from "../../../Components/Button";
 import SearchList from "../../../Components/SearchList";
 
-const SettingsScreen = () => {
+const SettingsScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -35,6 +35,7 @@ const SettingsScreen = () => {
             backgroundColor="#052644"
             color="white"
             label="Add a payment method"
+            action={() => navigation.navigate("AddPayment")}
           />
         </View>
         <View style={styles.section}>
@@ -57,6 +58,12 @@ const SettingsScreen = () => {
           <SearchList type="expand" label="Pin Settings" />
           <SearchList type="expand" label="Lock my account" />
         </View>
+        <Button
+          color="red"
+          backgroundColor="#CFCFCF"
+          label="Sign Out"
+          style={{ marginTop: 50 }}
+        />
       </ScrollView>
     </View>
   );
