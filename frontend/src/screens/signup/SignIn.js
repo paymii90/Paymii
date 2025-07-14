@@ -13,7 +13,7 @@ const SignIn = ({ navigation }) => {
   const { login } = useContext(AuthContext);
 
   const handleSubmit = async () => {
-     navigation.replace("Main");  // would be removed later
+    //  navigation.replace("Main");  // would be removed later
     setError("");
     if (!email || !password) {
       setError("Email and Password are required!");
