@@ -23,49 +23,52 @@ import SearchList from "../../../Components/SearchList";
 
 const SettingsScreen = () => {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View>
-        <Text style={styles.email}>useremail@gmail.com</Text>
-        <Text style={styles.username}>USERNAME</Text>
-      </View>
-      <View style={styles.PaymentSection}>
-        <Text>Payment Methods</Text>
-        <Button
-          backgroundColor="#052644"
-          color="white"
-          label="Add a payment method"
-        />
-      </View>
-      <View style={styles.section}>
-        <Text style={styles.header}>Account</Text>
-        <SearchList type="expand" label="Limits" />
-        <SearchList type="expand" label="Native Currency" />
-        <SearchList type="expand" label="Privacy" />
-        <SearchList type="expand" label="Phone Numbers" />
-        <SearchList type="expand" label="Notification Settings" />
-        <SearchList type="expand" label="Close Account" />
-      </View>
-      <View style={styles.section}>
-        <Text style={styles.header}>Display</Text>
-        <SearchList type="expand" label="Appearance" />
-        <SearchList type="Checkbox" label="Hide balances" opacity={1} />
-      </View>
-      <View style={styles.section}>
-        <Text style={styles.header}>Security</Text>
-        <SearchList type="Checkbox" label="Require Pin" opacity={1} />
-        <SearchList type="expand" label="Pin Settings" />
-        <SearchList type="expand" label="Lock my account" />
-      </View>
-    </ScrollView>
+    <View style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View>
+          <Text style={styles.email}>useremail@gmail.com</Text>
+          <Text style={styles.username}>USERNAME</Text>
+        </View>
+        <View style={styles.PaymentSection}>
+          <Text>Payment Methods</Text>
+          <Button
+            backgroundColor="#052644"
+            color="white"
+            label="Add a payment method"
+          />
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.header}>Account</Text>
+          <SearchList type="expand" label="Limits" />
+          <SearchList type="expand" label="Native Currency" />
+          <SearchList type="expand" label="Privacy" />
+          <SearchList type="expand" label="Phone Numbers" />
+          <SearchList type="expand" label="Notification Settings" />
+          <SearchList type="expand" label="Close Account" />
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.header}>Display</Text>
+          <SearchList type="expand" label="Appearance" />
+          <SearchList type="Checkbox" label="Hide balances" opacity={1} />
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.header}>Security</Text>
+          <SearchList type="Checkbox" label="Require Pin" opacity={1} />
+          <SearchList type="expand" label="Pin Settings" />
+          <SearchList type="expand" label="Lock my account" />
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
-    flex: 1,
+    flexGrow: 1,
     padding: "5%",
     paddingTop: "20%",
+    paddingBottom: "5%",
   },
   username: {
     fontSize: 30,
@@ -86,7 +89,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   section: {
-    marginTop: 15,
+    marginTop: 10,
     marginBottom: 5,
   },
 });
