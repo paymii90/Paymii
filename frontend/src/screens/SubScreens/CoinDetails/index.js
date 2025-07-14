@@ -77,7 +77,13 @@ const CoinDetailScreen = () => {
         <TabToggle selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
 
         {selectedTab === "Balance" ? (
-          <WalletCard image={image} name={name} symbol={symbol} />
+         <WalletCard
+            image={coin.image}
+            name={coin.name}
+            symbol={coin.symbol}
+            coinId={coin.id}
+          />
+
         ) : (
           <CoinInsights coin={coin} /> // Render coin info/description
         )}

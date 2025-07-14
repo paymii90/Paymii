@@ -1,18 +1,35 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { useContext } from "react";
+import { usePortfolio } from "../../../context/portfolioContext";
+import { CoinContext } from "../../../context/CoinContext";
 
-const WalletCard = ({image, name, symbol}) => {
+
+
+const WalletCard = ({ image, name, symbol, coinId }) => {
+  const { portfolio } = usePortfolio();
+  const { getCoinById } = useContext(CoinContext);
+
+  const matchedCoin = portfolio.find((item) => item.coin_id === coinId);
+  const balance = matchedCoin ? matchedCoin.amount : 0;
+
+  const coin = getCoinById(coinId);
+  const current_price = coin ? coin.current_price : 0; // Assuming coin has current_price property
+  // Calculate estimated GHS value based on balance and current price
+  const estimatedGHS = balance * current_price || 0;
+
   return (
     <View style={styles.walletCard}>
       <Image source={{ uri: image }} style={styles.coinIcon} />
       <Text style={styles.walletLabel}>{name} Wallet</Text>
       <View style={{ alignItems: "flex-end" }}>
-        <Text style={styles.walletBalance}>GH₵0.00</Text>
-        <Text style={styles.walletBalanceSmall}>0 {symbol.toUpperCase()}</Text>
+        <Text style={styles.walletBalance}>GH₵ {estimatedGHS.toFixed(2)}</Text>
+        <Text style={styles.walletBalanceSmall}>{balance} {symbol.toUpperCase()}</Text>
       </View>
     </View>
   );
 };
+
 
 export default WalletCard;
 
