@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
-import Paymentmethod from "../../../../assets/Paymentmethod.svg";
-import Button from "../../../Components/Button";
+import Paymentmethod from "../../../../../assets/Paymentmethod.svg";
+import Button from "../../../../Components/Button";
 
 const AddPayment = ({ navigation }) => {
   return (
