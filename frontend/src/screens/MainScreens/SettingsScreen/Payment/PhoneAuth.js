@@ -6,8 +6,8 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import Input from "../../Components/Input";
-import Button from "../../Components/Button";
+import Input from "../../../../Components/Input";
+import Button from "../../../../Components/Button";
 
 // const PhoneAuthentication = () => {
 //   const [otp, setOtp] = useState(0);
@@ -18,7 +18,7 @@ import Button from "../../Components/Button";
 //   );
 // };
 
-const PhoneAuthentication = ({ navigation }) => {
+const PhoneAuth = ({ navigation }) => {
   const [phoneOtp, setPhoneOtp] = useState("");
   return (
     <KeyboardAvoidingView
@@ -42,7 +42,7 @@ const PhoneAuthentication = ({ navigation }) => {
           label="Submit"
           backgroundColor="#052644"
           color="white"
-          action={() => navigation.navigate("Citizenship")}
+          action={() => navigation.navigate("Verify")}
         />
         <Button label="Resend Code" backgroundColor="#CFCFCF" color="black" />
       </View>
@@ -76,4 +76,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PhoneAuthentication;
+export default PhoneAuth;

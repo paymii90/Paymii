@@ -7,11 +7,11 @@ import {
   Pressable,
   Keyboard,
 } from "react-native";
-import Input from "../../../Components/Input";
-import Mtn from "../../../../assets/Mtn";
-import AirtelTigo from "../../../../assets/AirtelTigo";
-import Telecel from "../../../../assets/Telecel";
-import Button from "../../../Components/Button";
+import Input from "../../../../Components/Input";
+import Mtn from "../../../../../assets/Mtn";
+import AirtelTigo from "../../../../../assets/AirtelTigo";
+import Telecel from "../../../../../assets/Telecel";
+import Button from "../../../../Components/Button";
 import { TouchableWithoutFeedback } from "react-native-web";
 
 const Momo = ({ navigation }) => {
@@ -64,6 +64,7 @@ const Momo = ({ navigation }) => {
           backgroundColor="#052644"
           color="white"
           label="Add MoMo account"
+          action={() => navigation.navigate("PhoneAuth")}
         />
       </View>
     </Pressable>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, StyleSheet, Pressable, Keyboard } from "react-native";
-import Input from "../../../Components/Input";
-import Button from "../../../Components/Button";
+import Input from "../../../../Components/Input";
+import Button from "../../../../Components/Button";
 
 const BankCard = ({ navigation }) => {
   return (
@@ -17,7 +17,7 @@ const BankCard = ({ navigation }) => {
         <Text>
           By adding a new card, you agree to the credit/debit card terms.
         </Text>
-        <Button label="Add Card" />
+        <Button label="Add Card" action={() => navigation.navigate("Verify")} />
       </View>
     </Pressable>
   );
