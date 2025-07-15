@@ -16,6 +16,7 @@ const AddPayment = ({ navigation }) => {
           backgroundColor="#052644"
           color="white"
           label="Add mobile money number"
+          action={() => navigation.navigate("MoMo")}
         />
         <Button
           backgroundColor="#052644"
