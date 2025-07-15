@@ -17,6 +17,9 @@ NTI, Nana-Akua Fokuo
 ADDO, Emmanuella Asantewaa
 NARTEY, Meshack Kwame
 BORNGREAT, Lordson Fafa
-ADU, Bright Agyemang
-BOADI, Daniel Tonto
 OWUSU, Emmanuel
+.) NTI, Nana-Akua Fokuo
+.) ADDO, Emmanuella Asantewaa
+.) NARTEY, Meshack Kwame
+.) BORNGREAT, Lordson Fafa
+.) OWUSU, Emmanuel
