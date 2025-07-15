@@ -2,9 +2,9 @@ import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 const Button = ({
   action,
-  backgroundColor,
+  backgroundColor = "#052644",
   label,
-  color,
+  color = "white",
   style,
   labelStyle,
 }) => {

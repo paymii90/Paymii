@@ -22,6 +22,9 @@ const AddPayment = ({ navigation }) => {
           backgroundColor="#052644"
           color="white"
           label="Add Bank Account"
+          action={() => {
+            navigation.navigate("Card");
+          }}
         />
       </View>
     </View>
