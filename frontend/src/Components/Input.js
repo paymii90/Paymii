@@ -1,8 +1,9 @@
 import { StyleSheet, View, TextInput, Text } from "react-native";
 import { useState } from "react";
 
-const Input = (props) => {
+const Input = ({ width = 345, ...props }) => {
   const [isFocused, setIsFocused] = useState(false);
+  const [flex, setFlex] = useState(props.flex);
   return (
     <View style={{ alignSelf: "center" }}>
       <Text style={styles.text}>{props.title}</Text>
@@ -13,7 +14,7 @@ const Input = (props) => {
           secureTextEntry={props.visibility}
           onChangeText={props.action}
           keyboardType={props.keyboard}
-          style={[styles.Input, isFocused && styles.activeInput]}
+          style={[styles.Input, { width }, isFocused && styles.activeInput]}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
         />
