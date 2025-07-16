@@ -8,34 +8,48 @@ import {
   Image,
 } from "react-native";
 import { CoinContext } from "../../../context/CoinContext";
+import { useNavigation } from "@react-navigation/native";
 
 const TopAssets = () => {
   const { coins } = useContext(CoinContext);
   const [topAssets, setTopAssets] = useState(coins.slice(0, 3));
   const [buttonText, setbuttonText] = useState("See All");
+  const navigation = useNavigation();
+  
 
   const renderItem = ({ item }) => {
     const isNegative = item.price_change_percentage_24h < 0;
     const changeColor = isNegative ? "#ea3943" : "#16c784";
 
     return (
-      <View style={styles.assetItem}>
-        <View style={styles.assetLeft}>
-          <Image source={{ uri: item.image }} style={styles.assetImage} />
-          <View>
-            <Text style={styles.assetName}>{item.name}</Text>
-            <Text style={styles.assetSymbol}>{item.symbol.toUpperCase()}</Text>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("CoinStack", {
+            screen: "CoinDetails",
+            params: { coin: item },
+          })
+        }
+      >
+        <View style={styles.assetItem}>
+          <View style={styles.assetLeft}>
+            <Image source={{ uri: item.image }} style={styles.assetImage} />
+            <View>
+              <Text style={styles.assetName}>{item.name}</Text>
+              <Text style={styles.assetSymbol}>
+                {item.symbol.toUpperCase()}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.assetRight}>
+            <Text style={styles.assetPrice}>
+              GH₵{item.current_price.toLocaleString()}
+            </Text>
+            <Text style={[styles.assetChange, { color: changeColor }]}>
+              {item.price_change_percentage_24h.toFixed(2)}%
+            </Text>
           </View>
         </View>
-        <View style={styles.assetRight}>
-          <Text style={styles.assetPrice}>
-            GH₵{item.current_price.toLocaleString()}
-          </Text>
-          <Text style={[styles.assetChange, { color: changeColor }]}>
-            {item.price_change_percentage_24h.toFixed(2)}%
-          </Text>
-        </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -52,9 +66,9 @@ const TopAssets = () => {
           setTopAssets(coins.slice(0, 10));
           setbuttonText("See Less");
 
-          if (buttonText === 'See Less'){
+          if (buttonText === "See Less") {
             setTopAssets(coins.slice(0, 3));
-            setbuttonText('See All')
+            setbuttonText("See All");
           }
         }}
         style={styles.button}
