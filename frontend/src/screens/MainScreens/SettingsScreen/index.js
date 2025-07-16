@@ -40,7 +40,11 @@ const SettingsScreen = ({ navigation }) => {
         </View>
         <View style={styles.section}>
           <Text style={styles.header}>Account</Text>
-          <SearchList type="expand" label="Limits" />
+          <SearchList
+            type="expand"
+            label="Limits"
+            action={() => navigation.navigate("Limits")}
+          />
           <SearchList type="expand" label="Native Currency" />
           <SearchList type="expand" label="Privacy" />
           <SearchList type="expand" label="Phone Numbers" />
@@ -49,7 +53,6 @@ const SettingsScreen = ({ navigation }) => {
         </View>
         <View style={styles.section}>
           <Text style={styles.header}>Display</Text>
-          <SearchList type="expand" label="Appearance" />
           <SearchList type="Checkbox" label="Hide balances" opacity={1} />
         </View>
         <View style={styles.section}>

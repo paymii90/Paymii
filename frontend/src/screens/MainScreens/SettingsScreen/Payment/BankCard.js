@@ -10,7 +10,7 @@ const BankCard = ({ navigation }) => {
       <Input title="Name" placeholder="SpongeBob SquarePants" />
       <Input title="Card Number" keyboard="numeric" />
       <View style={styles.innerInput}>
-        <Input title="CVV" visible={false} width="170" keyboard="numeric" />
+        <Input title="CVV" visibility={true} width="170" keyboard="numeric" />
         <Input title="Expiry date" width="170" keyboard="numeric" />
       </View>
       <View style={styles.footer}>
@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
   footer: {
     height: "40%",
     justifyContent: "flex-end",
+    gap: 10,
   },
 });
 
