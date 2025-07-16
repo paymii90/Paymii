@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
-import Paymentmethod from "../../../../assets/Paymentmethod.svg";
-import Button from "../../../Components/Button";
+import Paymentmethod from "../../../../../assets/Paymentmethod.svg";
+import Button from "../../../../Components/Button";
 
 const AddPayment = ({ navigation }) => {
   return (
@@ -16,11 +16,15 @@ const AddPayment = ({ navigation }) => {
           backgroundColor="#052644"
           color="white"
           label="Add mobile money number"
+          action={() => navigation.navigate("MoMo")}
         />
         <Button
           backgroundColor="#052644"
           color="white"
           label="Add Bank Account"
+          action={() => {
+            navigation.navigate("Card");
+          }}
         />
       </View>
     </View>

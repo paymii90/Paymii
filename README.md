@@ -13,10 +13,11 @@ Paymii is a secure and user-friendly platform that allows users to manage crypto
 A modern and efficient cryptocurrency application built with Spring Boot for the backend and React Native (Expo) for the frontend.
 
 CONTRIBUTERS
-NTI, Nana-Akua Fokuo
-ADDO, Emmanuella Asantewaa
-NARTEY, Meshack Kwame
-BORNGREAT, Lordson Fafa
-ADU, Bright Agyemang
-BOADI, Daniel Tonto
-OWUSU, Emmanuel
+
+| Role                 | Contributor(s)                              | LinkedIn Profile                              |
+|----------------------|---------------------------------------------|---------------------------------------------|
+| 🎨 **UI/UX Design**   | ![UI/UX](https://img.shields.io/badge/Role-UI%2FUX-blueviolet) **NTI, Nana-Akua Fokuo** <br> ![UI/UX](https://img.shields.io/badge/Role-UI%2FUX-blueviolet) **ADDO, Emmanuella Asantewaa** | [LinkedIn Profile](https://www.linkedin.com/in/username) <br> [LinkedIn Profile](https://www.linkedin.com/in/username) |
+| 💻 **Frontend**        | ![Frontend](https://img.shields.io/badge/Role-Frontend-blue) **BORNGREAT, Lordson Fafa** <br> ![Frontend](https://img.shields.io/badge/Role-Frontend-blue) **OWUSU, Emmanuel** | [LinkedIn Profile](https://www.linkedin.com/in/username) <br> [LinkedIn Profile](https://www.linkedin.com/in/emmanuelowusu123) |
+| 🔧 **Backend**         | ![Backend](https://img.shields.io/badge/Role-Backend-green) **NARTEY, Meshack Kwame** | [LinkedIn Profile](https://www.linkedin.com/in/username) |
+
+

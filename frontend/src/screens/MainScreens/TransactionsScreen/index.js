@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -13,12 +13,15 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import moment from 'moment';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { IpContext } from '../../../context/IpContext';
+import { getAuth } from 'firebase/auth';
 
 const TransactionsScreen = () => {
   const navigation = useNavigation();
   const [transactions, setTransactions] = useState([]);
   const [grouped, setGrouped] = useState({});
   const [loading, setLoading] = useState(true);
+  const { ipAddress } = useContext(IpContext);
 
   const groupByMonth = (data) => {
     const groups = {};
@@ -33,12 +36,27 @@ const TransactionsScreen = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const userId = await AsyncStorage.getItem('userId');
-        const response = await axios.get(`http://localhost:8080/api/transactions/user/${userId}`);
-        const data = response.data;
+        const auth = getAuth();
+        const user = auth.currentUser;
 
+        if (!user) {
+          console.warn("No user is currently signed in.");
+          return;
+        }
+
+        const idToken = await user.getIdToken(); // 🔐 Get Firebase token
+
+        const response = await axios.get(`http://10.80.33.210:8080/api/transactions/history`, {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        });
+
+        const data = response.data;
         setTransactions(data);
         setGrouped(groupByMonth(data));
+        // console.log("📦 Transactions fetched successfully:", data);
+        
       } catch (error) {
         console.error('Failed to fetch transactions:', error);
       } finally {
@@ -51,9 +69,9 @@ const TransactionsScreen = () => {
 
   const renderTransaction = (tx) => (
     <View style={styles.txRow}>
-      <Image source={{ uri: tx.coin_image }} style={styles.coinIcon} />
+      <Image source={{ uri: tx.coinImage }} style={styles.coinIcon} />
       <View style={{ flex: 1, marginLeft: 10 }}>
-        <Text style={styles.txType}>{tx.type} {tx.coin_symbol.toUpperCase()}</Text>
+        <Text style={styles.txType}>{tx.type} {tx.coinSymbol.toUpperCase()}</Text>
         <Text style={styles.txDate}>{moment(tx.timestamp).format('MMM DD, YYYY')}</Text>
       </View>
       <View style={{ alignItems: 'flex-end' }}>
@@ -61,7 +79,7 @@ const TransactionsScreen = () => {
           {tx.type === 'SELL' || tx.type === 'SEND' ? '-' : '+'}${parseFloat(tx.amount).toFixed(2)}
         </Text>
         <Text style={styles.txCoinAmount}>
-          {parseFloat(tx.coin_quantity).toFixed(6)} {tx.coin_symbol.toUpperCase()}
+          {parseFloat(tx.coinQuantity).toFixed(6)} {tx.coinSymbol.toUpperCase()}
         </Text>
       </View>
     </View>

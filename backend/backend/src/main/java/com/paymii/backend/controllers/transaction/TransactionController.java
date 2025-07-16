@@ -277,8 +277,25 @@ public class TransactionController {
         return transactionService.convert(req);
     }
 
-    @GetMapping("/history/{userId}")
-    public List<Transaction> history(@PathVariable Long userId) {
-        return transactionService.getHistory(userId);
-    }
+    @GetMapping("/history")
+    public ResponseEntity<?> getTransactionHistory() {
+        try {
+            FirebaseToken token = (FirebaseToken) SecurityContextHolder
+                    .getContext()
+                    .getAuthentication()
+                    .getPrincipal();
+
+            String firebaseUid = token.getUid();
+
+            User user = userRepository.findByFirebaseUid(firebaseUid)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            List<Transaction> history = transactionService.getHistory(user.getId());
+
+            return ResponseEntity.ok(history);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Unable to fetch transactions: " + e.getMessage());
+        }
+}
 }
