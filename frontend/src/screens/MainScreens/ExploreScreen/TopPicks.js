@@ -1,23 +1,13 @@
 import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from "react-native";
 import React from "react";
-
-// Dummy data for now
-const topPicks = [
-  {
-    id: "1",
-    name: "Bitcoin",
-    symbol: "BTC",
-    image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579",
-  },
-  {
-    id: "2",
-    name: "Ethereum",
-    symbol: "ETH",
-    image: "https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880",
-  },
-];
+import { useNavigation } from "@react-navigation/native";
+import { useContext } from "react";
+import { CoinContext } from "../../../context/CoinContext";
 
 const TopPicks = () => {
+  const { coins } = useContext(CoinContext);
+  const topPicks = coins.slice(0, 5);
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Top picks for you</Text>
@@ -27,10 +17,16 @@ const TopPicks = () => {
         data={topPicks}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card}>
+          <TouchableOpacity style={styles.card}
+          onPress={() =>
+            navigation.navigate("CoinStack", {
+              screen: "CoinDetails",
+              params: { coin: item },
+            })
+          }>
             <Image source={{ uri: item.image }} style={styles.image} />
             <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.symbol}>{item.symbol}</Text>
+            <Text style={styles.symbol}>{item.symbol.toUpperCase()}</Text>
           </TouchableOpacity>
         )}
       />
