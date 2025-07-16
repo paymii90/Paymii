@@ -7,6 +7,9 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -25,75 +28,87 @@ const SendCryptoScreen = () => {
 
   return (
     <SafeAreaWrapper>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={{ marginBottom: 16 }}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <Ionicons name="arrow-back" size={24} color="#000" />
-      </TouchableOpacity>
+        <View style={{ flex: 1, justifyContent: "space-between" }}>
+          <ScrollView contentContainerStyle={styles.content}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginBottom: 16 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#000" />
+            </TouchableOpacity>
 
-      <Text style={styles.screenTitle}>Send {coin.name}</Text>
+            <Text style={styles.screenTitle}>Send {coin.name}</Text>
 
-      <View style={styles.card}>
-        {/* Coin Info Row */}
-        <View style={styles.coinRow}>
-          <Image source={{ uri: coin.image }} style={styles.coinImage} />
-          <View style={{ flex: 1 }}>
-            <Text style={styles.coinName}>{coin.name}</Text>
-            <Text style={styles.coinSymbol}>{coin.symbol.toUpperCase()}</Text>
-          </View>
-          <Text style={styles.balance}>
-            2.23464 {coin.symbol.toUpperCase()}
-          </Text>
+            <View style={styles.card}>
+              {/* Coin Info Row */}
+              <View style={styles.coinRow}>
+                <Image source={{ uri: coin.image }} style={styles.coinImage} />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.coinName}>{coin.name}</Text>
+                  <Text style={styles.coinSymbol}>
+                    {coin.symbol.toUpperCase()}
+                  </Text>
+                </View>
+                <Text style={styles.balance}>
+                  2.23464 {coin.symbol.toUpperCase()}
+                </Text>
+              </View>
+
+              {/* Address Input */}
+              <View style={styles.inputRow}>
+                <TextInput
+                  placeholder="Enter Address"
+                  value={address}
+                  onChangeText={setAddress}
+                  style={styles.input}
+                />
+                {/* <Ionicons name="qr-code-outline" size={24} color="#333" /> */}
+              </View>
+
+              {/* Amount Input */}
+              <TextInput
+                placeholder="Amount"
+                value={amount}
+                onChangeText={setAmount}
+                keyboardType="numeric"
+                style={styles.textInput}
+              />
+
+              {/* Note Input */}
+              <TextInput
+                placeholder="Note"
+                value={note}
+                onChangeText={setNote}
+                style={styles.textInput}
+              />
+
+              {/* Fees */}
+              <Text style={styles.fees}>
+                Transaction fees: 0.0006 {coin.symbol.toUpperCase()}
+              </Text>
+              <Text style={styles.fees}>
+                Min: 0.00061 {coin.symbol.toUpperCase()} - Max: 2.0006{" "}
+                {coin.symbol.toUpperCase()}
+              </Text>
+            </View>
+
+            {/* Note under card */}
+            <Text style={styles.note}>
+              * Block/Time will be calculated after the transaction is generated
+              and broadcasted
+            </Text>
+          </ScrollView>
+
+          {/* Send Button */}
+          <TouchableOpacity style={styles.sendBtn}>
+            <Text style={styles.sendText}>SEND {coin.symbol.toUpperCase()}</Text>
+          </TouchableOpacity>
         </View>
-
-        {/* Address Input */}
-        <View style={styles.inputRow}>
-          <TextInput
-            placeholder="Enter Address"
-            value={address}
-            onChangeText={setAddress}
-            style={styles.input}
-          />
-          {/* <Ionicons name="qr-code-outline" size={24} color="#333" /> */}
-        </View>
-
-        {/* Amount Input */}
-        <TextInput
-          placeholder="Amount"
-          value={amount}
-          onChangeText={setAmount}
-          style={styles.textInput}
-        />
-
-        {/* Note Input */}
-        <TextInput
-          placeholder="Note"
-          value={note}
-          onChangeText={setNote}
-          style={styles.textInput}
-        />
-
-        {/* Fees */}
-        <Text style={styles.fees}>
-          Transaction fees: 0.0006 {coin.symbol.toUpperCase()}
-        </Text>
-        <Text style={styles.fees}>
-          Min: 0.00061 {coin.symbol.toUpperCase()} - Max: 2.0006{" "}
-          {coin.symbol.toUpperCase()}
-        </Text>
-      </View>
-
-      {/* Note under card */}
-      <Text style={styles.note}>
-        * Block/Time will be calculated after the transaction is generated and
-        broadcasted
-      </Text>
-
-      {/* Send Button */}
-      <TouchableOpacity style={styles.sendBtn}>
-        <Text style={styles.sendText}>SEND {coin.symbol.toUpperCase()}</Text>
-      </TouchableOpacity>
+      </KeyboardAvoidingView>
     </SafeAreaWrapper>
   );
 };
@@ -101,6 +116,10 @@ const SendCryptoScreen = () => {
 export default SendCryptoScreen;
 
 const styles = StyleSheet.create({
+  content: {
+    paddingHorizontal: "5%",
+    paddingBottom: 16,
+  },
   screenTitle: {
     fontSize: 20,
     fontWeight: "bold",
@@ -171,15 +190,18 @@ const styles = StyleSheet.create({
     color: "#888",
     textAlign: "center",
     marginTop: 16,
-    marginBottom: 16,
   },
   sendBtn: {
     backgroundColor: "#052644",
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: "center",
-    marginBottom: "6%",
-    alignSelf: "flex-end",
+    marginHorizontal: "5%",
+    marginBottom: "4%",
+    shadowColor: "#000",
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 3,
   },
   sendText: {
     fontSize: 16,
