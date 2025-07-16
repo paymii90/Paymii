@@ -1,11 +1,12 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, ScrollView } from "react-native";
 import Paymentmethod from "../../../../../assets/Paymentmethod.svg";
 import Button from "../../../../Components/Button";
+//import { ScrollView } from "react-native-web";
 
 const AddPayment = ({ navigation }) => {
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Paymentmethod />
       <Text style={styles.header}>Let's add your account</Text>
       <Text style={styles.text}>
@@ -27,7 +28,7 @@ const AddPayment = ({ navigation }) => {
           }}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

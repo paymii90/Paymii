@@ -10,7 +10,10 @@ const Verify = ({ navigation }) => {
       <Text style={styles.header}>You're Verified!!</Text>"
       <Text>Your account has been verified successfully</Text>
       <View style={styles.button}>
-        <Button label="Let's go" />
+        <Button
+          label="Let's go"
+          action={() => navigation.navigate("ExploreMain")}
+        />
       </View>
     </View>
   );
