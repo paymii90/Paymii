@@ -6,6 +6,8 @@ import Momo from "../MainScreens/SettingsScreen/Payment/Momo";
 import BankCard from "../MainScreens/SettingsScreen/Payment/BankCard";
 import PhoneAuth from "../MainScreens/SettingsScreen/Payment/PhoneAuth";
 import Verify from "../MainScreens/SettingsScreen/Payment/Verify";
+import ExploreScreen from "../MainScreens/ExploreScreen";
+import Limits from "../MainScreens/SettingsScreen/Limit";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +19,8 @@ const SettingsStack = () => (
     <Stack.Screen name="Card" component={BankCard} />
     <Stack.Screen name="PhoneAuth" component={PhoneAuth} />
     <Stack.Screen name="Verify" component={Verify} />
+    <Stack.Screen name="ExploreMain" component={ExploreScreen} />
+    <Stack.Screen name="Limits" component={Limits} />
     {/* Add screen like ProfileEdit, SecuritySettings, etc. here */}
   </Stack.Navigator>
 );
