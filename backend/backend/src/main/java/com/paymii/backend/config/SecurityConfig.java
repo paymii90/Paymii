@@ -20,6 +20,7 @@ public class SecurityConfig {
                                 "/api/test/firebase",
                                 "/api/coins/**",
                                 "/api/transactions/**",
+                                "/api/chat/**",
                                 "api/portfolio",
                                 "/api/users/**" )
 

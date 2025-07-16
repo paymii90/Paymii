@@ -1,13 +1,19 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet ,TouchableOpacity} from "react-native";
 import ChatIcon from "../../assets/ChatIcon.svg";
 import Search from "../../assets/Search.svg";
+import { useNavigation } from "@react-navigation/native";
 
 const Searchbar = () => {
+  const navigation = useNavigation();
+  
   return (
     <View style={styles.container}>
       <Search />
-      <ChatIcon />
+      <TouchableOpacity style={styles.chatIcon}
+      onPress={() => navigation.navigate('Chat')}>
+        <ChatIcon />
+      </TouchableOpacity>
     </View>
   );
 };
