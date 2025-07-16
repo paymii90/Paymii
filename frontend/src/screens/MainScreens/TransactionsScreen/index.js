@@ -46,7 +46,7 @@ const TransactionsScreen = () => {
 
         const idToken = await user.getIdToken(); // 🔐 Get Firebase token
 
-        const response = await axios.get(`http://10.80.33.210:8080/api/transactions/history`, {
+        const response = await axios.get(`${ipAddress}/api/transactions/history`, {
           headers: {
             Authorization: `Bearer ${idToken}`,
           },
