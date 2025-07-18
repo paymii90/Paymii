@@ -12,6 +12,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  Modal,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
@@ -22,7 +23,7 @@ import * as DocumentPicker from "expo-document-picker";
 import { BlurView } from "expo-blur";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import EmojiSelector from "react-native-emoji-selector";
-import messages from "../../../../../assets/data/messages";
+import dummyMessages from "../../../../../assets/data/messages";
 
 const ChatScreen = () => {
   const navigation = useNavigation();
@@ -33,7 +34,10 @@ const ChatScreen = () => {
   const [showAttach, setShowAttach] = useState(false);
   const [isAttachmentModalVisible, setAttachmentModalVisible] = useState(false);
 
-  const [messageList, setMessageList] = useState(messages); // 1. useState instead of static import
+  const [messages, setMessages] = useState(dummyMessages || []);
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isImageModalVisible, setImageModalVisible] = useState(false);
 
   const scrollToEnd = () => {
     setTimeout(() => {
@@ -63,16 +67,38 @@ const ChatScreen = () => {
 
   //For Attachment Modal
   const handlePickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-    });
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+      });
 
-    if (!result.canceled) {
-      alert("Image picked: " + result.assets[0].uri);
-      // You can also add this to your messages list here
+      if (!result.canceled && result.assets?.length > 0) {
+        const uri = result.assets[0].uri;
+
+        const now = new Date();
+        const newMessage = {
+          id: `${Date.now()}`,
+          sender: "You",
+          type: "sent",
+          time: now.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          content: input.trim(), // allow combined text + image
+          image: uri,
+          date: now.toISOString().split("T")[0],
+        };
+
+        setMessages((prev) => [...prev, newMessage]);
+        setInput(""); // clear input after sending
+      }
+
+      setAttachmentModalVisible(false);
+    } catch (error) {
+      console.error("Image Picker Error:", error);
+      alert("Something went wrong picking the image.");
     }
-    setAttachmentModalVisible(false);
   };
 
   const handleTakePhoto = async () => {
@@ -80,7 +106,25 @@ const ChatScreen = () => {
     if (permission.granted) {
       const result = await ImagePicker.launchCameraAsync();
       if (!result.canceled) {
-        alert("Photo taken: " + result.assets[0].uri);
+        // alert("Photo taken: " + result.assets[0].uri);
+        const uri = result.assets[0].uri;
+
+        const now = new Date();
+        const newMessage = {
+          id: `${Date.now()}`,
+          sender: "You",
+          type: "sent",
+          time: now.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          content: input.trim(), // allow combined text + image
+          image: uri,
+          date: now.toISOString().split("T")[0],
+        };
+
+        setMessages((prev) => [...prev, newMessage]);
+        setInput(""); // clear input after sending
       }
     }
     setAttachmentModalVisible(false);
@@ -98,7 +142,7 @@ const ChatScreen = () => {
     scrollToEnd();
     // Update last seen text every minute
     const updateLastSeen = () => {
-      const lastMsg = [...messageList]
+      const lastMsg = [...messages]
         .reverse()
         .find((msg) => msg.type === "received" || msg.type === "sent");
       if (lastMsg) {
@@ -122,7 +166,7 @@ const ChatScreen = () => {
     updateLastSeen(); // run immediately
     const interval = setInterval(updateLastSeen, 60000); // update every minute
     return () => clearInterval(interval); // cleanup
-  }, [messageList]);
+  }, [messages]);
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -137,7 +181,7 @@ const ChatScreen = () => {
       type: "sent",
     };
 
-    setMessageList((prev) => [...prev, newMessage]);
+    setMessages((prev) => [...prev, newMessage]);
     setInput("");
     scrollToEnd();
   };
@@ -193,7 +237,7 @@ const ChatScreen = () => {
                 keyboardShouldPersistTaps="handled"
                 onContentSizeChange={scrollToEnd}
               >
-                {messageList.map((msg) => {
+                {messages.map((msg) => {
                   const showDateLabel = msg.date !== lastDate;
                   lastDate = msg.date;
 
@@ -229,14 +273,36 @@ const ChatScreen = () => {
                           {msg.type === "received" && (
                             <Text style={styles.senderName}>{msg.sender}</Text>
                           )}
-                          <Text
-                            style={[
-                              styles.messageText,
-                              msg.type === "sent" && { color: "#fff" },
-                            ]}
-                          >
-                            {msg.content}
-                          </Text>
+                          {/* Show image if available */}
+                          {msg.image && (
+                            <TouchableOpacity
+                              onPress={() => {
+                                setSelectedImage(msg.image);
+                                setImageModalVisible(true);
+                              }}
+                            >
+                              <Image
+                                source={{ uri: msg.image }}
+                                style={{
+                                  width: 200,
+                                  height: 150,
+                                  borderRadius: 8,
+                                  marginTop: 5,
+                                }}
+                              />
+                            </TouchableOpacity>
+                          )}
+                          {/* Show text if available */}
+                          {msg.content ? (
+                            <Text
+                              style={[
+                                styles.messageText,
+                                msg.type === "sent" && { color: "#fff" },
+                              ]}
+                            >
+                              {msg.content}
+                            </Text>
+                          ) : null}
                           <Text style={styles.timestamp}>{msg.time}</Text>
                         </View>
                       </View>
@@ -254,7 +320,7 @@ const ChatScreen = () => {
                 <TouchableOpacity
                   onPress={() => setAttachmentModalVisible(true)}
                 >
-                  <Ionicons name="attach" size={24} color="#777" />
+                  <Ionicons name="attach" size={28} color="#777" />
                 </TouchableOpacity>
 
                 <TextInput
@@ -265,7 +331,7 @@ const ChatScreen = () => {
                   onFocus={scrollToEnd}
                 />
                 <TouchableOpacity onPress={handleSend}>
-                  <Ionicons name="send" size={24} color="#052644" />
+                  <Ionicons name="send" size={28} color="#052644" />
                 </TouchableOpacity>
               </BlurView>
               <AttachmentModal
@@ -279,6 +345,25 @@ const ChatScreen = () => {
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
       </ImageBackground>
+      {/* // Image Modal */}
+      {selectedImage && (
+        <Modal
+          visible={isImageModalVisible}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setImageModalVisible(false)}
+        >
+          <TouchableWithoutFeedback onPress={() => setImageModalVisible(false)}>
+            <View style={styles.modalOverlay}>
+              <Image
+                source={{ uri: selectedImage }}
+                style={styles.fullscreenImage}
+                resizeMode="contain"
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+      )}
     </SafeAreaWrapper>
   );
 };
@@ -348,6 +433,7 @@ const styles = StyleSheet.create({
   },
   messageText: {
     color: "#000",
+    fontSize: 16,
   },
   timestamp: {
     fontSize: 10,
@@ -369,8 +455,8 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: "row",
-    padding: 10,
-    paddingHorizontal: 15,
+    padding: 15,
+    paddingHorizontal: 20,
     alignItems: "center",
     borderTopWidth: 0.5,
     borderTopColor: "#ccc",
@@ -380,5 +466,16 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 10,
     fontSize: 14,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.9)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  fullscreenImage: {
+    width: "90%",
+    height: "80%",
+    borderRadius: 10,
   },
 });
