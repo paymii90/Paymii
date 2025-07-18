@@ -38,6 +38,7 @@ const CoinStack = () => (
     <Stack.Screen name="SendCryptoScreen" component={SendCryptoScreen} />
     <Stack.Screen name="ReceiveCryptoScreen" component={ReceiveCryptoScreen} />
     <Stack.Screen name="SuccessScreen" component={SuccessScreen} />
+    <Stack.Screen name="Chat" component={Chat} />
 
 
 
