@@ -45,7 +45,15 @@ const SettingsScreen = ({ navigation }) => {
             label="Limits"
             action={() => navigation.navigate("Limits")}
           />
-          <SearchList type="expand" label="Native Currency" />
+          <SearchList
+            type="expand"
+            label="Native Currency"
+            action={() =>
+              navigation.navigate("CoinStack", {
+                screen: "MethodSelection",
+              })
+            }
+          />
           <SearchList type="expand" label="Privacy" />
           <SearchList type="expand" label="Phone Numbers" />
           <SearchList type="expand" label="Notification Settings" />
