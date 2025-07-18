@@ -12,7 +12,7 @@ import ModalComponent from "react-native-modal";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-const TransferPopup = ({ isVisible, onClose,singleCoinItem }) => {
+const TransferPopup = ({ isVisible, onClose, singleCoinItem }) => {
   const navigation = useNavigation();
   return (
     <ModalComponent
