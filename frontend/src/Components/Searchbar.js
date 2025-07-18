@@ -11,7 +11,9 @@ const Searchbar = () => {
     <View style={styles.container}>
       <Search />
       <TouchableOpacity style={styles.chatIcon}
-      onPress={() => navigation.navigate('Chat')}>
+      onPress={() =>  navigation.navigate("CoinStack", {
+                screen: "Chat",
+              })}>
         <ChatIcon />
       </TouchableOpacity>
     </View>
