@@ -18,6 +18,8 @@ import DepositConfirmation from "../SubScreens/HomeSub/Deposit/DepositConfirmati
 import MethodSelection from "../SubScreens/HomeSub/Deposit/Deposit";
 import AddPayment from "../MainScreens/SettingsScreen/Payment/AddPayment";
 
+import Chat from "../SubScreens/HomeSub/Chat";
+
 const Stack = createNativeStackNavigator();
 
 const CoinStack = () => (
@@ -38,6 +40,8 @@ const CoinStack = () => (
     <Stack.Screen name="SendCryptoScreen" component={SendCryptoScreen} />
     <Stack.Screen name="ReceiveCryptoScreen" component={ReceiveCryptoScreen} />
     <Stack.Screen name="SuccessScreen" component={SuccessScreen} />
+    <Stack.Screen name="Chat" component={Chat} />
+
     <Stack.Screen name="DepositConfirmation" component={DepositConfirmation} />
     {/* The screen names of MethodSelection and Deposit have interchanged */}
     <Stack.Screen name="MethodSelection" component={MethodSelection} />
