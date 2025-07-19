@@ -11,6 +11,7 @@ import {
 import ModalComponent from "react-native-modal";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import CoinStack from "../../MainStacks/CoinStack";
 
 const TransferPopup = ({ isVisible, onClose, singleCoinItem }) => {
   const navigation = useNavigation();
@@ -82,7 +83,7 @@ const TransferPopup = ({ isVisible, onClose, singleCoinItem }) => {
             onClose(); // closes popup first
             setTimeout(() => {
               navigation.navigate("CoinStack", {
-                screen: "Deposit",
+                screen: "MethodSelection",
               }); // then navigates after slight delay
             }, 200); // slight delay gives modal time to animate out
           }}
@@ -105,7 +106,7 @@ const TransferPopup = ({ isVisible, onClose, singleCoinItem }) => {
             onClose(); // closes popup first
             setTimeout(() => {
               navigation.navigate("CoinStack", {
-                screen: "Withdraw",
+                screen: "MethodSelection",
               }); // then navigates after slight delay
             }, 200); // slight delay gives modal time to animate out
           }}
