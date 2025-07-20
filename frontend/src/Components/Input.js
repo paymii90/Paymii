@@ -4,6 +4,7 @@ import { useState } from "react";
 const Input = ({ width = 345, fontSize = 14, ...props }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [flex, setFlex] = useState(props.flex);
+
   return (
     <View style={{ alignSelf: "center" }}>
       <Text style={[styles.text, { fontSize }]}>{props.title}</Text>
@@ -12,7 +13,7 @@ const Input = ({ width = 345, fontSize = 14, ...props }) => {
           value={props.value}
           placeholder={props.placeholder}
           secureTextEntry={props.visibility}
-          onChangeText={props.action}
+          onChangeText={props.onChangeText || props.action} // <- supports both
           keyboardType={props.keyboard}
           style={[styles.Input, { width }, isFocused && styles.activeInput]}
           onFocus={() => setIsFocused(true)}
@@ -39,7 +40,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontWeight: "bold",
-    //fontSize: 16,
   },
   activeInput: {
     borderColor: "#052644",
