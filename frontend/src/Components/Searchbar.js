@@ -1,99 +1,105 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  Text,
+  Keyboard,
+  Dimensions,
+} from "react-native";
 import ChatIcon from "../../assets/ChatIcon.svg";
 import Search from "../../assets/Search.svg";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import Input from "./Input";
-import SearchData from "../../assets/data/SearchData";
-import DummyPayment from "../../assets/data/DummyPayment";
+
+const { width } = Dimensions.get("window");
 
 const Searchbar = () => {
   const navigation = useNavigation();
   const [clicked, setClicked] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [typing, setTyping] = useState(false);
-  //implementing search logic
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-    setTyping(!query);
-
-    if (query) {
-      const filtered = SearchData.filter((item) =>
-        item.name.toLowerCase().includes(query.toLowerCase())
-      );
-      setSearchResults(filtered);
-    } else setSearchResults([]);
-  };
 
   const searchDim = [
-    {
-      name: "Portfolio",
-      navName: "Portfolio",
-      id: 1,
-    },
-    {
-      name: "Settings",
-      navName: "Settings",
-      id: 2,
-    },
-    {
-      name: "Explore",
-      navName: "Explore",
-      id: 3,
-    },
+    { name: "Portfolio", navName: "Portfolio", id: 1 },
+    { name: "Settings", navName: "Settings", id: 2 },
+    { name: "Explore", navName: "Explore", id: 3 },
   ];
+
+  const filteredResults = searchDim.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.chatIcon}
-        onPress={() => setClicked(!clicked)}
-      >
-        <Search />
-      </TouchableOpacity>
-      {clicked === true ? (
-        <View>
+      {clicked ? (
+        <View style={styles.overlay}>
+          <View style={styles.closeWrapper}>
+            <TouchableOpacity
+              onPress={() => {
+                setSearchQuery("");
+                setClicked(false);
+                Keyboard.dismiss();
+              }}
+            >
+              <AntDesign name="closecircle" size={22} color="black" />
+            </TouchableOpacity>
+          </View>
+
           <Input
-            //onPress={setTyping(true)}
-            key="input"
             placeholder="Search"
-            style={styles.searchbox}
-            width="300"
-            fontSize="0"
             value={searchQuery}
-            action={() => {
-              handleSearch(searchQuery);
-            }}
+            action={setSearchQuery}
+            width={width * 0.9}
+            fontSize={16}
           />
-          {typing && (
-            <FlatList
-              data={searchDim}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <TouchableOpacity>
-                  <Text>{item.name}</Text>
-                </TouchableOpacity>
-              )}
-              ListEmptyComponent={
-                <Text>
-                  {searchQuery ? "No results found" : "Start typing to search"}
+
+          <FlatList
+            data={searchQuery ? filteredResults : []}
+            keyExtractor={(item) => item.id.toString()}
+            keyboardShouldPersistTaps="handled"
+            style={styles.dropdown}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate(item.navName);
+                  setClicked(false);
+                  setSearchQuery("");
+                  Keyboard.dismiss();
+                }}
+              >
+                <Text style={styles.resultText}>{item.name}</Text>
+              </TouchableOpacity>
+            )}
+            ListEmptyComponent={
+              searchQuery.length > 0 ? (
+                <Text style={styles.noResult}>
+                  No results found for "{searchQuery}"
                 </Text>
-              }
-            />
-          )}
+              ) : null
+            }
+          />
         </View>
       ) : (
-        <TouchableOpacity
-          style={styles.chatIcon}
-          key="icon"
-          onPress={() =>
-            navigation.navigate("CoinStack", {
-              screen: "Chat",
-            })
-          }
-        >
-          <ChatIcon />
-        </TouchableOpacity>
+        <>
+          <TouchableOpacity
+            style={styles.chatIcon}
+            onPress={() => setClicked(true)}
+          >
+            <Search />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.chatIcon}
+            onPress={() =>
+              navigation.navigate("CoinStack", {
+                screen: "Chat",
+              })
+            }
+          >
+            <ChatIcon />
+          </TouchableOpacity>
+        </>
       )}
     </View>
   );
@@ -101,18 +107,53 @@ const Searchbar = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between",
-    width: "90%",
+    width: "100%",
     height: 60,
     position: "absolute",
     top: 60,
     alignItems: "center",
     alignSelf: "center",
+    justifyContent: "space-between",
+    zIndex: 1,
   },
-  searchbox: {
-    padding: 0,
+  overlay: {
+    position: "absolute",
+    top: -20,
+    width: "100%",
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 8,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    zIndex: 2,
+  },
+  closeWrapper: {
+    alignItems: "flex-end",
+    paddingBottom: 4,
+  },
+  dropdown: {
+    maxHeight: 200,
+    marginTop: 10,
+  },
+  chatIcon: {
+    padding: 8,
+  },
+  resultText: {
+    fontSize: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderBottomWidth: 1,
+    borderColor: "#eee",
+  },
+  noResult: {
+    padding: 12,
+    fontStyle: "italic",
+    color: "#999",
+    textAlign: "center",
   },
 });
 
