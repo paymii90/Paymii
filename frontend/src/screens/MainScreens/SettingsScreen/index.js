@@ -54,7 +54,11 @@ const SettingsScreen = ({ navigation }) => {
               })
             }
           />
-          <SearchList type="expand" label="Privacy" />
+          <SearchList
+            type="expand"
+            label="Privacy"
+            action={() => navigation.navigate("Trial")}
+          />
           <SearchList type="expand" label="Phone Numbers" />
           <SearchList type="expand" label="Notification Settings" />
           <SearchList type="expand" label="Close Account" />
