@@ -8,6 +8,7 @@ import PhoneAuth from "../MainScreens/SettingsScreen/Payment/PhoneAuth";
 import Verify from "../MainScreens/SettingsScreen/Payment/Verify";
 import ExploreScreen from "../MainScreens/ExploreScreen";
 import Limits from "../MainScreens/SettingsScreen/Limit";
+import Trial from "../MainScreens/SettingsScreen/Trial";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,7 @@ const SettingsStack = () => (
     <Stack.Screen name="Verify" component={Verify} />
     <Stack.Screen name="ExploreMain" component={ExploreScreen} />
     <Stack.Screen name="Limits" component={Limits} />
+    <Stack.Screen name="Trial" component={Trial} />
     {/* Add screen like ProfileEdit, SecuritySettings, etc. here */}
   </Stack.Navigator>
 );

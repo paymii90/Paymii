@@ -1,12 +1,12 @@
 import { StyleSheet, View, TextInput, Text } from "react-native";
 import { useState } from "react";
 
-const Input = ({ width = 345, ...props }) => {
+const Input = ({ width = 345, fontSize = 14, ...props }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [flex, setFlex] = useState(props.flex);
   return (
     <View style={{ alignSelf: "center" }}>
-      <Text style={styles.text}>{props.title}</Text>
+      <Text style={[styles.text, { fontSize }]}>{props.title}</Text>
       <View style={styles.container}>
         <TextInput
           value={props.value}
@@ -25,10 +25,11 @@ const Input = ({ width = 345, ...props }) => {
 
 const styles = StyleSheet.create({
   Input: {
-    padding: 16,
+    padding: 10,
     width: 327,
-    height: 58,
+    height: 50,
     justifyContent: "center",
+    fontSize: 16,
   },
   container: {
     borderColor: "#CFCFCF",
@@ -37,9 +38,8 @@ const styles = StyleSheet.create({
     width: "95%",
   },
   text: {
-    paddingVertical: 10,
     fontWeight: "bold",
-    fontSize: 16,
+    //fontSize: 16,
   },
   activeInput: {
     borderColor: "#052644",
