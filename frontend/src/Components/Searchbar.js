@@ -108,7 +108,7 @@ const Searchbar = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    width: "90%",
+    width: "100%",
     height: 60,
     position: "absolute",
     top: 60,
@@ -119,9 +119,8 @@ const styles = StyleSheet.create({
   },
   overlay: {
     position: "absolute",
-    // top: 60,
-    width: width * 0.95,
-    alignSelf: "center",
+    top: -20,
+    width: "100%",
     backgroundColor: "#fff",
     borderRadius: 8,
     padding: 8,
