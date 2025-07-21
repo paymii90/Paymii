@@ -1,16 +1,32 @@
 import {
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 
-const BuyHeader = () => {
+const BuyHeader = ({ onSearch }) => {
   const navigation = useNavigation();
-  
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchText, setSearchText] = useState("");
+
+  const handleSearchToggle = () => {
+    setIsSearching(!isSearching);
+    if (isSearching) {
+      setSearchText(""); // Clear on close
+      onSearch && onSearch(""); // Reset search
+    }
+  };
+
+  const handleSearchChange = (text) => {
+    setSearchText(text);
+    onSearch && onSearch(text);
+  };
+
   return (
     <View style={styles.container}>
       {/* Left: Close Button */}
@@ -18,30 +34,48 @@ const BuyHeader = () => {
         onPress={() => navigation.goBack()}
         style={styles.leftButton}
       >
-        <AntDesign name="close" size={30} color="black" />
+        <AntDesign name="arrowleft" size={30} color="black" />
       </TouchableOpacity>
 
-      {/* Middle: Title */}
+      {/* Center: Title or Search Input */}
       <View style={styles.center}>
-        <Text style={styles.title}>Select asset to buy</Text>
+        {isSearching ? (
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search asset..."
+            value={searchText}
+            onChangeText={handleSearchChange}
+            autoFocus
+          />
+        ) : (
+          <Text style={styles.title}>Select asset to buy</Text>
+        )}
       </View>
 
-      {/* Right: Spacer to balance layout */}
-      <View style={styles.rightSpacer} />
+      {/* Right: Search/Close Icon */}
+      <TouchableOpacity onPress={handleSearchToggle} style={styles.rightButton}>
+        <AntDesign
+          name={isSearching ? "close" : "search1"}
+          size={26}
+          color="black"
+        />
+      </TouchableOpacity>
     </View>
   );
 };
 
+export default BuyHeader;
+
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 15.,
+    paddingVertical: 15,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
-  leftButton: {
-    // padding: 10,
-    // marginLeft: 10,
+  leftButton: {},
+  rightButton: {
+    paddingHorizontal: 10,
   },
   center: {
     position: "absolute",
@@ -53,10 +87,11 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 22,
   },
-  rightSpacer: {
-    width: 44, // Matches close button width to balance layout
-    marginRight: 10,
+  searchInput: {
+    fontSize: 18,
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+    width: 200,
+    paddingVertical: 2,
   },
 });
-
-export default BuyHeader;

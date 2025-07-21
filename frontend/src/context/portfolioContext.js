@@ -19,27 +19,51 @@ export const PortfolioProvider = ({ children }) => {
 
   const fetchPortfolio = useCallback(async () => {
     try {
+      setLoading(true);
       const token = await AsyncStorage.getItem("token");
+
+      if (!token) {
+        console.warn("No token found, skipping fetch");
+        setPortfolio([]);
+        return;
+      }
+
       const response = await fetch(`${ipAddress}/api/portfolio`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
       const json = await response.json();
       setPortfolio(json);
     } catch (error) {
       console.error("Error fetching portfolio:", error);
+
+      // 🔁 Fallback: empty list or mock data
+      setPortfolio([]);
+      // Or for demo fallback:
+      // setPortfolio([
+      //   {
+      //     coin_id: "bitcoin",
+      //     coin_symbol: "btc",
+      //     coin_image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
+      //     amount: 0,
+      //     totalValue: 0,
+      //   },
+      // ]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [ipAddress]);
 
-  // Fetch once when app loads
   useEffect(() => {
     fetchPortfolio();
   }, [fetchPortfolio]);
 
-  // Optional: Call this after buy/sell to refresh
   const refreshPortfolio = async () => {
     await fetchPortfolio();
   };

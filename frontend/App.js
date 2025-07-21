@@ -1,21 +1,39 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import StackNavigator from "./src/navigation/StackNavigator";
-import TabNavigator from "./src/navigation/TabNavigator";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import ExploreStack from "./src/screens/MainStacks/ExploreStack";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import StackNavigator from "./src/navigation/StackNavigator"; // ← Auth stack
+import TabNavigator from "./src/navigation/TabNavigator";     // ← Main app
+import ExploreStack from "./src/screens/MainStacks/ExploreStack";
 import AppProvider from "./src/context/AppProvider";
+import { AuthContext } from "./src/context/AuthContext";
+import { ActivityIndicator, View } from "react-native";
 
 function Main() {
   const Root = createNativeStackNavigator();
+  const { isLoggedIn, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#052644" />
+      </View>
+    );
+  }
+
   return (
     <SafeAreaProvider>
       <NavigationContainer>
         <Root.Navigator screenOptions={{ headerShown: false }}>
-          <Root.Screen name="StackNavigator" component={StackNavigator} />
-          <Root.Screen name="Explore" component={ExploreStack} />
+          {isLoggedIn ? (
+            <>
+              <Root.Screen name="Main" component={TabNavigator} />
+              {/* <Root.Screen name="Explore" component={ExploreStack} /> */}
+            </>
+          ) : (
+            <Root.Screen name="Auth" component={StackNavigator} />
+          )}
         </Root.Navigator>
         <StatusBar style="dark" />
       </NavigationContainer>

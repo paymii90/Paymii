@@ -31,6 +31,7 @@ const SignIn = ({ navigation }) => {
     } catch (err) {
       console.log("❌ Login handler error:", err);
       setError("Login failed.");
+      navigation.goBack();
     } finally {
       setLoading(false);
     }
