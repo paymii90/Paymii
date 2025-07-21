@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
   FlatList,
   ActivityIndicator,
   Pressable,
+  TouchableOpacity,
 } from "react-native";
 import Spacer from "../../../Components/Spacer";
 import { BlurView } from "expo-blur";
@@ -23,15 +24,7 @@ import SingleButtonItem from "../../../../assets/configs/SingleButtonItem";
 import Plus from "../../../../assets/plus-1.png";
 import BuyCryptoPopup from "../../../../assets/configs/BuyCryptoPopup.js";
 
-//mock data
-import {
-  watchlistCoins,
-  trendingCoins,
-  topGainers,
-  topLosers,
-  mostBuyers,
-  mostSearched,
-} from "../../../../assets/configs/mockCoinCategories.js";
+import { CoinContext } from "../../../context/CoinContext.js";
 
 //api request
 import { getMarketCoins, fetchExchangeRate } from "../../../api/coinGecko";
@@ -43,34 +36,55 @@ import FooterButtons from "../../../Components/FooterButtons.js";
 const Home = () => {
   const navigation = useNavigation();
   const [activeButton, setActiveButton] = useState("Watchlist");
-  const [coins, setCoins] = useState([]);
+  const [filteredCoins, setFilteredCoins] = useState([]);
   const [exchangeRate, setExchangeRate] = useState(11);
   const [loading, setLoading] = useState(false);
   const [buySellPopupVisible, setBuySellPopupVisible] = useState(false);
   const [transferPopupVisible, setTransferPopupVisible] = useState(false);
+  const { coins } = useContext(CoinContext);
+  console.log("Coin Context:", coins);
+
   let selectedData = {};
 
   switch (activeButton) {
     case "Watchlist":
-      selectedData = watchlistCoins;
+      selectedData = coins.filter((coin) =>
+        coin.name.toLowerCase().includes("ba")
+      );
       break;
     case "Trending":
-      selectedData = trendingCoins;
+      selectedData = coins
+        .filter((coin) => coin.price_change_percentage_24h > 5)
+        .slice(0, 5);
       break;
     case "Top Gainers":
-      selectedData = topGainers;
+      selectedData = coins
+        .sort(
+          (a, b) =>
+            b.price_change_percentage_24h - a.price_change_percentage_24h
+        )
+        .slice(0, 5);
       break;
     case "Top Losers":
-      selectedData = topLosers;
+      selectedData = coins
+        .sort(
+          (a, b) =>
+            a.price_change_percentage_24h - b.price_change_percentage_24h
+        )
+        .slice(0, 5);
       break;
     case "Most Buyers":
-      selectedData = mostBuyers;
+      selectedData = coins.filter((coin) => coin.current_price > 50);
       break;
     case "Most Searched":
-      selectedData = mostSearched;
+      selectedData = coins
+        .filter((coin) => coin.name.toLowerCase().includes("bit"))
+        .slice(0, 5);
       break;
     default:
-      selectedData = watchlistCoins;
+      selectedData = coins
+        .filter((coin) => coin.name.toLowerCase().includes("ba"))
+        .slice(0, 5);
   }
 
   useEffect(() => {
@@ -78,11 +92,11 @@ const Home = () => {
       setLoading(true);
       try {
         // const rate = await fetchExchangeRate();
-        // setExchangeRate(rate || 11);d
-        setCoins(selectedData);
+        // setExchangeRate(rate || 11);
+        setFilteredCoins(selectedData);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setCoins([]);
+        setFilteredCoins([]);
       } finally {
         setLoading(false);
       }
@@ -139,81 +153,60 @@ const Home = () => {
         {activeButton && (
           <View style={{ marginTop: 20 }}>
             <Text style={{ fontSize: 16, color: "#333" }}>
-              Showing results for:{" "}
+              {selectedData.length > 0
+                ? "Showing results for: "
+                : "No results found for: "}
               <Text style={{ fontWeight: "bold" }}>{activeButton}</Text>
             </Text>
             {loading ? (
               <View style={styles.loader}>
-                <ActivityIndicator size="large" color="#000000" />
+                <ActivityIndicator size="large" color="#000000ff" />
               </View>
             ) : (
               <View>
-                {coins.map((item) => (
-                  <View key={item.name} style={styles.coinContainer}>
-                    <Image source={{ uri: item.image }} style={styles.logo} />
-                    <View style={styles.coinInfo}>
-                      <Text style={styles.name}>
-                        {item.name} ({item.symbol.toUpperCase()})
-                      </Text>
-                      <Text style={styles.price}>
-                        GH₵ {(item.current_price * exchangeRate).toFixed(2)}
+                {filteredCoins.map((item) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      console.log("Navigating to coin details for:", item);
+
+                      navigation.navigate("CoinStack", {
+                        screen: "CoinDetails",
+                        params: { coin: item },
+                      });
+                    }}
+                    key={item.id}
+                  >
+                    <View style={styles.coinContainer}>
+                      <Image source={{ uri: item.image }} style={styles.logo} />
+                      <View style={styles.coinInfo}>
+                        <Text style={styles.name}>
+                          {item.name} ({item.symbol.toUpperCase()})
+                        </Text>
+                        <Text style={styles.price}>
+                          GH₵ {(item.current_price * exchangeRate).toFixed(2)}
+                        </Text>
+                      </View>
+                      <Text
+                        style={[
+                          styles.priceChange,
+                          {
+                            color:
+                              item.price_change_percentage_24h >= 0
+                                ? "green"
+                                : "red",
+                          },
+                        ]}
+                      >
+                        {item.price_change_percentage_24h.toFixed(2)}%
                       </Text>
                     </View>
-                    <Text
-                      style={[
-                        styles.priceChange,
-                        {
-                          color:
-                            item.price_change_percentage_24h >= 0
-                              ? "green"
-                              : "red",
-                        },
-                      ]}
-                    >
-                      {item.price_change_percentage_24h.toFixed(2)}%
-                    </Text>
-                  </View>
+                  </TouchableOpacity>
                 ))}
               </View>
             )}
           </View>
         )}
         <Spacer height={40} />
-        {/* <View style={styles.footButts}>
-          <Button
-            label="Buy & Sell"
-            backgroundColor="#052644"
-            color="white"
-            style={{
-              borderRadius: 60,
-              width: "40%",
-              transform: [{ translateX: 30 }],
-            }}
-            labelStyle={{ fontWeight: 600 }}
-            action={() => setBuySellPopupVisible(true)}
-          />
-          <BuyCryptoPopup
-            isVisible={buySellPopupVisible}
-            onClose={() => setBuySellPopupVisible(false)}
-          /> */}
-        {/* <Image source={Plus} style={styles.plus} /> */}
-        {/* <Button
-            label="Transfer"
-            backgroundColor="#011D5C"
-            color="white"
-            style={{
-              borderRadius: 60,
-              width: "40%",
-              transform: [{ translateX: -30 }],
-            }}
-            labelStyle={{ fontWeight: 600 }}
-            action={() => setTransferPopupVisible(true)}
-          />
-          <TransferPopup
-            isVisible={transferPopupVisible}
-            onClose={() => setTransferPopupVisible(false)}
-          />
-        </View> */}
       </ScrollView>
       <FooterButtons />
     </SafeAreaView>
@@ -239,7 +232,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "rgba(252, 243, 243, 0.66)",
+    backgroundColor: "rgba(116, 99, 99, 0.66)",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     borderBottomWidth: 0.1,
     marginLeft: -20,
@@ -282,8 +275,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 10,
     padding: 10,
-    backgroundColor: "#1e1e1e",
+    backgroundColor: "#afaeaeff",
     borderRadius: 10,
+    borderWidth: .25,
+    borderColor: "#c04c4cff",
   },
   logo: {
     width: 40,
@@ -294,7 +289,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
-    color: "#fff",
+    color: "#5a0b0bff",
     fontWeight: "bold",
     fontSize: 14,
   },
