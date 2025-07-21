@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   price: {
-    color: "#ccc",
+    color: "#3a0101ff",
     fontSize: 13,
   },
   priceChange: {

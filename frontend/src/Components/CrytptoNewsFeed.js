@@ -14,8 +14,11 @@ import {
 } from "react-native";
 import axios from "axios";
 import fallBackImage from "../../assets/thumbnail.jpeg"; // Fallback image if no thumbnail is available
+import fallBackImage2 from "../../assets/thumbnail2.jpeg"; // Another fallback image if needed
+import Button from "../Components/Button"; //
+import newsFeed from "../../assets/data/news";
 
-const API_KEY = "60fb70a715600fc51f26f8b2cd32aa6a71c76e3a";
+// const API_KEY = "60fb70a715600fc51f26f8b2cd32aa6a71c76e3a";
 
 const CryptoNewsFeed = () => {
   const [news, setNews] = useState([]);
@@ -25,10 +28,14 @@ const CryptoNewsFeed = () => {
 
   const fetchNews = async () => {
     try {
-      const response = await axios.get(
-        `https://cryptopanic.com/api/v1/posts/?auth_token=${API_KEY}&public=true`
-      );
-      setNews(response.data.results);
+      // const response = await axios.get(
+      //   `https://cryptopanic.com/api/v1/posts/?auth_token=${API_KEY}&public=true`
+      // );
+      // setNews(response.data.results);
+      // console.log("Fetched news:", response.data.results);
+      // console.log(newsFeed);
+
+      setNews(newsFeed);
     } catch (error) {
       console.error("Error fetching crypto news:", error);
     } finally {
@@ -39,6 +46,34 @@ const CryptoNewsFeed = () => {
   useEffect(() => {
     fetchNews();
   }, []);
+
+  const getImageSource = (item) => {
+    if (item.thumbnail && item.thumbnail.startsWith("http")) {
+      return { uri: item.thumbnail };
+    } else if (item.title.includes("Bitcoin")) {
+      return {
+        uri: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
+      };
+    } else if (item.title.includes("Ethereum")) {
+      return {
+        uri: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
+      };
+    } else if (item.title.includes("Solana")) {
+      return {
+        uri: "https://assets.coingecko.com/coins/images/4128/large/solana.png",
+      };
+    } else if (item.title.includes("BNB")) {
+      return {
+        uri: "https://assets.coingecko.com/coins/images/825/large/bnb.png",
+      };
+    } else if (item.title.includes("Cardano")) {
+      return {
+        uri: "https://assets.coingecko.com/coins/images/975/large/cardano.png",
+      };
+    } else {
+      return fallBackImage;
+    }
+  };
 
   const openModal = (item) => {
     setSelectedItem(item);
@@ -59,46 +94,52 @@ const CryptoNewsFeed = () => {
       {loading ? (
         <ActivityIndicator size="large" color="#000" />
       ) : (
-        <FlatList
-          data={news.slice(0, 8)}
-          keyExtractor={(item, index) => index.toString()}
-          scrollEnabled={false}
-          renderItem={({ item }) => {
-            const hasUrl = !!item.url;
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  if (hasUrl) {
-                    Linking.openURL(item.url);
-                  } else {
-                    openModal(item);
-                  }
-                }}
-              >
-                <View style={styles.newsItem}>
-                  <View style={styles.newsText}>
-                    <Text style={styles.source}>
-                      {item.source?.title || "Unknown"} ·{" "}
-                      {new Date(item.published_at).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </Text>
-                    <Text style={styles.title}>{item.title}</Text>
-                  </View>
-                  <Image
-                    source={
-                      item.thumbnail && item.thumbnail.startsWith("http")
-                        ? { uri: item.thumbnail }
-                        : fallBackImage
+        <>
+          <FlatList
+            data={news.slice(0, 100)}
+            keyExtractor={(item, index) => index.toString()}
+            scrollEnabled={false}
+            renderItem={({ item }) => {
+              const hasUrl = !!item.url;
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    if (hasUrl) {
+                      Linking.openURL(item.url);
+                    } else {
+                      openModal(item);
                     }
-                    style={styles.thumbnail}
-                  />
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
+                  }}
+                >
+                  <View style={styles.newsItem}>
+                    <View style={styles.newsText}>
+                      <Text style={styles.source}>
+                        {item.kind || "Unknown"} ·{" "}
+                        {new Date(item.published_at).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </Text>
+                      <Text style={styles.title}>{item.title}</Text>
+                    </View>
+                    <Image
+                      source={getImageSource(item)}
+                      style={styles.thumbnail}
+                    />
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+          />
+          {/* <Button
+            label="See More"
+            backgroundColor="#052644"
+            color="white"
+            style={styles.button}
+            labelStyle={{ fontWeight: 600 }}
+            // action={}
+          /> */}
+        </>
       )}
 
       {/* Modal */}
@@ -111,31 +152,33 @@ const CryptoNewsFeed = () => {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <ScrollView>
-              <Image
-                source={
-                  selectedItem?.thumbnail && selectedItem.thumbnail.startsWith("http")
-                    ? { uri: selectedItem.thumbnail }
-                    : fallBackImage
-                }
-                style={styles.modalImage}
-              />
+              {selectedItem && (
+                <>
+                  <Image
+                    source={getImageSource(selectedItem)}
+                    style={styles.modalImage}
+                  />
 
-              <Text style={styles.modalTitle}>{selectedItem?.title}</Text>
-              <Text style={styles.modalSource}>
-                {selectedItem?.source?.title || "Unknown"} ·{" "}
-                {new Date(selectedItem?.published_at).toLocaleString()}
-              </Text>
-              <Text style={styles.modalDescription}>
-                {selectedItem?.description || "No description available."}
-              </Text>
+                  <Text style={styles.modalTitle}>{selectedItem?.title}</Text>
+                  <Text style={styles.modalSource}>
+                    {selectedItem?.kind || "Unknown"} ·{" "}
+                    {new Date(selectedItem?.published_at).toLocaleString()}
+                  </Text>
+                  <Text style={styles.modalDescription}>
+                    {selectedItem?.description || "No description available."}
+                  </Text>
 
-              {selectedItem?.url && (
-                <Pressable
-                  onPress={() => Linking.openURL(selectedItem.url)}
-                  style={[styles.closeButton, { backgroundColor: "#555" }]}
-                >
-                  <Text style={styles.closeButtonText}>Read Full Article</Text>
-                </Pressable>
+                  {selectedItem?.url && (
+                    <Pressable
+                      onPress={() => Linking.openURL(selectedItem.url)}
+                      style={[styles.closeButton, { backgroundColor: "#555" }]}
+                    >
+                      <Text style={styles.closeButtonText}>
+                        Read Full Article
+                      </Text>
+                    </Pressable>
+                  )}
+                </>
               )}
             </ScrollView>
             <Pressable
