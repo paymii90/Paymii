@@ -32,6 +32,7 @@ import TransferPopup from "./TransferPopup.js";
 import { useNavigation } from "@react-navigation/native";
 import BottomActionButtons from "../ExploreScreen/BottomButtons.js";
 import FooterButtons from "../../../Components/FooterButtons.js";
+import CryptoNewsFeed from "../../../Components/CrytptoNewsFeed.js";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -42,15 +43,15 @@ const Home = () => {
   const [buySellPopupVisible, setBuySellPopupVisible] = useState(false);
   const [transferPopupVisible, setTransferPopupVisible] = useState(false);
   const { coins } = useContext(CoinContext);
-  console.log("Coin Context:", coins);
+  // console.log("Coin Context:", coins);
 
   let selectedData = {};
 
   switch (activeButton) {
     case "Watchlist":
       selectedData = coins.filter((coin) =>
-        coin.name.toLowerCase().includes("ba")
-      );
+        coin.market_cap_rank < 100
+      ).slice(0, 5);
       break;
     case "Trending":
       selectedData = coins
@@ -207,7 +208,9 @@ const Home = () => {
           </View>
         )}
         <Spacer height={40} />
+        <CryptoNewsFeed />
       </ScrollView>
+
       <FooterButtons />
     </SafeAreaView>
   );
@@ -277,7 +280,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#afaeaeff",
     borderRadius: 10,
-    borderWidth: .25,
+    borderWidth: 0.25,
     borderColor: "#c04c4cff",
   },
   logo: {

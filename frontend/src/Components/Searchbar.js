@@ -43,7 +43,7 @@ const Searchbar = () => {
                 Keyboard.dismiss();
               }}
             >
-              <AntDesign name="closecircle" size={22} color="black" />
+              <AntDesign name="closecircle" size={24} color="black" />
             </TouchableOpacity>
           </View>
 
@@ -87,7 +87,7 @@ const Searchbar = () => {
             style={styles.chatIcon}
             onPress={() => setClicked(true)}
           >
-            <Search />
+            <Search width={24} height={24} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.chatIcon}
@@ -97,7 +97,7 @@ const Searchbar = () => {
               })
             }
           >
-            <ChatIcon />
+            <ChatIcon width={24} height={24} />
           </TouchableOpacity>
         </>
       )}
