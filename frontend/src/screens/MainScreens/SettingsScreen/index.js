@@ -16,12 +16,14 @@
 
 // export default SettingsScreen;
 
-import React from "react";
+import React, { useState } from "react";
 import { Text, View, StyleSheet, ScrollView } from "react-native";
 import Button from "../../../Components/Button";
 import SearchList from "../../../Components/SearchList";
+import CloseAccount from "./CloseAccount";
 
 const SettingsScreen = ({ navigation }) => {
+  const [isVisible, setIsVisible] = useState(false);
   return (
     <View style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -48,20 +50,20 @@ const SettingsScreen = ({ navigation }) => {
           <SearchList
             type="expand"
             label="Native Currency"
-            action={() =>
-              navigation.navigate("CoinStack", {
-                screen: "MethodSelection",
-              })
-            }
+            action={() => navigation.navigate("Cur")}
           />
           <SearchList
             type="expand"
             label="Privacy"
-            action={() => navigation.navigate("Trial")}
+            //action={() => navigation.navigate("Cur")}
           />
           <SearchList type="expand" label="Phone Numbers" />
           <SearchList type="expand" label="Notification Settings" />
-          <SearchList type="expand" label="Close Account" />
+          <SearchList
+            type="expand"
+            label="Close Account"
+            action={() => setIsVisible(true)}
+          />
         </View>
         <View style={styles.section}>
           <Text style={styles.header}>Display</Text>
@@ -80,6 +82,7 @@ const SettingsScreen = ({ navigation }) => {
           style={{ marginTop: 50 }}
         />
       </ScrollView>
+      <CloseAccount Visible={isVisible} onClose={() => setIsVisible(false)} />
     </View>
   );
 };
