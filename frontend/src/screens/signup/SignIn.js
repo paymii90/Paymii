@@ -1,8 +1,9 @@
 import React, { useState, useContext } from "react";
-import { Text, StyleSheet, View } from "react-native";
+import { Text, StyleSheet, View, Alert } from "react-native";
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
 import { AuthContext } from "../../context/AuthContext";
+import Toast from "react-native-toast-message";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -10,10 +11,10 @@ const SignIn = ({ navigation }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { login } = useContext(AuthContext);
+  const { login, authError } = useContext(AuthContext);
 
   const handleSubmit = async () => {
-    //  navigation.replace("Main");  // would be removed later
+    navigation.navigate("Main"); // Temporary navigation to Main for testing
     setError("");
     if (!email || !password) {
       setError("Email and Password are required!");
@@ -26,12 +27,14 @@ const SignIn = ({ navigation }) => {
 
     try {
       setLoading(true);
-      await login(email, password); // ✅ Wait for login to complete
-      navigation.replace("Main");   // ✅ Move navigation after login success
+      await login(email, password); // Login will set isLoggedIn
     } catch (err) {
       console.log("❌ Login handler error:", err);
-      setError("Login failed.");
-      navigation.goBack();
+      Toast.show({
+        type: "error",
+        text1: "Login Failed",
+        text2: err?.message || "Something went wrong. Check your internet.",
+      });
     } finally {
       setLoading(false);
     }
@@ -53,7 +56,7 @@ const SignIn = ({ navigation }) => {
         keyboard="default"
         visibility
       />
-      <Text style={styles.error}>{error}</Text>
+      <Text style={styles.error}>{error || authError}</Text>
       <Button
         label={loading ? "Signing in..." : "Sign In"}
         backgroundColor="#052644"

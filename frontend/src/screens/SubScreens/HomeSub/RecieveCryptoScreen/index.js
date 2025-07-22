@@ -13,6 +13,7 @@ import QRCode from "react-native-qrcode-svg";
 import * as Clipboard from "expo-clipboard";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import SafeAreaWrapper from "../../../../Components/SafeAreaWrapper";
+import Toast from "react-native-toast-message";
 
 const { width } = Dimensions.get("window");
 
@@ -26,7 +27,11 @@ const ReceiveCryptoScreen = () => {
 
   const handleCopy = () => {
     Clipboard.setStringAsync(dummyAddress);
-    alert("Address copied to clipboard");
+    Toast.show({
+      type: 'info',
+      text1: "Copied",
+      text2: "Address has been copied to clipboard.",
+    });
   };
 
   const handleShare = () => {
@@ -89,7 +94,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingHorizontal: "5%",
     justifyContent: "space-between",
-    
   },
   backButton: {
     marginBottom: 10,

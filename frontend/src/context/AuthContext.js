@@ -32,10 +32,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       const user = response.user;
-      console.log("🔐 User logged in:", user);
-      
       const idToken = await user.getIdToken(true);
-
       const backendUser = await getUserByEmail(user.email);
       await AsyncStorage.setItem("user", JSON.stringify(backendUser));
       await AsyncStorage.setItem("token", idToken);
@@ -43,12 +40,12 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(true);
     } catch (error) {
       console.log("❌ Login error:", error);
-      setAuthError("Login failed. Please check your credentials.");
-      setIsLoggedIn(false);
+      setAuthError("Login failed.");
+      setIsLoggedIn(false); // ✅ Ensure it stays false
+      throw error; // ✅ re-throw to be caught in SignIn
     } finally {
       setLoading(false);
     }
-
   };
 
   // ✅ SIGN UP
@@ -145,6 +142,7 @@ export const AuthProvider = ({ children }) => {
         signUp,
         logout,
         isLoggedIn,
+        setIsLoggedIn,
         loading,
         authError,
       }}

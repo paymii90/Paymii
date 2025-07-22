@@ -13,6 +13,7 @@ import SafeAreaWrapper from "../../../../Components/SafeAreaWrapper";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import BuyPreviewModal from "./BuyPreviewModal";
 import CustomNumpad from "../../../../Components/customNumpad";
+import Toast from "react-native-toast-message";
 const { width } = Dimensions.get("window");
 
 const BuySingleCoin = () => {
@@ -86,9 +87,17 @@ const BuySingleCoin = () => {
             style={styles.Btn}
             onPress={() => {
               if (amount <= 0) {
-                alert("Enter Amount");
+                Toast.show({
+                  type: "error",
+                  text1: "Invalid Amount",
+                  text2: "Please enter a valid amount.",
+                });
               } else if (amount > balance) {
-                alert("Insufficient balance");
+                Toast.show({
+                  type: "error",
+                  text1: "Insufficient Balance",
+                  text2: "You don’t have enough funds to proceed.",
+                });
               } else {
                 setShowModal(true);
               }
