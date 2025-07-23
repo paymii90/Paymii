@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IpContext } from "./IpContext";
+import Toast from "react-native-toast-message";
 
 // Create context
 const PortfolioContext = createContext();
@@ -41,20 +42,15 @@ export const PortfolioProvider = ({ children }) => {
       const json = await response.json();
       setPortfolio(json);
     } catch (error) {
-      console.error("Error fetching portfolio:", error);
+      // console.error("Error fetching portfolio:", error);
 
-      // 🔁 Fallback: empty list or mock data
+      Toast.show({
+        type: "error",
+        text1: "Portfolio Fetch Failed",
+        text2: error.message || "Something went wrong. Check your internet.",
+      });
+      // console.warn("Error fetching portfolio:", error);
       setPortfolio([]);
-      // Or for demo fallback:
-      // setPortfolio([
-      //   {
-      //     coin_id: "bitcoin",
-      //     coin_symbol: "btc",
-      //     coin_image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
-      //     amount: 0,
-      //     totalValue: 0,
-      //   },
-      // ]);
     } finally {
       setLoading(false);
     }

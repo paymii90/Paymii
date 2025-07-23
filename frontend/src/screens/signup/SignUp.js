@@ -3,7 +3,8 @@ import { Text, View, StyleSheet, ScrollView } from "react-native";
 import Input from "../../Components/Input";
 import Checkbox from "../../Components/Checkbox";
 import Button from "../../Components/Button";
-import { AuthContext } from "../../context/AuthContext"; // <-- Make sure this path is correct!
+import { AuthContext } from "../../context/AuthContext"; 
+
 
 const SignUp = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");

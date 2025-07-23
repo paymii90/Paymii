@@ -16,6 +16,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IpContext } from "../../../context/IpContext";
 import { getAuth } from "firebase/auth";
 import Button from "../../../Components/Button";
+import LottieView from "lottie-react-native";
+import Toast from "react-native-toast-message";
 
 const TransactionsScreen = () => {
   const navigation = useNavigation();
@@ -61,7 +63,12 @@ const TransactionsScreen = () => {
         setGrouped(groupByMonth(data));
         // console.log("📦 Transactions fetched successfully:", data);
       } catch (error) {
-        console.error("Failed to fetch transactions:", error);
+        // console.error("Failed to fetch transactions:", error);
+        Toast.show({
+          type: "error",
+          text1: "Transaction Fetch Failed",
+          text2: error.message || "Something went wrong. Check your internet.",
+        });
       } finally {
         setLoading(false);
       }
@@ -101,7 +108,16 @@ const TransactionsScreen = () => {
   );
 
   if (loading) {
-    return <ActivityIndicator size="large" style={{ marginTop: 40 }} />;
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <LottieView
+          source={require("../../../../assets/animations/loading.json")}
+          autoPlay
+          loop
+          style={{ width: 150, height: 150 }}
+        />
+      </View>
+    );
   }
 
   if (transactions.length === 0) {

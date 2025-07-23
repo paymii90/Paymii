@@ -23,12 +23,12 @@ const ReceiveCryptoScreen = () => {
   const { coin } = route.params;
 
   const dummyAddress = `NCo-${coin?.symbol}yFCpQnRBxV2sVmGUY`;
-  const message = `My Paymii ${coin?.name} address is NCo-${coin?.symbol}yFCpQnRBxV2sVmGUY`;
+  const message = `My Paymii ${coin?.name} address is ${dummyAddress}`;
 
   const handleCopy = () => {
     Clipboard.setStringAsync(dummyAddress);
     Toast.show({
-      type: 'info',
+      type: "info",
       text1: "Copied",
       text2: "Address has been copied to clipboard.",
     });

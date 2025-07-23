@@ -36,13 +36,11 @@ export const AuthProvider = ({ children }) => {
       const backendUser = await getUserByEmail(user.email);
       await AsyncStorage.setItem("user", JSON.stringify(backendUser));
       await AsyncStorage.setItem("token", idToken);
-
       setIsLoggedIn(true);
     } catch (error) {
       console.log("❌ Login error:", error);
       setAuthError("Login failed.");
-      setIsLoggedIn(false); // ✅ Ensure it stays false
-      throw error; // ✅ re-throw to be caught in SignIn
+      throw error; // Let UI handle toast
     } finally {
       setLoading(false);
     }
@@ -53,11 +51,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setAuthError("");
     try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const response = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(response.user, {
         displayName: `${firstName} ${lastName}`,
       });
@@ -72,20 +66,14 @@ export const AuthProvider = ({ children }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${idToken}`,
         },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-        }),
+        body: JSON.stringify({ firstName, lastName, email }),
       });
 
-      if (!registerResp.ok)
-        throw new Error("Failed to register user in backend");
+      if (!registerResp.ok) throw new Error("Failed to register user in backend");
 
       const backendUser = await getUserByEmail(email);
       await AsyncStorage.setItem("user", JSON.stringify(backendUser));
-      setIsLoggedIn(true);
-      alert("Check your email to verify your account!");
+      // Do NOT set isLoggedIn here; wait until verification
     } catch (error) {
       console.log("❌ Sign up error:", error);
       if (error.code === "auth/email-already-in-use") {
@@ -97,7 +85,8 @@ export const AuthProvider = ({ children }) => {
       } else {
         setAuthError(error.message || "Sign Up Failed");
       }
-      setIsLoggedIn(false);
+      throw error;
+      setIsLoggedIn(true);
     } finally {
       setLoading(false);
     }
@@ -107,11 +96,7 @@ export const AuthProvider = ({ children }) => {
   const checkAuthStatus = async () => {
     try {
       const storedUser = await AsyncStorage.getItem("user");
-      if (storedUser) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
+      setIsLoggedIn(!!storedUser);
     } catch (error) {
       console.log("❌ Error checking auth status:", error);
       setIsLoggedIn(false);

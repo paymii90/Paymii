@@ -32,7 +32,7 @@ const BuyAssets = () => {
         <FlatList
           data={coinsData}
           ListHeaderComponent={<BuyHeader onSearch={handleSearch} />}
-          renderItem={({ item }) => <SingleCoinItem singleCoinItem={item} />}
+          renderItem={({ item }) => <SingleCoinItem singleCoinItem={item} path="CoinDetails" />}
           keyExtractor={(item) => item.id?.toString() || item.name}
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{ paddingBottom: 20 }}

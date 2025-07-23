@@ -8,8 +8,9 @@ import TabNavigator from "./src/navigation/TabNavigator"; // Main app tabs
 import CoinStack from "./src/screens/MainStacks/CoinStack"; // Coin details/buy
 import AppProvider from "./src/context/AppProvider";
 import { AuthContext } from "./src/context/AuthContext";
-import { ActivityIndicator, View } from "react-native";
+import { View } from "react-native";
 import Toast from "react-native-toast-message";
+import LottieView from "lottie-react-native";
 
 function Main() {
   const Root = createNativeStackNavigator();
@@ -18,7 +19,12 @@ function Main() {
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#052644" />
+        <LottieView
+          source={require("./assets/animations/loading.json")}
+          autoPlay
+          loop
+          style={{ width: 200, height: 200 }}
+        />
       </View>
     );
   }
