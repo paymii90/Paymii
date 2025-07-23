@@ -4,8 +4,8 @@ import SafeAreaWrapper from "../../../Components/SafeAreaWrapper";
 import TopMovers from "./TopMovers";
 import TopAssets from "./TopAssets";
 import TopPicks from "./TopPicks";
-import BottomActionButtons from "./BottomButtons";
 import Spacer from "../../../Components/Spacer";
+import FooterButtons from "../../../Components/FooterButtons";
 
 const ExploreScreen = () => {
   return (
@@ -26,7 +26,7 @@ const ExploreScreen = () => {
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
         />
-        <BottomActionButtons />
+        <FooterButtons />
       </View>
     </SafeAreaWrapper>
   );

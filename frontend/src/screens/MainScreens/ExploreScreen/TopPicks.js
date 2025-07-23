@@ -1,11 +1,17 @@
-import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import { useContext } from "react";
-import { CoinContext } from "../../../context/CoinContext";
+import { useCoins } from "../../../context/CoinContext";
 
 const TopPicks = () => {
-  const { coins } = useContext(CoinContext);
+  const { coins } = useCoins();
   const topPicks = coins.slice(0, 5);
   const navigation = useNavigation();
   return (
@@ -17,13 +23,15 @@ const TopPicks = () => {
         data={topPicks}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card}
-          onPress={() =>
-            navigation.navigate("CoinStack", {
-              screen: "CoinDetails",
-              params: { coin: item },
-            })
-          }>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() =>
+              navigation.navigate("CoinStack", {
+                screen: "CoinDetails",
+                params: { coin: item },
+              })
+            }
+          >
             <Image source={{ uri: item.image }} style={styles.image} />
             <Text style={styles.name}>{item.name}</Text>
             <Text style={styles.symbol}>{item.symbol.toUpperCase()}</Text>

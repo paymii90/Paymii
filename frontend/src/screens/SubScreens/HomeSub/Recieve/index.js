@@ -13,7 +13,7 @@ import { CoinContext } from "../../../../context/CoinContext";
 import KeyboardManager from "../../../../Components/KeyboardManager";
 
 const SendCrypto = () => {
-  const { coins } = useContext(CoinContext);
+  const { coins, exchangeRate } = useContext(CoinContext);
   const [coinsData, setCoinsData] = useState(coins);
 
   const handleSearch = (text) => {
@@ -30,7 +30,11 @@ const SendCrypto = () => {
           data={coinsData}
           ListHeaderComponent={<SellHeader onSearch={handleSearch} />}
           renderItem={({ item }) => (
-            <SingleCoinItem singleCoinItem={item} path="ReceiveCryptoScreen" />
+            <SingleCoinItem
+              singleCoinItem={item}
+              path="ReceiveCryptoScreen"
+              exchangeRate={exchangeRate}
+            />
           )}
           keyExtractor={(item) => item.id?.toString() || item.name}
           keyboardShouldPersistTaps="handled"
