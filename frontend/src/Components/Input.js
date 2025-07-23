@@ -31,15 +31,18 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     fontSize: 16,
+  
   },
   container: {
     borderColor: "#CFCFCF",
     borderWidth: 1,
     borderRadius: 4,
     width: "95%",
+    marginBottom: 22,
   },
   text: {
     fontWeight: "bold",
+    marginBottom: 4,
   },
   activeInput: {
     borderColor: "#052644",

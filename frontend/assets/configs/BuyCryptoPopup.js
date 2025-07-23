@@ -56,7 +56,7 @@ const BuyCryptoPopup = ({ isVisible, onClose, screen }) => {
             onClose(); // closes popup first
             setTimeout(() => {
               navigation.navigate("CoinStack", {
-                screen: "Send",
+                screen: "Sell",
               }); // then navigates after slight delay
             }, 200); // slight delay gives modal time to animate out
           }}
