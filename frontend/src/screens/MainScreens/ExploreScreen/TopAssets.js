@@ -7,14 +7,16 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
-import { CoinContext } from "../../../context/CoinContext";
+import { useCoins } from "../../../context/CoinContext";
 import { useNavigation } from "@react-navigation/native";
+import { useFormattedCurrency } from "../../../hooks/useFormattedCurrency";
 
 const TopAssets = () => {
-  const { coins } = useContext(CoinContext);
+  const { coins } = useCoins();
   const [topAssets, setTopAssets] = useState(coins.slice(0, 3));
   const [buttonText, setbuttonText] = useState("See All");
   const navigation = useNavigation();
+  const formatCurrency = useFormattedCurrency();
   
 
   const renderItem = ({ item }) => {
@@ -42,7 +44,7 @@ const TopAssets = () => {
           </View>
           <View style={styles.assetRight}>
             <Text style={styles.assetPrice}>
-              GH₵{item.current_price.toLocaleString()}
+              {formatCurrency(item.current_price)}
             </Text>
             <Text style={[styles.assetChange, { color: changeColor }]}>
               {item.price_change_percentage_24h.toFixed(2)}%

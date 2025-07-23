@@ -12,7 +12,7 @@ import SingleCoinItem from "./SingleCoinItem";
 import { CoinContext } from "../../../../context/CoinContext";
 
 const BuyAssets = () => {
-  const { coins } = useContext(CoinContext);
+  const { coins, exchangeRate } = useContext(CoinContext);
   const [coinsData, setCoinsData] = useState(coins);
 
   const handleSearch = (text) => {
@@ -32,7 +32,13 @@ const BuyAssets = () => {
         <FlatList
           data={coinsData}
           ListHeaderComponent={<BuyHeader onSearch={handleSearch} />}
-          renderItem={({ item }) => <SingleCoinItem singleCoinItem={item} path="CoinDetails" />}
+          renderItem={({ item }) => (
+            <SingleCoinItem
+              singleCoinItem={item}
+              path="CoinDetails"
+              exchangeRate={exchangeRate}
+            />
+          )}
           keyExtractor={(item) => item.id?.toString() || item.name}
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{ paddingBottom: 20 }}

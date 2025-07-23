@@ -9,19 +9,22 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
-
-import VerifyEmail from '../../../../../assets/VerifyEmail'
+import LottieView from "lottie-react-native";
 
 const SuccessScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-const { coinName } = route.params || {};
-
+  const { coinName } = route.params || {};
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <VerifyEmail style = {styles.image}/>
+        <LottieView
+          source={require("../../../../../assets/animations/Success.json")}
+          autoPlay
+          loop
+          style={{ width: 300, height: 300 }}
+        />
 
         <Text style={styles.title}>All done</Text>
         <Text style={styles.subtitle}>
@@ -32,10 +35,10 @@ const { coinName } = route.params || {};
       <TouchableOpacity
         style={styles.button}
         onPress={() =>
-        navigation.navigate("Main", {
-        screen: "Portfolio",
-  })
-}
+          navigation.navigate("Main", {
+            screen: "Portfolio",
+          })
+        }
       >
         <Text style={styles.buttonText}>Done</Text>
       </TouchableOpacity>
@@ -44,7 +47,6 @@ const { coinName } = route.params || {};
 };
 
 export default SuccessScreen;
-
 
 const styles = StyleSheet.create({
   container: {
@@ -81,10 +83,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     marginBottom: 20,
-    width: '80%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf:'center'
+    width: "80%",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
   },
   buttonText: {
     color: "#fff",
@@ -92,4 +94,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-

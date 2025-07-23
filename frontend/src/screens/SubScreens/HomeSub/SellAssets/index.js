@@ -12,7 +12,7 @@ import SingleCoinItem from "../Buy/SingleCoinItem";
 import { CoinContext } from "../../../../context/CoinContext";
 
 const SendCrypto = () => {
-  const { coins } = useContext(CoinContext);
+  const { coins, exchangeRate } = useContext(CoinContext);
   const [coinsData, setCoinsData] = useState(coins);
 
   const handleSearch = (text) => {
@@ -33,7 +33,11 @@ const SendCrypto = () => {
           data={coinsData}
           ListHeaderComponent={<SellHeader onSearch={handleSearch} />}
           renderItem={({ item }) => (
-            <SingleCoinItem singleCoinItem={item} path="SellSingleCoin" />
+            <SingleCoinItem
+              singleCoinItem={item}
+              path="SellSingleCoin"
+              exchangeRate={exchangeRate}
+            />
           )}
           keyExtractor={(item) => item.id?.toString() || item.name}
           keyboardShouldPersistTaps="handled"

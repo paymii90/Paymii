@@ -24,34 +24,36 @@ import SingleButtonItem from "../../../../assets/configs/SingleButtonItem";
 import Plus from "../../../../assets/plus-1.png";
 import BuyCryptoPopup from "../../../../assets/configs/BuyCryptoPopup.js";
 
-import { CoinContext } from "../../../context/CoinContext.js";
+import { useCoins } from "../../../context/CoinContext.js";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 //api request
 import { getMarketCoins, fetchExchangeRate } from "../../../api/coinGecko";
 import TransferPopup from "./TransferPopup.js";
 import { useNavigation } from "@react-navigation/native";
-import BottomActionButtons from "../ExploreScreen/BottomButtons.js";
 import FooterButtons from "../../../Components/FooterButtons.js";
 import CryptoNewsFeed from "../../../Components/CrytptoNewsFeed.js";
+import LottieView from "lottie-react-native";
+import { useFormattedCurrency } from "../../../hooks/useFormattedCurrency.js";
 
 const Home = () => {
   const navigation = useNavigation();
   const [activeButton, setActiveButton] = useState("Watchlist");
   const [filteredCoins, setFilteredCoins] = useState([]);
-  const [exchangeRate, setExchangeRate] = useState(11);
   const [loading, setLoading] = useState(false);
   const [buySellPopupVisible, setBuySellPopupVisible] = useState(false);
   const [transferPopupVisible, setTransferPopupVisible] = useState(false);
-  const { coins } = useContext(CoinContext);
+  const { coins, exchangeRate } = useCoins();
+  const formatCurrency = useFormattedCurrency();
   // console.log("Coin Context:", coins);
 
   let selectedData = {};
 
   switch (activeButton) {
     case "Watchlist":
-      selectedData = coins.filter((coin) =>
-        coin.market_cap_rank < 100
-      ).slice(0, 5);
+      selectedData = coins
+        .filter((coin) => coin.market_cap_rank < 100)
+        .slice(0, 5);
       break;
     case "Trending":
       selectedData = coins
@@ -75,7 +77,9 @@ const Home = () => {
         .slice(0, 5);
       break;
     case "Most Buyers":
-      selectedData = coins.filter((coin) => coin.current_price > 50);
+      selectedData = coins
+        .filter((coin) => coin.total_volume > 1000000)
+        .slice(0, 5);
       break;
     case "Most Searched":
       selectedData = coins
@@ -92,8 +96,6 @@ const Home = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        // const rate = await fetchExchangeRate();
-        // setExchangeRate(rate || 11);
         setFilteredCoins(selectedData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -161,14 +163,19 @@ const Home = () => {
             </Text>
             {loading ? (
               <View style={styles.loader}>
-                <ActivityIndicator size="large" color="#000000ff" />
+                <LottieView
+                  source={require("../../../../assets/animations/loading.json")}
+                  autoPlay
+                  loop
+                  style={{ width: 100, height: 100 }}
+                />
               </View>
             ) : (
               <View>
                 {filteredCoins.map((item) => (
                   <TouchableOpacity
                     onPress={() => {
-                      console.log("Navigating to coin details for:", item);
+                      // console.log("Navigating to coin details for:", item);
 
                       navigation.navigate("CoinStack", {
                         screen: "CoinDetails",
@@ -184,22 +191,30 @@ const Home = () => {
                           {item.name} ({item.symbol.toUpperCase()})
                         </Text>
                         <Text style={styles.price}>
-                          GH₵ {(item.current_price * exchangeRate).toFixed(2)}
+                          {formatCurrency(item.current_price)}
                         </Text>
                       </View>
-                      <Text
-                        style={[
-                          styles.priceChange,
-                          {
-                            color:
-                              item.price_change_percentage_24h >= 0
-                                ? "green"
-                                : "red",
-                          },
-                        ]}
-                      >
-                        {item.price_change_percentage_24h.toFixed(2)}%
-                      </Text>
+                      <View style={{ flexDirection: "row", alignItems: "center" }}>
+                        {item.price_change_percentage_24h >= 0 ? (
+                          <AntDesign name="caretup" size={20} color="green" />
+                        ) : (
+                          <AntDesign name="caretdown" size={20} color="#ea3943" />
+                        )}
+
+                        <Text
+                          style={[
+                            styles.priceChange,
+                            {
+                              color:
+                                item.price_change_percentage_24h >= 0
+                                  ? "green"
+                                  : "red",
+                            },
+                          ]}
+                        >
+                          {item.price_change_percentage_24h.toFixed(2)}%
+                        </Text>
+                      </View>
                     </View>
                   </TouchableOpacity>
                 ))}

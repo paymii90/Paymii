@@ -6,16 +6,19 @@ import { AuthContext } from "../../context/AuthContext";
 import Toast from "react-native-toast-message";
 import KeyboardManager from "../../Components/KeyboardManager";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formError, setFormError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
 
   const { login, authError } = useContext(AuthContext);
 
   const handleSubmit = async () => {
+    navigation.navigate("Main"); //would later be removed
     setFormError("");
 
     if (!email || !password) {

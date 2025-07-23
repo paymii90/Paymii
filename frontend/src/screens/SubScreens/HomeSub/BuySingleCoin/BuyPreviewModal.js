@@ -63,8 +63,8 @@ const BuyPreviewModal = ({
         paymentMethod: "Mobile Money",
       };
 
-      const result = await buyCoin(buyData, token, ipAddress);
-      console.log("✅ Buy result:", result);
+      // const result = await buyCoin(buyData, token, ipAddress);
+      // console.log("✅ Buy result:", result);
 
       Toast.show({
         type: "success",

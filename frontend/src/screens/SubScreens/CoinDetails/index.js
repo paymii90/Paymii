@@ -22,6 +22,7 @@ import WalletCard from "./walletCard";
 import CoinInsights from "./coinInsights";
 import BuyCryptoPopup from "./BuyCryptoPopup";
 import TransferPopup from "./TransferPopup";
+import { useCoins } from "../../../context/CoinContext";
 
 const timeRanges = ["1H", "1D", "1W", "1M", "1Y", "All"];
 
@@ -35,6 +36,7 @@ const CoinDetailScreen = () => {
 
   const route = useRoute();
   const { coin } = route.params;
+  const { exchangeRate } = useCoins();
 
   // console.log(coin);
   const {
@@ -65,6 +67,7 @@ const CoinDetailScreen = () => {
           price_change_24h={price_change_24h}
           price_change_percentage_24h={price_change_percentage_24h}
           navigation={navigation}
+          exchangeRate={exchangeRate}
         />
 
         {/* Chart Placeholder */}
@@ -77,13 +80,12 @@ const CoinDetailScreen = () => {
         <TabToggle selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
 
         {selectedTab === "Balance" ? (
-         <WalletCard
+          <WalletCard
             image={coin.image}
             name={coin.name}
             symbol={coin.symbol}
             coinId={coin.id}
           />
-
         ) : (
           <CoinInsights coin={coin} /> // Render coin info/description
         )}

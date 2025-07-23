@@ -28,6 +28,6 @@ export const fetchExchangeRate = async () => {
     return data.rates.GHS;
   } catch (error) {
     console.error("❌ Error fetching exchange rate: ", error);
-    return "12";
+    return "10.88"; // Default value in case of error
   }
 };
