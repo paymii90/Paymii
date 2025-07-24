@@ -57,8 +57,8 @@ const Home = () => {
       break;
     case "Trending":
       selectedData = coins
-        .filter((coin) => coin.price_change_percentage_24h > 5)
-        .slice(0, 5);
+        .filter((coin) => coin.market_cap_rank <= 10)
+        .slice(0, 5); 
       break;
     case "Top Gainers":
       selectedData = coins
