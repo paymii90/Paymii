@@ -13,12 +13,11 @@ import {
   ScrollView,
 } from "react-native";
 import axios from "axios";
-import fallBackImage from "../../assets/thumbnail.jpeg"; // Fallback image if no thumbnail is available
-import fallBackImage2 from "../../assets/thumbnail2.jpeg"; // Another fallback image if needed
-import Button from "../Components/Button"; //
+import fallBackImage from "../../assets/thumbnail.jpeg";
 import newsFeed from "../../assets/data/news";
+import LottieView from "lottie-react-native";
 
-// const API_KEY = "60fb70a715600fc51f26f8b2cd32aa6a71c76e3a";
+const API_KEY = "pub_3b6fd31a84d0411aa4bf76be7f8c0766"; // Replace with your key
 
 const CryptoNewsFeed = () => {
   const [news, setNews] = useState([]);
@@ -28,16 +27,23 @@ const CryptoNewsFeed = () => {
 
   const fetchNews = async () => {
     try {
-      // const response = await axios.get(
-      //   `https://cryptopanic.com/api/v1/posts/?auth_token=${API_KEY}&public=true`
-      // );
-      // setNews(response.data.results);
-      // console.log("Fetched news:", response.data.results);
-      // console.log(newsFeed);
+      const response = await axios.get(
+        `https://newsdata.io/api/1/news?apikey=${API_KEY}&q=crypto&language=en&category=business`
+      );
 
-      setNews(newsFeed);
+      const transformedNews = response.data.results.map((item) => ({
+        title: item.title,
+        description: item.description,
+        url: item.link,
+        published_at: item.pubDate,
+        thumbnail: item.image_url,
+        kind: item.category?.[0] || "News",
+      }));
+
+      setNews(transformedNews);
     } catch (error) {
-      console.error("Error fetching crypto news:", error);
+      console.warn("⚠️ Using fallback news due to API error");
+      setNews(newsFeed); // fallback data
     } finally {
       setLoading(false);
     }
@@ -48,31 +54,9 @@ const CryptoNewsFeed = () => {
   }, []);
 
   const getImageSource = (item) => {
-    if (item.thumbnail && item.thumbnail.startsWith("http")) {
-      return { uri: item.thumbnail };
-    } else if (item.title.includes("Bitcoin")) {
-      return {
-        uri: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
-      };
-    } else if (item.title.includes("Ethereum")) {
-      return {
-        uri: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
-      };
-    } else if (item.title.includes("Solana")) {
-      return {
-        uri: "https://assets.coingecko.com/coins/images/4128/large/solana.png",
-      };
-    } else if (item.title.includes("BNB")) {
-      return {
-        uri: "https://assets.coingecko.com/coins/images/825/large/bnb.png",
-      };
-    } else if (item.title.includes("Cardano")) {
-      return {
-        uri: "https://assets.coingecko.com/coins/images/975/large/cardano.png",
-      };
-    } else {
-      return fallBackImage;
-    }
+    return item.thumbnail && item.thumbnail.startsWith("http")
+      ? { uri: item.thumbnail }
+      : fallBackImage;
   };
 
   const openModal = (item) => {
@@ -85,61 +69,44 @@ const CryptoNewsFeed = () => {
       <View style={styles.headerRow}>
         <Text style={styles.header}>News</Text>
         <TouchableOpacity
-          onPress={() => Linking.openURL("https://cryptopanic.com")}
+          onPress={() => Linking.openURL("https://newsdata.io")}
         >
           <Text style={styles.viewMore}>View more</Text>
         </TouchableOpacity>
       </View>
 
       {loading ? (
-        <ActivityIndicator size="large" color="#000" />
-      ) : (
-        <>
-          <FlatList
-            data={news.slice(0, 100)}
-            keyExtractor={(item, index) => index.toString()}
-            scrollEnabled={false}
-            renderItem={({ item }) => {
-              const hasUrl = !!item.url;
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    if (hasUrl) {
-                      Linking.openURL(item.url);
-                    } else {
-                      openModal(item);
-                    }
-                  }}
-                >
-                  <View style={styles.newsItem}>
-                    <View style={styles.newsText}>
-                      <Text style={styles.source}>
-                        {item.kind || "Unknown"} ·{" "}
-                        {new Date(item.published_at).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </Text>
-                      <Text style={styles.title}>{item.title}</Text>
-                    </View>
-                    <Image
-                      source={getImageSource(item)}
-                      style={styles.thumbnail}
-                    />
-                  </View>
-                </TouchableOpacity>
-              );
-            }}
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <LottieView
+            source={require("../../assets/animations/loading.json")}
+            autoPlay
+            loop
+            style={{ width: 100, height: 100 }}
           />
-          {/* <Button
-            label="See More"
-            backgroundColor="#052644"
-            color="white"
-            style={styles.button}
-            labelStyle={{ fontWeight: 600 }}
-            // action={}
-          /> */}
-        </>
+        </View>
+      ) : (
+        <FlatList
+          data={news.slice(0, 100)}
+          keyExtractor={(item, index) => index.toString()}
+          scrollEnabled={false}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => openModal(item)}>
+              <View style={styles.newsItem}>
+                <View style={styles.newsText}>
+                  <Text style={styles.source}>
+                    {item.kind || "News"} ·{" "}
+                    {new Date(item.published_at).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </Text>
+                  <Text style={styles.title}>{item.title}</Text>
+                </View>
+                <Image source={getImageSource(item)} style={styles.thumbnail} />
+              </View>
+            </TouchableOpacity>
+          )}
+        />
       )}
 
       {/* Modal */}
@@ -158,10 +125,9 @@ const CryptoNewsFeed = () => {
                     source={getImageSource(selectedItem)}
                     style={styles.modalImage}
                   />
-
                   <Text style={styles.modalTitle}>{selectedItem?.title}</Text>
                   <Text style={styles.modalSource}>
-                    {selectedItem?.kind || "Unknown"} ·{" "}
+                    {selectedItem?.kind || "News"} ·{" "}
                     {new Date(selectedItem?.published_at).toLocaleString()}
                   </Text>
                   <Text style={styles.modalDescription}>
@@ -171,21 +137,20 @@ const CryptoNewsFeed = () => {
                   {selectedItem?.url && (
                     <Pressable
                       onPress={() => Linking.openURL(selectedItem.url)}
-                      style={[styles.closeButton, { backgroundColor: "#555" }]}
+                      style={[styles.actionButton, { backgroundColor: "#555" }]}
                     >
-                      <Text style={styles.closeButtonText}>
-                        Read Full Article
-                      </Text>
+                      <Text style={styles.buttonText}>Read More</Text>
                     </Pressable>
                   )}
                 </>
               )}
             </ScrollView>
+
             <Pressable
-              style={styles.closeButton}
+              style={[styles.actionButton, { backgroundColor: "#0a84ff" }]}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={styles.closeButtonText}>Close</Text>
+              <Text style={styles.buttonText}>Close</Text>
             </Pressable>
           </View>
         </View>
@@ -242,8 +207,6 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 8,
   },
-
-  // Modal styles
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.6)",
@@ -278,14 +241,13 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: "#333",
   },
-  closeButton: {
-    marginTop: 15,
-    backgroundColor: "#0a84ff",
+  actionButton: {
+    marginTop: 12,
     padding: 10,
     borderRadius: 8,
     alignItems: "center",
   },
-  closeButtonText: {
+  buttonText: {
     color: "#fff",
     fontWeight: "bold",
   },

@@ -12,7 +12,9 @@ import { useCoins } from "../../../context/CoinContext";
 
 const TopPicks = () => {
   const { coins } = useCoins();
-  const topPicks = coins.filter((coin) => coin.market_cap_rank <= 10).slice(0, 5);
+  const topPicks = coins
+    .filter((coin) => coin.market_cap_rank <= 10)
+    .slice(0, 5);
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -33,7 +35,9 @@ const TopPicks = () => {
             }
           >
             <Image source={{ uri: item.image }} style={styles.image} />
-            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
+              {item.name}
+            </Text>
             <Text style={styles.symbol}>{item.symbol.toUpperCase()}</Text>
           </TouchableOpacity>
         )}

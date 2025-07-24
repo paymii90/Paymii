@@ -21,6 +21,7 @@ const ExploreScreen = () => {
               <TopMovers />
               <TopAssets />
               <TopPicks />
+              <Spacer height={30} />
             </>
           }
           keyExtractor={(item, index) => index.toString()}

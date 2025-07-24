@@ -17,7 +17,6 @@ const TopAssets = () => {
   const [buttonText, setbuttonText] = useState("See All");
   const navigation = useNavigation();
   const formatCurrency = useFormattedCurrency();
-  
 
   const renderItem = ({ item }) => {
     const isNegative = item.price_change_percentage_24h < 0;
@@ -35,8 +34,14 @@ const TopAssets = () => {
         <View style={styles.assetItem}>
           <View style={styles.assetLeft}>
             <Image source={{ uri: item.image }} style={styles.assetImage} />
-            <View>
-              <Text style={styles.assetName}>{item.name}</Text>
+            <View style={{maxWidth : 200}}>
+              <Text
+                style={styles.assetName}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {item.name}
+              </Text>
               <Text style={styles.assetSymbol}>
                 {item.symbol.toUpperCase()}
               </Text>
