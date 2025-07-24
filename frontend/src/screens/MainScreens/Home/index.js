@@ -35,6 +35,7 @@ import FooterButtons from "../../../Components/FooterButtons.js";
 import CryptoNewsFeed from "../../../Components/CrytptoNewsFeed.js";
 import LottieView from "lottie-react-native";
 import { useFormattedCurrency } from "../../../hooks/useFormattedCurrency.js";
+import MiniChart from "../../../Components/MiniChart.js";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -58,7 +59,7 @@ const Home = () => {
     case "Trending":
       selectedData = coins
         .filter((coin) => coin.market_cap_rank <= 10)
-        .slice(0, 5); 
+        .slice(0, 5);
       break;
     case "Top Gainers":
       selectedData = coins
@@ -187,18 +188,35 @@ const Home = () => {
                     <View style={styles.coinContainer}>
                       <Image source={{ uri: item.image }} style={styles.logo} />
                       <View style={styles.coinInfo}>
-                        <Text style={styles.name}>
+                        {/* <Text style={styles.name}>
+                          {item.name} ({item.symbol.toUpperCase()})
+                        </Text> */}
+                        <Text
+                          style={styles.name}
+                          numberOfLines={1}
+                          ellipsizeMode="tail"
+                        >
                           {item.name} ({item.symbol.toUpperCase()})
                         </Text>
                         <Text style={styles.price}>
                           {formatCurrency(item.current_price)}
                         </Text>
                       </View>
-                      <View style={{ flexDirection: "row", alignItems: "center" }}>
+                      <MiniChart
+                        coinId={item.id}
+                        backgroundcolor={"#afaeaeff"}
+                      />
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
                         {item.price_change_percentage_24h >= 0 ? (
                           <AntDesign name="caretup" size={20} color="green" />
                         ) : (
-                          <AntDesign name="caretdown" size={20} color="#ea3943" />
+                          <AntDesign
+                            name="caretdown"
+                            size={20}
+                            color="#ea3943"
+                          />
                         )}
 
                         <Text

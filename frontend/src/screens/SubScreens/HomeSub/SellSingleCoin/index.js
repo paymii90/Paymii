@@ -54,7 +54,13 @@ const SellSingleCoin = () => {
             >
               <Ionicons name="arrow-back" size={24} color="#fff" />
             </TouchableOpacity>
-            <Text style={styles.coinName}>{coin.name}</Text>
+            <Text
+              style={styles.coinName}
+              numberOfLines={2}
+              ellipsizeMode="tail"
+            >
+              {coin.name}
+            </Text>
             <TouchableOpacity
               style={styles.sellButton}
               onPress={() => {

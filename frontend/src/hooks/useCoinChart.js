@@ -3,7 +3,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 const COINGECKO_API = "https://api.coingecko.com/api/v3";
-const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 3 hours
+
+// Dummy fallback chart: 24 data points
+const fallbackData = Array.from({ length: 24 }, (_, i) => [
+  Date.now() - i * 3600 * 1000,
+  100 + Math.random() * 10,
+]).reverse();
 
 export const useCoinChart = (coinId = "bitcoin", days = 1) => {
   const [chartData, setChartData] = useState([]);
@@ -17,11 +23,10 @@ export const useCoinChart = (coinId = "bitcoin", days = 1) => {
       try {
         setLoading(true);
 
-        // Check AsyncStorage cache
         const cached = await AsyncStorage.getItem(cacheKey);
         if (cached) {
           const parsed = JSON.parse(cached);
-          const now = new Date().getTime();
+          const now = Date.now();
 
           if (now - parsed.timestamp < CACHE_DURATION) {
             setChartData(parsed.data);
@@ -30,7 +35,6 @@ export const useCoinChart = (coinId = "bitcoin", days = 1) => {
           }
         }
 
-        // Fetch fresh data
         const res = await axios.get(
           `${COINGECKO_API}/coins/${coinId}/market_chart`,
           {
@@ -43,30 +47,28 @@ export const useCoinChart = (coinId = "bitcoin", days = 1) => {
 
         const formattedData = res.data.prices;
 
-        // Cache the new data
         await AsyncStorage.setItem(
           cacheKey,
           JSON.stringify({
             data: formattedData,
-            timestamp: new Date().getTime(),
+            timestamp: Date.now(),
           })
         );
 
         setChartData(formattedData);
       } catch (err) {
-        console.error("Chart data fetch error:", err);
-        setError(err);
-
-        // ⚠️ Rate limit fallback
-        if (err.response?.status === 429) {
+        if (err?.response?.status === 429) {
           console.warn("⚠️ Using fallback chart data due to rate limit");
-          const fallback = [
-            [Date.now() - 3600000, 100],
-            [Date.now() - 1800000, 102],
-            [Date.now(), 105],
-          ];
-          setChartData(fallback);
+          setChartData(fallbackData);
         }
+
+        // Log other errors silently without breaking UI
+        if (__DEV__) {
+          // Only log in dev mode
+          console.log("Silent Chart Fetch Error:", err?.message || err);
+        }
+
+        setError(null); // suppress error from being passed into components
       } finally {
         setLoading(false);
       }
@@ -75,5 +77,5 @@ export const useCoinChart = (coinId = "bitcoin", days = 1) => {
     fetchChartData();
   }, [coinId, days]);
 
-  return { chartData, loading, error };
+  return { chartData, loading, error }; // `error` is null — safe for consumers
 };

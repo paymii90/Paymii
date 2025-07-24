@@ -7,12 +7,12 @@ import {
   TouchableOpacity,
   ScrollView,
   Animated,
+  InteractionManager,
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { useRoute } from "@react-navigation/native";
 import { useCoinChart } from "../../../hooks/useCoinChart";
 import LottieView from "lottie-react-native";
-import { useCoins } from "../../../context/CoinContext";
 import { useFormattedCurrency } from "../../../hooks/useFormattedCurrency";
 
 const screenWidth = Dimensions.get("window").width * 0.95;
@@ -73,23 +73,25 @@ const ChartComponent = () => {
       date.getMinutes()
     ).padStart(2, "0")}`;
 
-    setTooltip({ index, value, time: formattedTime });
+    InteractionManager.runAfterInteractions(() => {
+      setTooltip({ index, value, time: formattedTime });
 
-    requestAnimationFrame(() => {
-      Animated.timing(tooltipOpacity, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => {
-        setTimeout(() => {
-          Animated.timing(tooltipOpacity, {
-            toValue: 0,
-            duration: 500,
-            useNativeDriver: true,
-          }).start(() => {
-            setTooltip({ index: null, value: null, time: null });
-          });
-        }, 3000);
+      requestAnimationFrame(() => {
+        Animated.timing(tooltipOpacity, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(() => {
+          setTimeout(() => {
+            Animated.timing(tooltipOpacity, {
+              toValue: 0,
+              duration: 500,
+              useNativeDriver: true,
+            }).start(() => {
+              setTooltip({ index: null, value: null, time: null });
+            });
+          }, 3000);
+        });
       });
     });
   };
@@ -106,21 +108,7 @@ const ChartComponent = () => {
 
   return (
     <View style={styles.container}>
-      {loading ? (
-        <LottieView
-          source={require("../../../../assets/animations/loading.json")}
-          autoPlay
-          loop
-          style={{ width: 100, height: 100 }}
-        />
-      ) : error ? (
-        <LottieView
-          source={require("../../../../assets/animations/loading.json")}
-          autoPlay
-          loop
-          style={{ width: 100, height: 100 }}
-        />
-      ) : filteredPrices.length === 0 ? (
+      {loading || error || filteredPrices.length === 0 ? (
         <LottieView
           source={require("../../../../assets/animations/loading.json")}
           autoPlay
@@ -199,7 +187,6 @@ const ChartComponent = () => {
                   <Text style={styles.tooltipText}>
                     {formatCurrency(tooltip.value)}
                   </Text>
-
                   <Text style={styles.tooltipSub}>{tooltip.time}</Text>
                 </View>
               </Animated.View>
