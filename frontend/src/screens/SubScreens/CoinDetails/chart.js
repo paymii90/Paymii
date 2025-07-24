@@ -32,7 +32,7 @@ const dayMap = {
 };
 
 const ChartComponent = () => {
-  const [selectedRange, setSelectedRange] = useState("1D");
+  const [selectedRange, setSelectedRange] = useState("12H");
   const scrollRef = useRef(null);
   const tooltipOpacity = useRef(new Animated.Value(0)).current;
   const [tooltip, setTooltip] = useState({
