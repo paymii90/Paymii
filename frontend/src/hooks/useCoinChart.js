@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 const COINGECKO_API = "https://api.coingecko.com/api/v3";
-const CACHE_DURATION = 24 * 60 * 60 * 1000; // 3 hours
+const CACHE_DURATION = 6 * 60 * 60 * 1000; // 3 hours
 
 // Dummy fallback chart: 24 data points
 const fallbackData = Array.from({ length: 24 }, (_, i) => [

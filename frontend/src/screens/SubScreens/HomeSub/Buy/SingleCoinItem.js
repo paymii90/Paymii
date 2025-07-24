@@ -48,14 +48,20 @@ const SingleCoinItem = ({ singleCoinItem, path }) => {
 
         {/* Price and Change */}
         <View style={styles.priceContainer}>
-          <Text style={styles.price}>{formatCurrency(current_price)}</Text>
+          <Text style={styles.price} numberOfLines={1} adjustsFontSizeToFit>
+            {formatCurrency(current_price)}
+          </Text>
           <View style={styles.percentageWrapper}>
             <AntDesign
               name={price_change_percentage_24h >= 0 ? "caretup" : "caretdown"}
               size={16}
               color={percentageColor}
             />
-            <Text style={[styles.change, { color: percentageColor }]}>
+            <Text
+              style={[styles.change, { color: percentageColor }]}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+            >
               {price_change_percentage_24h.toFixed(2)}%
             </Text>
           </View>
@@ -84,8 +90,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   nameContainer: {
-    flex: 1.2,
+    flex: 1.5,
     justifyContent: "center",
+    paddingRight: 6,
   },
   name: {
     fontWeight: "600",
@@ -102,12 +109,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   priceContainer: {
-    width: 100,
+    flex: 1.2,
     alignItems: "flex-end",
+    justifyContent: "center",
   },
   price: {
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 15,
+    textAlign: "right",
   },
   percentageWrapper: {
     flexDirection: "row",

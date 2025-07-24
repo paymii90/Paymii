@@ -16,7 +16,9 @@ const CoinCard = ({ item, navigation }) => {
       style={styles.coinCard}
     >
       <Image source={{ uri: item.image }} style={styles.image} />
-      <Text style={styles.name}>{item.name}</Text>
+      <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
+        {item.name}
+      </Text>
       <Text style={styles.price}>{formatCurrency(item.current_price)}</Text>
       <Text
         style={[
