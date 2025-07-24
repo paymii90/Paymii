@@ -12,7 +12,7 @@ import { useCoins } from "../../../context/CoinContext";
 
 const TopPicks = () => {
   const { coins } = useCoins();
-  const topPicks = coins.slice(0, 5);
+  const topPicks = coins.filter((coin) => coin.market_cap_rank <= 10).slice(0, 5);
   const navigation = useNavigation();
   return (
     <View style={styles.container}>

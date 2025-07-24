@@ -52,7 +52,7 @@ const Home = () => {
   switch (activeButton) {
     case "Watchlist":
       selectedData = coins
-        .filter((coin) => coin.market_cap_rank < 100)
+        .filter((coin) => coin.market_cap_rank <= 20)
         .slice(0, 5);
       break;
     case "Trending":
