@@ -28,7 +28,7 @@ const Header = ({
 
       <Text style={styles.label}>{name} Price</Text>
       <Text style={styles.price}>{formatCurrency(current_price)}</Text>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
         {price_change_24h >= 0 ? (
           <AntDesign name="caretup" size={20} color="#16c784" />
         ) : (

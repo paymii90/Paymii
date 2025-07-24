@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Button from "../../../Components/Button";
 import Header from "./header";
-import Chart from "./chart";
+import ChartComponent from "./chart";
 import Buttons from "./buttons";
 import TabToggle from "./tabToggle";
 import WalletCard from "./walletCard";
@@ -23,8 +23,7 @@ import CoinInsights from "./coinInsights";
 import BuyCryptoPopup from "./BuyCryptoPopup";
 import TransferPopup from "./TransferPopup";
 import { useCoins } from "../../../context/CoinContext";
-
-const timeRanges = ["1H", "1D", "1W", "1M", "1Y", "All"];
+import CoinChartData from "../../../../assets/data/crypto.json";
 
 const CoinDetailScreen = () => {
   const navigation = useNavigation();
@@ -71,11 +70,7 @@ const CoinDetailScreen = () => {
         />
 
         {/* Chart Placeholder */}
-        <Chart
-          selectedRange={selectedRange}
-          timeRanges={timeRanges}
-          setSelectedRange={setSelectedRange}
-        />
+        <ChartComponent prices={CoinChartData.prices} />
         {/* Balance or Insights  */}
         <TabToggle selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
 

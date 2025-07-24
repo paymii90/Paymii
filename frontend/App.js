@@ -11,6 +11,7 @@ import { AuthContext } from "./src/context/AuthContext";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
 import LottieView from "lottie-react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 function Main() {
   const Root = createNativeStackNavigator();
@@ -51,8 +52,10 @@ function Main() {
 
 export default function App() {
   return (
-    <AppProvider>
-      <Main />
-    </AppProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}> 
+      <AppProvider>
+        <Main />
+      </AppProvider>
+    </GestureHandlerRootView>
   );
 }
