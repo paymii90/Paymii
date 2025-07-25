@@ -95,7 +95,7 @@ const Header = ({
             <Text
               style={[
                 styles.watchlistText,
-                { color: isInWatchlist ? "#bada55" : "#fff" },
+                { color: "#fff" },
               ]}
             >
               {isInWatchlist ? "In Favourites" : "Add to Favourites"}
