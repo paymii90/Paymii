@@ -1,4 +1,3 @@
-// BuyCryptoPopup.js //
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -6,123 +5,87 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Modal,
   Platform,
+  TouchableWithoutFeedback,
 } from "react-native";
-import ModalComponent from "react-native-modal";
+import { BlurView } from "expo-blur";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
 const BuyCryptoPopup = ({ isVisible, onClose, singleCoinItem }) => {
   const navigation = useNavigation();
+
+  const navigateWithDelay = (screen, passCoin = false) => {
+    onClose();
+    setTimeout(() => {
+      navigation.navigate("CoinStack", {
+        screen,
+        params: passCoin ? { coin: singleCoinItem } : undefined,
+      });
+    }, 250);
+  };
+
   return (
-    <ModalComponent
-      isVisible={isVisible}
-      onBackdropPress={onClose}
-      swipeDirection="down"
-      onSwipeComplete={onClose}
-      style={styles.modal}
+    <Modal
+      visible={isVisible}
+      transparent
+      animationType="slide"
+      onRequestClose={onClose}
     >
-      <View style={styles.popupContainer}>
-        <TouchableOpacity
-          style={styles.optionBtn}
-          onPress={() => {
-            onClose(); // closes popup firstcds
-            setTimeout(() => {
-              navigation.navigate("CoinStack", {
-                screen: "BuySingleCoin",
-                params: { coin: singleCoinItem },
-              }); // then navigates after slight delay
-            }, 200); // slight delay gives modal time to animate out
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Icon
-              name="shopping-cart"
-              size={18}
-              color="#444"
-              style={styles.icon}
-            />
-            <View>
-              <Text style={styles.optionText}>Buy</Text>
-              <Text style={{ fontWeight: 300, marginTop: 5 }}>
-                Buy Crypto with cash
-              </Text>
-            </View>
-          </View>
-          <Icon name="arrow-right" size={18} color="#444" />
-        </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View style={styles.fullscreen}>
+          <BlurView intensity={20} tint="light" style={StyleSheet.absoluteFill} />
 
-        <TouchableOpacity
-          style={styles.optionBtn}
-          onPress={() => {
-            onClose(); // closes popup first
-            setTimeout(() => {
-              navigation.navigate("CoinStack", {
-                screen: "SellSingleCoin",
-                params: { coin: singleCoinItem },
-              }); // then navigates after slight delay
-            }, 200); // slight delay gives modal time to animate out
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Icon
-              name="money-bill-wave"
-              size={18}
-              color="#444"
-              style={styles.icon}
-            />
-            <View>
-              <Text style={styles.optionText}>Sell</Text>
-              <Text style={{ fontWeight: 300, marginTop: 5 }}>
-                Buy Crypto with cash
-              </Text>
+          <TouchableWithoutFeedback>
+            <View style={styles.popupContainer}>
+              <BuyOption
+                icon={<Icon name="shopping-cart" size={18} color="#444" />}
+                title="Buy"
+                subtitle="Buy crypto with cash"
+                onPress={() => navigateWithDelay("BuySingleCoin", true)}
+              />
+              <BuyOption
+                icon={<Icon name="money-bill-wave" size={18} color="#444" />}
+                title="Sell"
+                subtitle="Sell crypto instantly"
+                onPress={() => navigateWithDelay("SellSingleCoin", true)}
+              />
+              <BuyOption
+                icon={<Icon name="exchange-alt" size={18} color="#444" />}
+                title="Convert"
+                subtitle="Swap to another coin"
+                onPress={() => navigateWithDelay("Convert")}
+              />
             </View>
-          </View>
-          <Icon name="arrow-right" size={18} color="#444" />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.optionBtn}
-          onPress={() => {
-            onClose(); // closes popup first
-            setTimeout(() => {
-              navigation.navigate("CoinStack", {
-                screen: "Convert",
-              }); // then navigates after slight delay
-            }, 200); // slight delay gives modal time to animate out
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Icon
-              name="exchange-alt"
-              size={18}
-              color="#444"
-              style={styles.icon}
-            />
-            <View>
-              <Text style={styles.optionText}>Convert</Text>
-              <Text style={{ fontWeight: 300, marginTop: 5 }}>
-                Buy Crypto with cash
-              </Text>
-            </View>
-          </View>
-          <Icon name="arrow-right" size={18} color="#444" />
-        </TouchableOpacity>
-      </View>
-    </ModalComponent>
+          </TouchableWithoutFeedback>
+        </View>
+      </TouchableWithoutFeedback>
+    </Modal>
   );
 };
 
+const BuyOption = ({ icon, title, subtitle, onPress }) => (
+  <TouchableOpacity style={styles.optionBtn} onPress={onPress}>
+    <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View style={styles.icon}>{icon}</View>
+      <View>
+        <Text style={styles.optionText}>{title}</Text>
+        <Text style={styles.optionSubtitle}>{subtitle}</Text>
+      </View>
+    </View>
+    <Icon name="arrow-right" size={18} color="#444" />
+  </TouchableOpacity>
+);
+
 const styles = StyleSheet.create({
-  modal: {
+  fullscreen: {
+    flex: 1,
     justifyContent: "flex-end",
-    margin: 0,
   },
   popupContainer: {
-    backgroundColor: "#CFCFCF",
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    borderWidth: 1,
-    borderColor: "#fff",
+    backgroundColor: "rgba(255,255,255,0.9)",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     padding: 20,
     paddingBottom: Platform.OS === "ios" ? 40 : 20,
   },
@@ -133,23 +96,20 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderBottomWidth: 1,
     borderColor: "#eee",
-    // paddingBottom : 25,
   },
-
-  action: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  icon: {
-    marginRight: 12,
-  },
-
   icon: {
     marginRight: 12,
   },
   optionText: {
     fontSize: 16,
-    color: "#333",
+    fontWeight: "600",
+    color: "#052644",
+  },
+  optionSubtitle: {
+    fontSize: 13,
+    fontWeight: "300",
+    marginTop: 5,
+    color: "#444",
   },
 });
 

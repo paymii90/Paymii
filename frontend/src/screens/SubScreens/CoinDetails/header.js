@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -29,7 +29,12 @@ const Header = ({
 
   const [animate, setAnimate] = useState(false);
   const animationRef = useRef(null);
-  const isInWatchlist = watchlist.some((c) => c.id === coinId);
+  const [isInWatchlist, setIsInWatchlist] = useState(false);
+
+  useEffect(() => {
+    const exists = watchlist.some((c) => c.id === coinId);
+    setIsInWatchlist(exists);
+  }, [watchlist, coinId]);
 
   const toggleWatchlist = () => {
     const coin = {

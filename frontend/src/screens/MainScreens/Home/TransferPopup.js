@@ -1,4 +1,3 @@
-// TransferPopup.js //
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -7,139 +6,99 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
+  Modal,
+  TouchableWithoutFeedback,
 } from "react-native";
-import ModalComponent from "react-native-modal";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { BlurView } from "expo-blur";
 
 const TransferPopup = ({ isVisible, onClose }) => {
   const navigation = useNavigation();
+
   return (
-    <ModalComponent
-      isVisible={isVisible}
-      onBackdropPress={onClose}
-      swipeDirection="down"
-      onSwipeComplete={onClose}
-      style={styles.modal}
+    <Modal
+      visible={isVisible}
+      transparent
+      animationType="slide"
+      onRequestClose={onClose}
     >
-      <View style={styles.popupContainer}>
-        <TouchableOpacity
-          style={styles.optionBtn}
-          onPress={() => {
-            onClose(); // closes popup first
-            setTimeout(() => {
-              navigation.navigate("CoinStack", {
-                screen: "Send",
-              }); // then navigates after slight delay
-            }, 200); // slight delay gives modal time to animate out
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Icon name="arrow-up" size={18} color="#444" style={styles.icon} />
-            <View>
-              <Text style={styles.optionText}>Send</Text>
-              <Text style={{ fontWeight: 300, marginTop: 5 }}>
-                Send crypto to another wallet
-              </Text>
-            </View>
-          </View>
-          <Icon name="arrow-right" size={18} color="#444" />
-        </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View style={styles.fullscreen}>
+          <BlurView
+            intensity={20}
+            tint="light"
+            style={StyleSheet.absoluteFill}
+          />
 
-        <TouchableOpacity
-          style={styles.optionBtn}
-          onPress={() => {
-            onClose(); // closes popup first
-            setTimeout(() => {
-              navigation.navigate("CoinStack", {
-                screen: "Receive",
-              }); // then navigates after slight delay
-            }, 200); // slight delay gives modal time to animate out
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Icon
-              name="arrow-down"
-              size={18}
-              color="#444"
-              style={styles.icon}
-            />
-            <View>
-              <Text style={styles.optionText}>Receive</Text>
-              <Text style={{ fontWeight: 300, marginTop: 5 }}>
-                Receive crypto from another wallet
-              </Text>
-            </View>
-          </View>
-          <Icon name="arrow-right" size={18} color="#444" />
-        </TouchableOpacity>
+          <TouchableWithoutFeedback>
+            <View style={styles.popupContainer}>
+              <TransferOption
+                icon={<Icon name="arrow-up" size={18} color="#444" />}
+                title="Send"
+                subtitle="Send crypto to another wallet"
+                onPress={() => navigateWithDelay("Send")}
+              />
 
-        <TouchableOpacity
-          style={styles.optionBtn}
-          onPress={() => {
-            onClose(); // closes popup first
-            setTimeout(() => {
-              navigation.navigate("CoinStack", {
-                screen: "Deposit",
-              }); // then navigates after slight delay
-            }, 200); // slight delay gives modal time to animate out
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Icon name="home" size={18} color="#444" style={styles.icon} />
-            <View>
-              <Text style={styles.optionText}>Deposit Cash</Text>
-              <Text style={{ fontWeight: 300, marginTop: 5 }}>
-                Transfer funds from your account
-              </Text>
-            </View>
-          </View>
-          <Icon name="arrow-right" size={18} color="#444" />
-        </TouchableOpacity>
+              <TransferOption
+                icon={<Icon name="arrow-down" size={18} color="#444" />}
+                title="Receive"
+                subtitle="Receive crypto from another wallet"
+                onPress={() => navigateWithDelay("Receive")}
+              />
 
-        <TouchableOpacity
-          style={styles.optionBtn}
-          onPress={() => {
-            onClose(); // closes popup first
-            setTimeout(() => {
-              navigation.navigate("CoinStack", {
-                screen: "Withdraw",
-              }); // then navigates after slight delay
-            }, 200); // slight delay gives modal time to animate out
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <FontAwesome
-              name="credit-card-alt"
-              size={18}
-              color="#444"
-              style={styles.icon}
-            />
-            <View>
-              <Text style={styles.optionText}>Withdraw Cash</Text>
-              <Text style={{ fontWeight: 300, marginTop: 5 }}>
-                Transfer funds to your account
-              </Text>
+              <TransferOption
+                icon={<Icon name="home" size={18} color="#444" />}
+                title="Deposit Cash"
+                subtitle="Transfer funds from your account"
+                onPress={() => navigateWithDelay("Deposit")}
+              />
+
+              <TransferOption
+                icon={
+                  <FontAwesome name="credit-card-alt" size={18} color="#444" />
+                }
+                title="Withdraw Cash"
+                subtitle="Transfer funds to your account"
+                onPress={() => navigateWithDelay("Withdraw")}
+              />
             </View>
-          </View>
-          <Icon name="arrow-right" size={18} color="#444" />
-        </TouchableOpacity>
-      </View>
-    </ModalComponent>
+          </TouchableWithoutFeedback>
+        </View>
+      </TouchableWithoutFeedback>
+    </Modal>
   );
+
+  function navigateWithDelay(screenName) {
+    onClose();
+    setTimeout(() => {
+      navigation.navigate("CoinStack", { screen: screenName });
+    }, 250);
+  }
 };
 
+const TransferOption = ({ icon, title, subtitle, onPress }) => (
+  <TouchableOpacity style={styles.optionBtn} onPress={onPress}>
+    <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View style={styles.icon}>{icon}</View>
+      <View>
+        <Text style={styles.optionText}>{title}</Text>
+        <Text style={styles.optionSubtitle}>{subtitle}</Text>
+      </View>
+    </View>
+    <Icon name="arrow-right" size={18} color="#444" />
+  </TouchableOpacity>
+);
+
 const styles = StyleSheet.create({
-  modal: {
+  fullscreen: {
+    flex: 1,
     justifyContent: "flex-end",
-    margin: 0,
   },
   popupContainer: {
-    backgroundColor: "#CFCFCF",
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    borderWidth: 1,
-    borderColor: "#fff",
+    backgroundColor: "rgba(255,255,255,0.9)",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     padding: 20,
     paddingBottom: Platform.OS === "ios" ? 40 : 20,
   },
@@ -150,23 +109,20 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderBottomWidth: 1,
     borderColor: "#eee",
-    // paddingBottom : 25,
   },
-
-  action: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  icon: {
-    marginRight: 12,
-  },
-
   icon: {
     marginRight: 12,
   },
   optionText: {
     fontSize: 16,
-    color: "#333",
+    fontWeight: "600",
+    color: "#052644",
+  },
+  optionSubtitle: {
+    fontSize: 13,
+    fontWeight: "300",
+    marginTop: 5,
+    color: "#444",
   },
 });
 
