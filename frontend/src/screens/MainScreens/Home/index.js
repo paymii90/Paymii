@@ -23,6 +23,7 @@ import ButtonsInfo from "../../../../assets/configs/HomeButtons";
 import SingleButtonItem from "../../../../assets/configs/SingleButtonItem";
 import Plus from "../../../../assets/plus-1.png";
 import BuyCryptoPopup from "../../../../assets/configs/BuyCryptoPopup.js";
+import { WatchlistContext } from "../../../context/WatchlistContext.js";
 
 import { useCoins } from "../../../context/CoinContext.js";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -46,15 +47,17 @@ const Home = () => {
   const [transferPopupVisible, setTransferPopupVisible] = useState(false);
   const { coins, exchangeRate } = useCoins();
   const formatCurrency = useFormattedCurrency();
+  const { watchlist } = useContext(WatchlistContext);
   // console.log("Coin Context:", coins);
 
   let selectedData = {};
 
   switch (activeButton) {
     case "Watchlist":
-      selectedData = coins
-        .filter((coin) => coin.market_cap_rank <= 20)
-        .slice(0, 5);
+      selectedData = coins.filter((coin) =>
+        watchlist.some((w) => w.id === coin.id)
+      );
+
       break;
     case "Trending":
       selectedData = coins
@@ -107,7 +110,7 @@ const Home = () => {
     };
 
     if (activeButton) fetchData();
-  }, [activeButton]);
+  }, [activeButton, watchlist]);
 
   return (
     <SafeAreaView
@@ -173,69 +176,80 @@ const Home = () => {
               </View>
             ) : (
               <View>
-                {filteredCoins.map((item) => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      // console.log("Navigating to coin details for:", item);
-
-                      navigation.navigate("CoinStack", {
-                        screen: "CoinDetails",
-                        params: { coin: item },
-                      });
-                    }}
-                    key={item.id}
-                  >
-                    <View style={styles.coinContainer}>
-                      <Image source={{ uri: item.image }} style={styles.logo} />
-                      <View style={styles.coinInfo}>
-                        {/* <Text style={styles.name}>
-                          {item.name} ({item.symbol.toUpperCase()})
-                        </Text> */}
-                        <Text
-                          style={styles.name}
-                          numberOfLines={1}
-                          ellipsizeMode="tail"
+                {filteredCoins.length === 0 && activeButton === "Watchlist" ? (
+                  <View style={styles.emptyWatchlistContainer}>
+                    <TouchableOpacity
+                      style={styles.plusCircle}
+                      onPress={() => navigation.navigate("Explore")}
+                    >
+                      <AntDesign name="plus" size={32} color="#fff" />
+                    </TouchableOpacity>
+                    <Text style={styles.emptyWatchlistText}>
+                      Add assets to Favourites
+                    </Text>
+                  </View>
+                ) : (
+                  filteredCoins.map((item) => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate("CoinStack", {
+                          screen: "CoinDetails",
+                          params: { coin: item },
+                        });
+                      }}
+                      key={item.id}
+                    >
+                      <View style={styles.coinContainer}>
+                        <Image
+                          source={{ uri: item.image }}
+                          style={styles.logo}
+                        />
+                        <View style={styles.coinInfo}>
+                          <Text
+                            style={styles.name}
+                            numberOfLines={1}
+                            ellipsizeMode="tail"
+                          >
+                            {item.name} ({item.symbol.toUpperCase()})
+                          </Text>
+                          <Text style={styles.price}>
+                            {formatCurrency(item.current_price)}
+                          </Text>
+                        </View>
+                        <MiniChart
+                          coinId={item.id}
+                          backgroundcolor={"#afaeaeff"}
+                        />
+                        <View
+                          style={{ flexDirection: "row", alignItems: "center" }}
                         >
-                          {item.name} ({item.symbol.toUpperCase()})
-                        </Text>
-                        <Text style={styles.price}>
-                          {formatCurrency(item.current_price)}
-                        </Text>
+                          {item.price_change_percentage_24h >= 0 ? (
+                            <AntDesign name="caretup" size={20} color="green" />
+                          ) : (
+                            <AntDesign
+                              name="caretdown"
+                              size={20}
+                              color="#ea3943"
+                            />
+                          )}
+                          <Text
+                            style={[
+                              styles.priceChange,
+                              {
+                                color:
+                                  item.price_change_percentage_24h >= 0
+                                    ? "green"
+                                    : "red",
+                              },
+                            ]}
+                          >
+                            {item.price_change_percentage_24h.toFixed(2)}%
+                          </Text>
+                        </View>
                       </View>
-                      <MiniChart
-                        coinId={item.id}
-                        backgroundcolor={"#afaeaeff"}
-                      />
-                      <View
-                        style={{ flexDirection: "row", alignItems: "center" }}
-                      >
-                        {item.price_change_percentage_24h >= 0 ? (
-                          <AntDesign name="caretup" size={20} color="green" />
-                        ) : (
-                          <AntDesign
-                            name="caretdown"
-                            size={20}
-                            color="#ea3943"
-                          />
-                        )}
-
-                        <Text
-                          style={[
-                            styles.priceChange,
-                            {
-                              color:
-                                item.price_change_percentage_24h >= 0
-                                  ? "green"
-                                  : "red",
-                            },
-                          ]}
-                        >
-                          {item.price_change_percentage_24h.toFixed(2)}%
-                        </Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                ))}
+                    </TouchableOpacity>
+                  ))
+                )}
               </View>
             )}
           </View>
@@ -336,5 +350,27 @@ const styles = StyleSheet.create({
   priceChange: {
     fontWeight: "600",
     fontSize: 13,
+  },
+  emptyWatchlistContainer: {
+    alignItems: "center",
+    marginVertical: 30,
+    justifyContent: "center",
+  },
+
+  plusCircle: {
+    width: 50,
+    height: 50,
+    borderRadius: 35,
+    backgroundColor: "#375169",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 12,
+    elevation: 4,
+  },
+
+  emptyWatchlistText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#444",
   },
 });
