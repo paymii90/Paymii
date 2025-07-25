@@ -1,58 +1,81 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthContext } from "./AuthContext";
 
 export const WatchlistContext = createContext();
 
 export const WatchlistProvider = ({ children }) => {
-  const { isLoggedIn } = useContext(AuthContext);
   const [watchlist, setWatchlist] = useState([]);
-  const [email, setEmail] = useState(null);
+  const [email, setEmail] = useState("");
 
-  useEffect(() => {
-    const load = async () => {
-      const userData = await AsyncStorage.getItem("user");
-      const parsed = userData ? JSON.parse(userData) : null;
-      const userEmail = parsed?.email;
-      setEmail(userEmail);
-      if (userEmail) {
-        const stored = await AsyncStorage.getItem(`watchlist_${userEmail}`);
-        if (stored) setWatchlist(JSON.parse(stored));
+  // Fetch user email from AsyncStorage
+  const getUserEmail = async () => {
+    try {
+      const user = await AsyncStorage.getItem("user");
+      if (user) {
+        const parsed = JSON.parse(user);
+        return parsed.email;
       }
-    };
-    load();
-  }, [isLoggedIn]);
-
-  const updateStorage = async (newList) => {
-    if (email) {
-      await AsyncStorage.setItem(`watchlist_${email}`, JSON.stringify(newList));
+      return null;
+    } catch (error) {
+      console.error("Error getting user email:", error);
+      return null;
     }
   };
 
-  const addToWatchlist = (coinId) => {
-    if (!watchlist.includes(coinId)) {
-      const updated = [...watchlist, coinId];
+  // Load watchlist on mount
+  useEffect(() => {
+    const loadWatchlist = async () => {
+      const userEmail = await getUserEmail();
+      if (userEmail) {
+        setEmail(userEmail);
+        const stored = await AsyncStorage.getItem(`watchlist_${userEmail}`);
+        setWatchlist(stored ? JSON.parse(stored) : []);
+      }
+    };
+
+    loadWatchlist();
+  }, []);
+
+  const saveToStorage = async (updatedList) => {
+    try {
+      await AsyncStorage.setItem(
+        `watchlist_${email}`,
+        JSON.stringify(updatedList)
+      );
+    } catch (e) {
+      console.error("Error saving watchlist:", e);
+    }
+  };
+
+  const addToWatchlist = (coin) => {
+    const exists = watchlist.find((c) => c.id === coin.id);
+    if (!exists) {
+      const updated = [...watchlist, coin];
       setWatchlist(updated);
-      updateStorage(updated);
+      saveToStorage(updated);
     }
   };
 
   const removeFromWatchlist = (coinId) => {
-    const updated = watchlist.filter((id) => id !== coinId);
+    const updated = watchlist.filter((c) => c.id !== coinId);
     setWatchlist(updated);
-    updateStorage(updated);
+    saveToStorage(updated);
   };
 
-  const isWatchlisted = (coinId) => watchlist.includes(coinId);
+  const isInWatchlist = (coinId) => {
+    return watchlist.some((coin) => coin.id === coinId);
+  };
 
   return (
     <WatchlistContext.Provider
-      value={{ watchlist, addToWatchlist, removeFromWatchlist, isWatchlisted }}
+      value={{
+        watchlist,
+        addToWatchlist,
+        removeFromWatchlist,
+        isInWatchlist,
+      }}
     >
       {children}
     </WatchlistContext.Provider>
   );
 };
-
-//custom hook
-export const useWatchlist = () => useContext(WatchlistContext);

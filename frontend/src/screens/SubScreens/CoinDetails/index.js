@@ -67,6 +67,8 @@ const CoinDetailScreen = () => {
           price_change_percentage_24h={price_change_percentage_24h}
           navigation={navigation}
           exchangeRate={exchangeRate}
+          coinId={coin.id}
+          image={coin.image}
         />
 
         {/* Chart Placeholder */}
