@@ -8,15 +8,16 @@ export const WatchlistProvider = ({ children }) => {
   const { user } = useContext(AuthContext);
   const [watchlist, setWatchlist] = useState([]);
 
-  const emailKey = user?.email || "guest";
-  const STORAGE_KEY = `watchlist_${emailKey}`;
-
   useEffect(() => {
     const loadWatchlist = async () => {
+      const emailKey = user?.email || "guest";
+      const STORAGE_KEY = `watchlist_${emailKey}`;
       try {
         const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
         if (jsonValue != null) {
           setWatchlist(JSON.parse(jsonValue));
+        } else {
+          setWatchlist([]);
         }
       } catch (e) {
         console.error("Failed to load watchlist", e);
@@ -24,9 +25,11 @@ export const WatchlistProvider = ({ children }) => {
     };
 
     loadWatchlist();
-  }, [user]);
+  }, [user?.email]);
 
   const saveWatchlist = async (updatedList) => {
+    const emailKey = user?.email || "guest";
+    const STORAGE_KEY = `watchlist_${emailKey}`;
     try {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedList));
       setWatchlist(updatedList);
