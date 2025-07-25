@@ -1,17 +1,29 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import StackNavigator from "./src/navigation/StackNavigator"; // Auth stack
-import TabNavigator from "./src/navigation/TabNavigator"; // Main app tabs
-import CoinStack from "./src/screens/MainStacks/CoinStack"; // Coin details/buy
+import StackNavigator from "./src/navigation/StackNavigator";
+import TabNavigator from "./src/navigation/TabNavigator";
+import CoinStack from "./src/screens/MainStacks/CoinStack";
 import AppProvider from "./src/context/AppProvider";
 import { AuthContext } from "./src/context/AuthContext";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
 import LottieView from "lottie-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+import * as Notifications from "expo-notifications";
+
+// ✅ Modern notification handler setup (fixes deprecation warning)
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 function Main() {
   const Root = createNativeStackNavigator();
@@ -52,7 +64,7 @@ function Main() {
 
 export default function App() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}> 
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <AppProvider>
         <Main />
       </AppProvider>

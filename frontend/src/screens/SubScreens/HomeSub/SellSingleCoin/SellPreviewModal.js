@@ -14,7 +14,7 @@ import { FIREBASE_AUTH } from "../../../../../firebaseConfig";
 import { sellCoin } from "../../../../api/transactionApi";
 import { useNavigation } from "@react-navigation/native";
 import { IpContext } from "../../../../context/IpContext";
-import Toast from "react-native-toast-message";
+import * as Notifications from "expo-notifications";
 import LottieView from "lottie-react-native";
 
 const SellPreviewModal = ({
@@ -42,11 +42,7 @@ const SellPreviewModal = ({
           token = await currentUser.getIdToken(true);
           await AsyncStorage.setItem("token", token);
         } else {
-          Toast.show({
-            type: "error",
-            text1: "Not Logged In",
-            text2: "Please log in again.",
-          });
+          alert("Not logged in. Please log in again.");
           return;
         }
       }
@@ -64,28 +60,28 @@ const SellPreviewModal = ({
       };
 
       const result = await sellCoin(sellData, token, ipAddress);
-      console.log("✅ Sell result:", result);
-
-      Toast.show({
-        type: "success",
-        text1: "Sale Successful",
-        text2: `${coin.name} sold successfully`,
-      });
+      console.log("Sell result:", result);
 
       onClose();
       setTimeout(() => {
         navigation.navigate("SuccessScreen", { coinName: coin.name });
       }, 400);
 
-      setBalance((prev) => prev - parseFloat(amount));
+      // Trigger local notification
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "Sell Completed 🎉",
+          body: `You successfully sold ${amount} ${coin.symbol.toUpperCase()}`,
+          sound: "default",
+        },
+        trigger: null,
+      });
+
+      setBalance((prev) => prev - parseFloat(amount)); // Update balance
     } catch (err) {
       console.log("❌ Sell error:", err);
       onClose();
-      Toast.show({
-        type: "error",
-        text1: "Sell Failed",
-        text2: "Something went wrong. Try again.",
-      });
+      alert("Sell failed. Try again.");
     } finally {
       setIsSelling(false);
     }
@@ -105,7 +101,6 @@ const SellPreviewModal = ({
             tint="light"
             style={StyleSheet.absoluteFill}
           />
-
           <TouchableWithoutFeedback>
             <View style={styles.modalContainer}>
               {isSelling ? (
