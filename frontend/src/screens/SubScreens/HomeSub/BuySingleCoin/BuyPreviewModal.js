@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { IpContext } from "../../../../context/IpContext";
 import Toast from "react-native-toast-message";
 import LottieView from "lottie-react-native";
+import * as Notifications from "expo-notifications";
 
 const BuyPreviewModal = ({
   visible,
@@ -29,6 +30,16 @@ const BuyPreviewModal = ({
   const { ipAddress } = useContext(IpContext);
   const coinValue = (amount / coin?.current_price).toFixed(6);
   const [isBuying, setIsBuying] = useState(false);
+
+  const sendLocalNotification = async () => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "🎉 Purchase Successful!",
+        body: `You've successfully bought ${coinValue} ${coin?.symbol.toUpperCase()}. Check your portfolio now!`,
+      },
+      trigger: null, // Immediate
+    });
+  };
 
   const handleBuy = async () => {
     setIsBuying(true);
@@ -66,16 +77,12 @@ const BuyPreviewModal = ({
       // const result = await buyCoin(buyData, token, ipAddress);
       // console.log("✅ Buy result:", result);
 
-      Toast.show({
-        type: "success",
-        text1: "Purchase Successful",
-        text2: `${coin.name} added to your portfolio`,
-      });
-
       onClose();
       setTimeout(() => {
         navigation.navigate("SuccessScreen", { coinName: coin.name });
       }, 400);
+
+      await sendLocalNotification();
 
       setBalance((prev) => prev - parseFloat(amount));
     } catch (err) {
@@ -100,8 +107,11 @@ const BuyPreviewModal = ({
     >
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.fullscreen}>
-          <BlurView intensity={15} tint="light" style={StyleSheet.absoluteFill} />
-
+          <BlurView
+            intensity={15}
+            tint="light"
+            style={StyleSheet.absoluteFill}
+          />
           <TouchableWithoutFeedback>
             <View style={styles.modalContainer}>
               {isBuying ? (
@@ -117,7 +127,10 @@ const BuyPreviewModal = ({
               ) : (
                 <>
                   <View style={styles.header}>
-                    <Image source={{ uri: coin?.image }} style={styles.coinImage} />
+                    <Image
+                      source={{ uri: coin?.image }}
+                      style={styles.coinImage}
+                    />
                     <View>
                       <Text style={styles.name}>{coin?.name}</Text>
                       <Text style={styles.symbol}>
@@ -139,7 +152,10 @@ const BuyPreviewModal = ({
                     </View>
                   </View>
 
-                  <TouchableOpacity style={styles.buyButton} onPress={handleBuy}>
+                  <TouchableOpacity
+                    style={styles.buyButton}
+                    onPress={handleBuy}
+                  >
                     <Text style={styles.buyText}>Buy Now</Text>
                   </TouchableOpacity>
 
