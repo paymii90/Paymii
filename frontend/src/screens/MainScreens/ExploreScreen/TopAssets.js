@@ -13,7 +13,7 @@ import { useFormattedCurrency } from "../../../hooks/useFormattedCurrency";
 
 const TopAssets = () => {
   const { coins } = useCoins();
-  const [topAssets, setTopAssets] = useState(coins.slice(0, 3));
+  const [topAssets, setTopAssets] = useState(coins.filter(coin => coin.market_cap_rank <= 10).slice(0, 3));
   const [buttonText, setbuttonText] = useState("See All");
   const navigation = useNavigation();
   const formatCurrency = useFormattedCurrency();
@@ -70,11 +70,11 @@ const TopAssets = () => {
       />
       <TouchableOpacity
         onPress={() => {
-          setTopAssets(coins.slice(0, 10));
+          setTopAssets(coins.sort((a, b) => a.market_cap_rank - b.market_cap_rank));
           setbuttonText("See Less");
 
           if (buttonText === "See Less") {
-            setTopAssets(coins.slice(0, 3));
+            setTopAssets(coins.filter(coin => coin.market_cap_rank <= 10).slice(0, 3));
             setbuttonText("See All");
           }
         }}

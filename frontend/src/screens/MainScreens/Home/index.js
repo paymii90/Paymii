@@ -54,7 +54,10 @@ const Home = () => {
 
   switch (activeButton) {
     case "Watchlist":
-      selectedData = coins.filter((coin) => watchlist.includes(coin.id));
+      selectedData = coins.filter((coin) =>
+        watchlist.some((w) => w.id === coin.id)
+      );
+
       break;
     case "Trending":
       selectedData = coins
@@ -107,7 +110,7 @@ const Home = () => {
     };
 
     if (activeButton) fetchData();
-  }, [activeButton]);
+  }, [activeButton, watchlist]);
 
   return (
     <SafeAreaView
@@ -182,7 +185,7 @@ const Home = () => {
                       <AntDesign name="plus" size={32} color="#fff" />
                     </TouchableOpacity>
                     <Text style={styles.emptyWatchlistText}>
-                      Add assets to Watchlist
+                      Add assets to Favourites
                     </Text>
                   </View>
                 ) : (

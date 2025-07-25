@@ -8,9 +8,9 @@ import {
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import LottieView from "lottie-react-native";
 import { useFormattedCurrency } from "../../../hooks/useFormattedCurrency";
 import { WatchlistContext } from "../../../context/WatchlistContext";
-import LottieView from "lottie-react-native";
 
 const fallbackImage = "https://cdn-icons-png.flaticon.com/512/6596/6596121.png";
 
@@ -27,10 +27,9 @@ const Header = ({
   const { watchlist, addToWatchlist, removeFromWatchlist } =
     useContext(WatchlistContext);
 
-  const isInWatchlist = watchlist.some((c) => c.id === coinId);
-
+  const [animate, setAnimate] = useState(false);
   const animationRef = useRef(null);
-  const [showAnimation, setShowAnimation] = useState(false);
+  const isInWatchlist = watchlist.some((c) => c.id === coinId);
 
   const toggleWatchlist = () => {
     const coin = {
@@ -44,9 +43,9 @@ const Header = ({
       removeFromWatchlist(coinId);
     } else {
       addToWatchlist(coin);
-      setShowAnimation(true);
+      setAnimate(true);
       animationRef.current?.play();
-      setTimeout(() => setShowAnimation(false), 1500); // auto-hide after 1.5s
+      setTimeout(() => setAnimate(false), 1500);
     }
   };
 
@@ -71,13 +70,20 @@ const Header = ({
             onPress={toggleWatchlist}
             style={styles.watchlistButton}
           >
-            <View style={{ position: "relative", alignItems: "center" }}>
-              {showAnimation && (
+            <View
+              style={{
+                position: "relative",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {animate && (
                 <LottieView
                   ref={animationRef}
                   source={require("../../../../assets/animations/star-fav.json")}
-                  style={styles.lottie}
+                  autoPlay={false}
                   loop={false}
+                  style={styles.lottie}
                 />
               )}
               <AntDesign
@@ -89,7 +95,7 @@ const Header = ({
             <Text
               style={[
                 styles.watchlistText,
-                { color:  "#fff" },
+                { color: isInWatchlist ? "#bada55" : "#fff" },
               ]}
             >
               {isInWatchlist ? "In Favourites" : "Add to Favourites"}
@@ -175,11 +181,9 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   lottie: {
+    width: 50,
+    height: 50,
     position: "absolute",
-    width: 60,
-    height: 60,
-    top: -18,
-    left: -18,
-    zIndex: 1,
+    zIndex: 10,
   },
 });
