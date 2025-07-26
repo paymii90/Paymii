@@ -7,7 +7,7 @@ export const CoinContext = createContext();
 
 const COINGECKO_API = "https://api.coingecko.com/api/v3";
 const CACHE_KEY = "cached_coins";
-const CACHE_DURATION = 0.033333333 * 60 * 60 * 1000; // fetch every 2 mins in ms
+const CACHE_DURATION = 2 * 60 * 1000; // fetch every 2 mins in ms
 
 export const CoinProvider = ({ children }) => {
   const [coins, setCoins] = useState([]);
@@ -19,6 +19,7 @@ export const CoinProvider = ({ children }) => {
         const cached = await AsyncStorage.getItem(CACHE_KEY);
         if (cached) {
           const parsed = JSON.parse(cached);
+          
           const now = Date.now();
           if (now - parsed.timestamp < CACHE_DURATION) {
             setCoins(parsed.data);
