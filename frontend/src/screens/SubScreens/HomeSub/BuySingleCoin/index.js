@@ -31,6 +31,7 @@ const BuySingleCoin = () => {
         <ImageBackground
           source={{ uri: coin.image }}
           style={styles.headerBackground}
+
           imageStyle={styles.headerImage}
           blurRadius={10}
         >
@@ -61,7 +62,7 @@ const BuySingleCoin = () => {
 
         <Text style={styles.label}>Enter Amount in GHC</Text>
         <Text style={styles.amount}>GH₵ {amount || "0"}</Text>
-        <Text style={styles.range}>Current Price: GH₵{coin.current_price}</Text>
+        <Text style={styles.range}>Current Price: {}</Text>
         <Text style={styles.balance}>Current Balance: ₵10,000</Text>
 
         <View style={styles.percentRow}>
