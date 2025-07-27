@@ -13,6 +13,7 @@ import SafeAreaWrapper from "../../../../Components/SafeAreaWrapper";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import BuyPreviewModal from "./BuyPreviewModal";
 import CustomNumpad from "../../../../Components/customNumpad";
+import { useFormattedCurrency } from "../../../../hooks/useFormattedCurrency";
 import Toast from "react-native-toast-message";
 const { width } = Dimensions.get("window");
 
@@ -24,6 +25,8 @@ const BuySingleCoin = () => {
   const [amount, setAmount] = useState("");
   const [balance, setBalance] = useState(10000); // GH₵10,00000 dummy balance
   const [showModal, setShowModal] = useState(false);
+
+  const formatCurrency = useFormattedCurrency();
 
   return (
     <SafeAreaWrapper>
@@ -62,7 +65,7 @@ const BuySingleCoin = () => {
 
         <Text style={styles.label}>Enter Amount in GHC</Text>
         <Text style={styles.amount}>GH₵ {amount || "0"}</Text>
-        <Text style={styles.range}>Current Price: {}</Text>
+        <Text style={styles.range}>Current Price: {formatCurrency(coin.current_price)}</Text>
         <Text style={styles.balance}>Current Balance: ₵10,000</Text>
 
         <View style={styles.percentRow}>
