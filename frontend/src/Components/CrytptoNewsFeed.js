@@ -7,34 +7,46 @@ import {
   Image,
   TouchableOpacity,
   Linking,
-  ActivityIndicator,
   Modal,
   Pressable,
+  Dimensions,
   ScrollView,
-  TouchableWithoutFeedback,
-  TouchableOpacity as RNTO,
+  RefreshControl,
 } from "react-native";
 import axios from "axios";
 import { BlurView } from "expo-blur";
 import LottieView from "lottie-react-native";
 import fallBackImage from "../../assets/thumbnail.jpeg";
-import newsFeed from "../../assets/data/news";
+import fallbackNews from "../../assets/data/news";
 
 const API_KEY = "pub_3b6fd31a84d0411aa4bf76be7f8c0766";
+const CATEGORIES = [
+  "All",
+  "Bitcoin",
+  "Ethereum",
+  "Altcoins",
+  "Crypto",
+  "NFTs",
+  "DeFi",
+];
 
 const CryptoNewsFeed = () => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("All");
 
-  const fetchNews = async () => {
+  const fetchNews = async (category = "All") => {
+    setLoading(true);
     try {
-      const response = await axios.get(
-        `https://newsdata.io/api/1/news?apikey=${API_KEY}&q=crypto&language=en&category=business,top,technology`
+      const topic = category === "All" ? "crypto" : category.toLowerCase();
+      const res = await axios.get(
+        `https://newsdata.io/api/1/news?apikey=${API_KEY}&q=${topic}&language=en&category=business,technology`
       );
 
-      const transformedNews = response.data.results.map((item) => ({
+      const transformed = res.data.results.map((item) => ({
         title: item.title,
         description: item.description,
         url: item.link,
@@ -43,12 +55,13 @@ const CryptoNewsFeed = () => {
         kind: item.category?.[0] || "News",
       }));
 
-      setNews(transformedNews);
-    } catch (error) {
+      setNews(transformed);
+    } catch (err) {
       console.warn("⚠️ Using fallback news due to API error");
-      setNews(newsFeed); // fallback
+      setNews(fallbackNews);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
@@ -56,10 +69,9 @@ const CryptoNewsFeed = () => {
     fetchNews();
   }, []);
 
-  const getImageSource = (item) => {
-    return item.thumbnail && item.thumbnail.startsWith("http")
-      ? { uri: item.thumbnail }
-      : fallBackImage;
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchNews(activeCategory);
   };
 
   const openModal = (item) => {
@@ -68,19 +80,31 @@ const CryptoNewsFeed = () => {
   };
 
   const closeModal = () => {
-    setSelectedItem(null);
     setModalVisible(false);
+    setSelectedItem(null);
   };
 
-  const getRelativeTime = (dateStr) => {
-    const publishedTime = new Date(dateStr);
-    const now = new Date();
-    const diff = Math.floor((now - publishedTime) / 60000); // minutes
+  const getImageSource = (item) => {
+    return item.thumbnail?.startsWith("http")
+      ? { uri: item.thumbnail }
+      : fallBackImage;
+  };
 
-    if (diff < 1) return "Just now";
-    if (diff < 60) return `${diff} min${diff === 1 ? "" : "s"} ago`;
-    const hours = Math.floor(diff / 60);
-    return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+  const getTimeAgo = (dateStr) => {
+    const now = new Date();
+    const date = new Date(dateStr);
+    const diff = Math.floor((now - date) / 1000);
+
+    if (diff < 60) return `${diff} sec${diff === 1 ? "" : "s"} ago`;
+    if (diff < 3600) {
+      const mins = Math.floor(diff / 60);
+      return `${mins} min${mins === 1 ? "" : "s"} ago`;
+    }
+    if (diff < 86400) {
+      const hrs = Math.floor(diff / 3600);
+      return `${hrs} hour${hrs === 1 ? "" : "s"} ago`;
+    }
+    return date.toDateString();
   };
 
   return (
@@ -94,26 +118,56 @@ const CryptoNewsFeed = () => {
         </TouchableOpacity>
       </View>
 
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.tabRow}
+      >
+        {CATEGORIES.map((cat) => (
+          <TouchableOpacity
+            key={cat}
+            style={[
+              styles.tabButton,
+              activeCategory === cat && styles.activeTab,
+            ]}
+            onPress={() => {
+              setActiveCategory(cat);
+              fetchNews(cat);
+            }}
+          >
+            <Text
+              style={[
+                styles.tabText,
+                activeCategory === cat && styles.activeTabText,
+              ]}
+            >
+              {cat}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
       {loading ? (
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
-          <LottieView
-            source={require("../../assets/animations/loading.json")}
-            autoPlay
-            loop
-            style={{ width: 100, height: 100 }}
-          />
-        </View>
+        <LottieView
+          source={require("../../assets/animations/loading.json")}
+          autoPlay
+          loop
+          style={{ width: 100, height: 100, alignSelf: "center" }}
+        />
       ) : (
         <FlatList
           data={news}
           keyExtractor={(item, index) => index.toString()}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           scrollEnabled={false}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => openModal(item)}>
               <View style={styles.newsItem}>
                 <View style={styles.newsText}>
                   <Text style={styles.source}>
-                    {item.kind || "News"} · {getRelativeTime(item.published_at)}
+                    {item.kind} · {getTimeAgo(item.published_at)}
                   </Text>
                   <Text style={styles.title}>{item.title}</Text>
                 </View>
@@ -124,24 +178,19 @@ const CryptoNewsFeed = () => {
         />
       )}
 
-      {/* Glassy Modal with tap-to-dismiss */}
       <Modal
         visible={modalVisible}
-        transparent
         animationType="slide"
+        transparent
         onRequestClose={closeModal}
       >
-        <RNTO
-          activeOpacity={1}
-          onPress={closeModal}
-          style={styles.modalOverlay}
-        >
+        <Pressable style={styles.modalOverlay} onPress={closeModal}>
           <BlurView
-            intensity={20}
+            intensity={25}
             tint="light"
             style={StyleSheet.absoluteFill}
           />
-          <RNTO activeOpacity={1} onPress={() => {}} style={styles.modalCard}>
+          <Pressable style={styles.modalCard}>
             <ScrollView showsVerticalScrollIndicator={false}>
               {selectedItem && (
                 <>
@@ -151,8 +200,8 @@ const CryptoNewsFeed = () => {
                   />
                   <Text style={styles.modalTitle}>{selectedItem.title}</Text>
                   <Text style={styles.modalSource}>
-                    {selectedItem.kind || "News"} ·{" "}
-                    {getRelativeTime(selectedItem.published_at)}
+                    {selectedItem.kind} ·{" "}
+                    {new Date(selectedItem.published_at).toLocaleString()}
                   </Text>
                   <Text style={styles.modalDescription}>
                     {selectedItem.description || "No description available."}
@@ -170,16 +219,15 @@ const CryptoNewsFeed = () => {
                   )}
                 </>
               )}
+              <Pressable
+                style={[styles.actionButton, { backgroundColor: "#0a84ff" }]}
+                onPress={closeModal}
+              >
+                <Text style={styles.buttonText}>Close</Text>
+              </Pressable>
             </ScrollView>
-
-            <Pressable
-              style={[styles.actionButton, { backgroundColor: "#0a84ff" }]}
-              onPress={closeModal}
-            >
-              <Text style={styles.buttonText}>Close</Text>
-            </Pressable>
-          </RNTO>
-        </RNTO>
+          </Pressable>
+        </Pressable>
       </Modal>
     </View>
   );
@@ -205,6 +253,27 @@ const styles = StyleSheet.create({
   viewMore: {
     color: "#0a84ff",
     fontWeight: "600",
+  },
+  tabRow: {
+    flexDirection: "row",
+    gap: 10,
+    paddingVertical: 8,
+  },
+  tabButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    backgroundColor: "#f0f0f0",
+  },
+  activeTab: {
+    backgroundColor: "#0a84ff",
+  },
+  tabText: {
+    color: "#000",
+    fontWeight: "500",
+  },
+  activeTabText: {
+    color: "#fff",
   },
   newsItem: {
     flexDirection: "row",
