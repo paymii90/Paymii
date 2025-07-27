@@ -110,7 +110,7 @@ const CryptoNewsFeed = () => {
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        <Text style={styles.header}>📰 Crypto News</Text>
+        <Text style={styles.header}>📰 Paymii News</Text>
         <TouchableOpacity
           onPress={() => Linking.openURL("https://newsdata.io")}
         >
