@@ -56,7 +56,8 @@
     "react-native-wagmi-charts": "^2.7.1",
     "react-native-web": "^0.20.0",
     "expo-notifications": "~0.31.4",
-    "expo-device": "~7.1.4"
+    "expo-device": "~7.1.4",
+    "expo-web-browser": "~14.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

@@ -20,7 +20,7 @@ import { BlurView } from "expo-blur";
 import Logo from "../../../../assets/logo.svg";
 import Button from "../../../Components/Button";
 import ButtonsInfo from "../../../../assets/configs/HomeButtons";
-import SingleButtonItem from "../../../../assets/configs/SingleButtonItem";
+import SingleButtonItem from "./SingleButtonItem.js";
 import Plus from "../../../../assets/plus-1.png";
 import BuyCryptoPopup from "../../../../assets/configs/BuyCryptoPopup.js";
 import { WatchlistContext } from "../../../context/WatchlistContext.js";
@@ -221,7 +221,10 @@ const Home = () => {
                           backgroundcolor={"#afaeaeff"}
                         />
                         <View
-                          style={{ flexDirection: "row", alignItems: "center" }}
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}
                         >
                           {item.price_change_percentage_24h >= 0 ? (
                             <AntDesign name="caretup" size={20} color="green" />
