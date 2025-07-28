@@ -13,6 +13,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import CustomNumpad from "../../../../Components/customNumpad";
 import { useFormattedCurrency } from "../../../../hooks/useFormattedCurrency";
 import ConvertPreviewModal from "./ConvertPreviewModal"; // you’ll build this next
+import Toast from "react-native-toast-message";
 
 const { width } = Dimensions.get("window");
 
@@ -22,7 +23,8 @@ const ConvertSingleCoin = () => {
   const { fromCoin, toCoin } = route.params;
 
   const [amount, setAmount] = useState("");
-  const [balance, setBalance] = useState(0.45); // Hardcoded crypto balance
+  const [balance, setBalance] = useState(2.675); // Hardcoded crypto balance
+  const [showModal, setShowModal] = useState(false);
 
   const formatCurrency = useFormattedCurrency();
 
@@ -44,7 +46,7 @@ const ConvertSingleCoin = () => {
               <Ionicons name="arrow-back" size={24} color="#fff" />
             </TouchableOpacity>
 
-            <Text style={styles.coinName} numberOfLines={2}>
+            <Text style={styles.coinName} numberOfLines={1}>
               Convert {fromCoin.name}
             </Text>
           </View>
@@ -84,19 +86,46 @@ const ConvertSingleCoin = () => {
           <TouchableOpacity
             style={styles.Btn}
             onPress={() => {
-              if (parseFloat(amount) > balance || parseFloat(amount) <= 0)
+              // Validation
+              if (fromCoin.id === toCoin.id) {
+                Toast.show({
+                  type: "error",
+                  text1: "Invalid Selection",
+                  text2: "Please select different coins",
+                });
                 return;
-              navigation.navigate("ConvertPreviewModal", {
-                fromCoin,
-                toCoin,
-                amount,
-              });
+              } else if (!amount || parseFloat(amount) <= 0) {
+                Toast.show({
+                  type: "error",
+                  text1: "Input Error",
+                  text2: "Please enter a valid amount",
+                });
+                return;
+              } else if (parseFloat(amount) > balance) {
+                Toast.show({
+                  type: "error",
+                  text1: "Insufficient Balance",
+                  text2: "You don't have enough balance",
+                });
+                return;
+              }
+
+              setShowModal(true);
             }}
           >
             <Text style={styles.previewText}>PREVIEW CONVERT</Text>
           </TouchableOpacity>
         </View>
       </View>
+      {showModal && (
+        <ConvertPreviewModal
+          visible={showModal}
+          onClose={() => setShowModal(false)}
+          fromCoin={fromCoin}
+          toCoin={toCoin}
+          amount={amount}
+        />
+      )}
     </SafeAreaWrapper>
   );
 };
