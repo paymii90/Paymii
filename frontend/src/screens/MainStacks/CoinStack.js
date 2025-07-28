@@ -17,6 +17,8 @@ import ReceiveCryptoScreen from "../SubScreens/HomeSub/RecieveCryptoScreen";
 import DepositConfirmation from "../SubScreens/HomeSub/Deposit/DepositConfirmation";
 import MethodSelection from "../SubScreens/HomeSub/Deposit/Deposit";
 import AddPayment from "../MainScreens/SettingsScreen/Payment/AddPayment";
+import ConvertSingleCoin from "../SubScreens/HomeSub/ConvertSingleCoin";
+import SelectToCoin from "../SubScreens/HomeSub/SelectToCoin";
 
 import Chat from "../SubScreens/HomeSub/Chat";
 
@@ -46,6 +48,9 @@ const CoinStack = () => (
     {/* The screen names of MethodSelection and Deposit have interchanged */}
     <Stack.Screen name="MethodSelection" component={MethodSelection} />
     <Stack.Screen name="AddPayment" component={AddPayment} />
+
+    <Stack.Screen name="ConvertSingleCoin" component={ConvertSingleCoin} />
+    <Stack.Screen name="SelectToCoin" component={SelectToCoin} />
   </Stack.Navigator>
 );
 

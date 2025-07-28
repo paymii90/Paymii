@@ -5,7 +5,7 @@ import { useFormattedCurrency } from "../../../../hooks/useFormattedCurrency";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MiniChart from "../../../../Components/MiniChart";
 
-const SingleCoinItem = ({ singleCoinItem, path }) => {
+const SingleCoinItem = ({ singleCoinItem, path, onPress }) => {
   const navigation = useNavigation();
   const {
     name,
@@ -22,12 +22,16 @@ const SingleCoinItem = ({ singleCoinItem, path }) => {
 
   return (
     <TouchableOpacity
-      onPress={() =>
-        navigation.navigate("CoinStack", {
-          screen: path,
-          params: { coin: singleCoinItem },
-        })
-      }
+      onPress={() => {
+        if (onPress) {
+          onPress();
+        } else {
+          navigation.navigate("CoinStack", {
+            screen: path,
+            params: { coin: singleCoinItem },
+          });
+        }
+      }}
     >
       <View style={styles.container}>
         {/* Coin Image */}

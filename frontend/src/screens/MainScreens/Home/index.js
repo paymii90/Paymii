@@ -12,23 +12,19 @@ import {
   ActivityIndicator,
   Pressable,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import Spacer from "../../../Components/Spacer";
 import { BlurView } from "expo-blur";
-
-//importing assets
 import Logo from "../../../../assets/logo.svg";
 import Button from "../../../Components/Button";
 import ButtonsInfo from "../../../../assets/configs/HomeButtons";
-import SingleButtonItem from "../../../../assets/configs/SingleButtonItem";
+import SingleButtonItem from "./SingleButtonItem.js";
 import Plus from "../../../../assets/plus-1.png";
 import BuyCryptoPopup from "../../../../assets/configs/BuyCryptoPopup.js";
 import { WatchlistContext } from "../../../context/WatchlistContext.js";
-
 import { useCoins } from "../../../context/CoinContext.js";
 import AntDesign from "@expo/vector-icons/AntDesign";
-
-//api request
 import { getMarketCoins, fetchExchangeRate } from "../../../api/coinGecko";
 import TransferPopup from "./TransferPopup.js";
 import { useNavigation } from "@react-navigation/native";
@@ -43,12 +39,10 @@ const Home = () => {
   const [activeButton, setActiveButton] = useState("Watchlist");
   const [filteredCoins, setFilteredCoins] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [buySellPopupVisible, setBuySellPopupVisible] = useState(false);
-  const [transferPopupVisible, setTransferPopupVisible] = useState(false);
+  const [refreshing, setRefreshing] = useState(false); // ✅ NEW
   const { coins, exchangeRate } = useCoins();
   const formatCurrency = useFormattedCurrency();
   const { watchlist } = useContext(WatchlistContext);
-  // console.log("Coin Context:", coins);
 
   let selectedData = {};
 
@@ -57,7 +51,6 @@ const Home = () => {
       selectedData = coins.filter((coin) =>
         watchlist.some((w) => w.id === coin.id)
       );
-
       break;
     case "Trending":
       selectedData = coins
@@ -97,27 +90,38 @@ const Home = () => {
   }
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        setFilteredCoins(selectedData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setFilteredCoins([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (activeButton) fetchData();
+    fetchFilteredData();
   }, [activeButton, watchlist]);
+
+  const fetchFilteredData = async () => {
+    setLoading(true);
+    try {
+      setFilteredCoins(selectedData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setFilteredCoins([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchFilteredData();
+    setRefreshing(false);
+  };
 
   return (
     <SafeAreaView
       style={styles.container}
       edges={["top", "bottom", "left", "right"]}
     >
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <Spacer height={80} />
         <View style={styles.logoCont}>
           <Logo width={500} height={500} />

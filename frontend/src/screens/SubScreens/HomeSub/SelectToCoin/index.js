@@ -1,21 +1,27 @@
+import React, { useContext, useState } from "react";
 import {
+  View,
   FlatList,
+  StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  StyleSheet,
-  View,
 } from "react-native";
-import React, { useContext, useState } from "react";
-import SellHeader from "./header";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import SelectToCoinHeader from "./header";
 import SingleCoinItem from "../Buy/SingleCoinItem";
 import { CoinContext } from "../../../../context/CoinContext";
-import { useNavigation } from "@react-navigation/native";
 
-const Convert = () => {
+const SelectToCoin = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  
+  const { fromCoin } = route.params;
+  console.log("fromCoin", fromCoin);
+  
+
   const { coins, exchangeRate } = useContext(CoinContext);
   const [coinsData, setCoinsData] = useState(coins);
-  const navigation = useNavigation();
 
   const handleSearch = (text) => {
     const filteredCoins = coins.filter((coin) =>
@@ -24,26 +30,29 @@ const Convert = () => {
     setCoinsData(filteredCoins);
   };
 
+  const handleSelectToCoin = (toCoin) => {
+    navigation.navigate("CoinStack", {
+      screen: "ConvertSingleCoin",
+      params: {
+        fromCoin,
+        toCoin,
+      },
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        // keyboardVerticalOffset={100}
       >
         <FlatList
           data={coinsData}
-          ListHeaderComponent={<SellHeader onSearch={handleSearch} />}
+          ListHeaderComponent={<SelectToCoinHeader onSearch={handleSearch} />}
           renderItem={({ item }) => (
             <SingleCoinItem
               singleCoinItem={item}
-              onPress={() => {
-                navigation.navigate("CoinStack", {
-                  screen: "SelectToCoin",
-                  params: { fromCoin: item },
-                });
-              }}
-              exchangeRate={exchangeRate}
+              onPress={() => handleSelectToCoin(item)}
             />
           )}
           keyExtractor={(item) => item.id?.toString() || item.name}
@@ -55,7 +64,7 @@ const Convert = () => {
   );
 };
 
-export default Convert;
+export default SelectToCoin;
 
 const styles = StyleSheet.create({
   container: {
