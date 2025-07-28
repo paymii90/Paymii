@@ -1,33 +1,30 @@
-//import { useContext } from "react";
-//import { AuthContext } from "../../../context/AuthContext";
-// import { Button, View, ScrollView } from "react-native";
-
-// const SettingsScreen = () => {
-//   // const { logout } = useContext(AuthContext);
-//   return (
-//     <ScrollView>
-//       <View>
-//         <Text>useremail@gmail.com</Text>
-//         <View>USERNAME</View>
-//       </View>
-//     </ScrollView>
-//   );
-// };
-
-// export default SettingsScreen;
-
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Text, View, StyleSheet, ScrollView } from "react-native";
 import Button from "../../../Components/Button";
 import SearchList from "../../../Components/SearchList";
+import { AuthContext } from "../../../context/AuthContext";
+import { getAuth } from "firebase/auth";
 
 const SettingsScreen = ({ navigation }) => {
+  const { logout } = useContext(AuthContext);
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user) {
+      setEmail(user.email || "No email set");
+      setUsername(user.displayName || "No username set");
+    }
+  }, []);
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.container}>
         <View>
-          <Text style={styles.email}>useremail@gmail.com</Text>
-          <Text style={styles.username}>USERNAME</Text>
+          {/* <Text style={styles.email}>{email}</Text> */}
+          <Text style={styles.username}>{username}</Text>
         </View>
         <View style={styles.PaymentSection}>
           <Text>Payment Methods</Text>
@@ -73,11 +70,13 @@ const SettingsScreen = ({ navigation }) => {
           <SearchList type="expand" label="Pin Settings" />
           <SearchList type="expand" label="Lock my account" />
         </View>
+
         <Button
           color="red"
           backgroundColor="#CFCFCF"
           label="Sign Out"
           style={{ marginTop: 50 }}
+          action={logout}
         />
       </ScrollView>
     </View>
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     color: "#111111",
-    opacity: 80,
+    opacity: 0.8,
   },
   PaymentSection: {
     gap: 10,
