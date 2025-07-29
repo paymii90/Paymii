@@ -72,7 +72,11 @@ const SettingsScreen = ({ navigation }) => {
         <View style={styles.section}>
           <Text style={styles.header}>Security</Text>
           <SearchList type="Checkbox" label="Require Pin" opacity={1} />
-          <SearchList type="expand" label="Pin Settings" />
+          <SearchList
+            type="expand"
+            label="Change Pin"
+            action={() => navigation.navigate("Pin")}
+          />
           <SearchList type="expand" label="Lock my account" />
         </View>
         <Button

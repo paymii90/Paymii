@@ -10,6 +10,7 @@ import ExploreScreen from "../MainScreens/ExploreScreen";
 import Limits from "../MainScreens/SettingsScreen/Limit";
 //import Trial from "../MainScreens/SettingsScreen/Trial";
 import NativeCurrency from "../MainScreens/SettingsScreen/NativeCurency";
+import Pin from "../MainScreens/SettingsScreen/Pin";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,7 @@ const SettingsStack = () => (
     <Stack.Screen name="ExploreMain" component={ExploreScreen} />
     <Stack.Screen name="Limits" component={Limits} />
     <Stack.Screen name="Cur" component={NativeCurrency} />
+    <Stack.Screen name="Pin" component={Pin} />
     {/* Add screen like ProfileEdit, SecuritySettings, etc. here */}
   </Stack.Navigator>
 );
