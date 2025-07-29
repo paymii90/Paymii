@@ -62,7 +62,14 @@ const Withdraw = () => {
                   type: "error",
                   text1: "Error",
                   text2: "Enter Amount",
-                })
+                });
+              } else if (amount > balance) {
+                Toast.show({
+                  type: "error",
+                  text1: "Error",
+                  text2: "Insufficient Balance",
+                });
+                setAmount("");
               } else {
                 navigation.navigate("WithdrawConfirmation", { amount });
               }
