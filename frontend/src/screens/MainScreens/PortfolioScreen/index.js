@@ -11,6 +11,7 @@ import React, { useCallback, useState } from "react";
 import Button from "../../../Components/Button";
 import FooterButtons from "../../../Components/FooterButtons";
 import { usePortfolio } from "../../../context/portfolioContext";
+import Searchbar from "../../../Components/Searchbar";
 
 const PortfolioScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState("Crypto");
@@ -26,10 +27,12 @@ const PortfolioScreen = ({ navigation }) => {
   }, 0);
 
   return (
+    <View style={styles.main}>
+      <Searchbar text='Portfolio' />
     <View style={styles.container}>
       <FlatList
         data={[]} // FlatList used to avoid ScrollView nesting error
-        keyExtractor={() => "dummy"}
+        keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <>
             <View style={styles.subContainer}>
@@ -72,10 +75,10 @@ const PortfolioScreen = ({ navigation }) => {
                   <FlatList
                     data={portfolio}
                     keyExtractor={(item) => item.name}
-                    refreshControl={
+                    r efreshControl={
                       <RefreshControl
                         refreshing={loading}
-                        onRefresh={onRefresh}
+                       onRefresh={onRefresh}
                       />
                     }
                     renderItem={({ item }) => (
@@ -165,6 +168,7 @@ const PortfolioScreen = ({ navigation }) => {
           </>
         }
       />
+    </View>
       <FooterButtons style={styles.BottomActionButtons} />
     </View>
   );
@@ -173,12 +177,17 @@ const PortfolioScreen = ({ navigation }) => {
 export default PortfolioScreen;
 
 const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+    paddingTop: '12%'
+  },
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
   },
   subContainer: {
-    paddingTop: "25%",
+    // paddingTop: "25%",
     padding: "5%",
   },
   header: {

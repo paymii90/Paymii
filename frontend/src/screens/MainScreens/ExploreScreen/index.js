@@ -6,12 +6,14 @@ import TopAssets from "./TopAssets";
 import TopPicks from "./TopPicks";
 import Spacer from "../../../Components/Spacer";
 import FooterButtons from "../../../Components/FooterButtons";
+import Searchbar from "../../../Components/Searchbar";
 
 const ExploreScreen = () => {
   return (
     <SafeAreaWrapper>
       <View style={styles.container}>
-        <Text style={styles.title}>Explore</Text>
+      <Searchbar text="Explore" />
+       
 
         <FlatList
           data={[]}
@@ -41,12 +43,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fff",
     justifyContent: "center",
-    paddingTop: 10,
+    // paddingTop: 10,
+    // elevation: 3
   },
   title: {
     fontSize: 30,
     fontWeight: "bold",
     marginLeft: 20,
     paddingVertical: 20,
+    alignItems: 'center'
   },
 });

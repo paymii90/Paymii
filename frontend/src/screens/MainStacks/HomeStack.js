@@ -8,7 +8,7 @@ import Searchbar from "../../Components/Searchbar";
 const Stack = createNativeStackNavigator();
 
 const HomeStack = () => (
-  <Stack.Navigator screenOptions={{ header: () => <Searchbar /> }}>
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="HomeMain" component={Home} />
     
     

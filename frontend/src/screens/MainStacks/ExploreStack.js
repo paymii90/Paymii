@@ -7,7 +7,7 @@ import Searchbar from "../../Components/Searchbar";
 const Stack = createNativeStackNavigator();
 
 const ExploreStack = () => (
-  <Stack.Navigator screenOptions={{ header: () => <Searchbar /> }}>
+  <Stack.Navigator screenOptions={{ headerShown: false}}>
     <Stack.Screen name="ExploreMain" component={ExploreScreen} />
     {/* Add more screens like Categories, Trending, etc. here */}
   </Stack.Navigator>

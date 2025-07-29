@@ -13,13 +13,16 @@ import Search from "../../assets/Search.svg";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import Input from "./Input";
+import SafeAreaWrapper from "./SafeAreaWrapper";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
 
-const Searchbar = () => {
+const Searchbar = ({text=''}) => {
   const navigation = useNavigation();
   const [clicked, setClicked] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const insets = useSafeAreaInsets();
 
   const searchDim = [
     { name: "Portfolio", navName: "Portfolio", id: 1 },
@@ -32,6 +35,7 @@ const Searchbar = () => {
   );
 
   return (
+    <View style={styles.main} >
     <View style={styles.container}>
       {clicked ? (
         <View style={styles.overlay}>
@@ -89,6 +93,7 @@ const Searchbar = () => {
           >
             <Search width={24} height={24} />
           </TouchableOpacity>
+          <Text style={styles.headerText}>{text}</Text>
           <TouchableOpacity
             style={styles.chatIcon}
             onPress={() =>
@@ -102,20 +107,36 @@ const Searchbar = () => {
         </>
       )}
     </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  // main: {
+  //   flex: 1,
+  //   //position: "absolute",
+  //   top: 0,
+  //   width: "100%",
+  //   height: 150,
+  //   zIndex: 10,
+  //   backgroundColor: '#CFCFCF',
+  //   justifyContent: "space-between",
+  //   zIndex: 1,
+  //   backgroundColor: "#fff",
+  // },
   container: {
     flexDirection: "row",
-    width: "100%",
-    height: 60,
-    position: "absolute",
-    top: 60,
+    width: "95%",
+    height: 75,
+   // position: "absolute",
+   // top: 60,
+   //backgroundColor: "#fff",
+   // Adjust padding based on safe area insets
     alignItems: "center",
-    alignSelf: "center",
+   // alignSelf: "center",
     justifyContent: "space-between",
     zIndex: 1,
+    
   },
   overlay: {
     position: "absolute",
@@ -154,6 +175,25 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     color: "#999",
     textAlign: "center",
+  },
+  main: {
+   // flex: 1,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: 70,
+  },
+  headerText: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "black",
+    
+   // textAlign: "center",
   },
 });
 

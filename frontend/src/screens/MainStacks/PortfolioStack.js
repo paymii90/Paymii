@@ -6,7 +6,7 @@ import Searchbar from "../../Components/Searchbar";
 const Stack = createNativeStackNavigator();
 
 const PortfolioStack = () => (
-  <Stack.Navigator screenOptions={{ header: () => <Searchbar /> }}>
+  <Stack.Navigator screenOptions={{ headerShown: false}}>
     <Stack.Screen name="PortfolioMain" component={PortfolioScreen} />
     {/* Add screen like AssetDetail here */}
   </Stack.Navigator>
