@@ -12,6 +12,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import SafeAreaWrapper from "../../../../Components/SafeAreaWrapper";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import CustomNumpad from "../../../../Components/customNumpad";
+import Toast from "react-native-toast-message";
 const { width } = Dimensions.get("window");
 
 const Deposit = () => {
@@ -57,7 +58,11 @@ const Deposit = () => {
             style={styles.Btn}
             onPress={() => {
               if (amount <= 0) {
-                alert("Enter Amount");
+                Toast.show({
+                  type: "error",
+                  text1: "Error",
+                  text2: "Amount must be greater than 0",
+                })
               } else {
                 navigation.navigate("DepositConfirmation", { amount });
               }

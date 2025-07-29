@@ -10,6 +10,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import SafeAreaWrapper from "../../../../Components/SafeAreaWrapper";
 import Toast from "react-native-toast-message";
+import * as Notifications from "expo-notifications";
 
 const { width } = Dimensions.get("window");
 
@@ -19,7 +20,18 @@ const DepositConfirmation = () => {
   const { amount } = route.params;
   const transactionFee = (amount * 0.01).toFixed(2);
 
-  const handleConfirm = () => {
+  const sendLocalNotification = async () => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "🎉 Deposit Successful!",
+        body: `You've successfully deposited GH₵ ${amount.toFixed(
+          2
+        )}. Check your portfolio now!`,
+      },
+      trigger: null, // Immediate
+    });
+  };
+  const handleConfirm = async () => {
     // TODO: Replace with actual logic
     Toast.show({
       type: "success",
@@ -29,6 +41,8 @@ const DepositConfirmation = () => {
     navigation.navigate("Main", {
       screen: "Portfolio",
     });
+
+    await sendLocalNotification();
   };
 
   return (
@@ -48,7 +62,9 @@ const DepositConfirmation = () => {
 
             <View style={styles.infoCard}>
               <Text style={styles.infoText}>Deposit Method: Mobile Money</Text>
-              <Text style={styles.infoText}>Transaction Fee: GH₵ {transactionFee}</Text>
+              <Text style={styles.infoText}>
+                Transaction Fee: GH₵ {transactionFee}
+              </Text>
               <Text style={styles.infoText}>
                 Total: GH₵ {(parseFloat(amount) - transactionFee).toFixed(2)}
               </Text>

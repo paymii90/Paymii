@@ -10,6 +10,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import SafeAreaWrapper from "../../../../Components/SafeAreaWrapper";
 import Toast from "react-native-toast-message";
+import * as Notifications from "expo-notifications";
 
 const { width } = Dimensions.get("window");
 
@@ -18,7 +19,19 @@ const WithdrawConfirmation = () => {
   const route = useRoute();
   const { amount } = route.params;
 
-  const handleConfirm = () => {
+  const sendLocalNotification = async () => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "🎉 Withdrawal Successful!",
+        body: `You've successfully withdrawn GH₵ ${amount.toFixed(
+          2
+        )}. Check your portfolio now!`,
+      },
+      trigger: null, // Immediate
+    });
+  };
+
+  const handleConfirm = async () => {
     // TODO: Replace with actual logic
     Toast.show({
       type: "success",
@@ -28,6 +41,8 @@ const WithdrawConfirmation = () => {
     navigation.navigate("Main", {
       screen: "Portfolio",
     });
+
+    await sendLocalNotification();
   };
 
   return (
@@ -47,7 +62,9 @@ const WithdrawConfirmation = () => {
 
             <View style={styles.infoCard}>
               <Text style={styles.infoText}>Withdraw To: Mobile Money</Text>
-              <Text style={styles.infoText}>Transaction Fee: GH₵ {(0.05 * amount).toFixed(2)}</Text>
+              <Text style={styles.infoText}>
+                Transaction Fee: GH₵ {(0.05 * amount).toFixed(2)}
+              </Text>
               {/* <Text style={styles.infoText}>
                 Total: GH₵ {(parseFloat(amount) + 0.5).toFixed(2)}
               </Text> */}

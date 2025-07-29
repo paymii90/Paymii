@@ -15,12 +15,14 @@ import CustomNumpad from "../../../../Components/customNumpad";
 import Toast from "react-native-toast-message";
 const { width } = Dimensions.get("window");
 
+
 const Withdraw = () => {
   const navigation = useNavigation();
 
   const [amount, setAmount] = useState("");
   const [balance, setBalance] = useState(10000); // GH₵10,00000 dummy balance
   const [showModal, setShowModal] = useState(false);
+
 
   return (
     <SafeAreaWrapper>
