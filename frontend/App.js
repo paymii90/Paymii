@@ -15,7 +15,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import * as Notifications from "expo-notifications";
 
-// ✅ Modern notification handler setup (fixes deprecation warning)
+// ✅ Setup notification handler globally
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowBanner: true,
@@ -25,7 +25,25 @@ Notifications.setNotificationHandler({
   }),
 });
 
+
+
 function Main() {
+
+  useEffect(() => {
+  const registerForPushNotifications = async () => {
+    const { status } = await Notifications.getPermissionsAsync();
+
+    if (status !== "granted") {
+      const { status: newStatus } = await Notifications.requestPermissionsAsync();
+      if (newStatus !== "granted") {
+        alert("Push notifications permission denied");
+      }
+    }
+  };
+
+  registerForPushNotifications();
+}, []);
+
   const Root = createNativeStackNavigator();
   const { isLoggedIn, loading } = useContext(AuthContext);
 
@@ -44,20 +62,23 @@ function Main() {
 
   return (
     <SafeAreaProvider>
-      <NavigationContainer key={isLoggedIn ? "main" : "auth"}>
-        <Root.Navigator screenOptions={{ headerShown: false }}>
-          {isLoggedIn ? (
-            <>
-              <Root.Screen name="Main" component={TabNavigator} />
-              <Root.Screen name="CoinStack" component={CoinStack} />
-            </>
-          ) : (
-            <Root.Screen name="Auth" component={StackNavigator} />
-          )}
-        </Root.Navigator>
-        <StatusBar style="dark" />
-      </NavigationContainer>
-      <Toast />
+      <>
+        <NavigationContainer key={isLoggedIn ? "main" : "auth"}>
+          <Root.Navigator screenOptions={{ headerShown: false }}>
+            {isLoggedIn ? (
+              <>
+                <Root.Screen name="Main" component={TabNavigator} />
+                <Root.Screen name="CoinStack" component={CoinStack} />
+              </>
+            ) : (
+              <Root.Screen name="Auth" component={StackNavigator} />
+            )}
+          </Root.Navigator>
+          <StatusBar style="dark" />
+        </NavigationContainer>
+
+        <Toast />
+      </>
     </SafeAreaProvider>
   );
 }
