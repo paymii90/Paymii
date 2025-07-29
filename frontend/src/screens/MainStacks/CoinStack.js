@@ -19,6 +19,7 @@ import MethodSelection from "../SubScreens/HomeSub/Deposit/Deposit";
 import AddPayment from "../MainScreens/SettingsScreen/Payment/AddPayment";
 import ConvertSingleCoin from "../SubScreens/HomeSub/ConvertSingleCoin";
 import SelectToCoin from "../SubScreens/HomeSub/SelectToCoin";
+import WithdrawConfirmation from "../SubScreens/HomeSub/Withdraw/WithdrawConfirmation";
 
 import Chat from "../SubScreens/HomeSub/Chat";
 
@@ -51,6 +52,8 @@ const CoinStack = () => (
 
     <Stack.Screen name="ConvertSingleCoin" component={ConvertSingleCoin} />
     <Stack.Screen name="SelectToCoin" component={SelectToCoin} />
+
+    <Stack.Screen name="WithdrawConfirmation" component={WithdrawConfirmation} />
   </Stack.Navigator>
 );
 

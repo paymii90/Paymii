@@ -67,7 +67,7 @@ const TransferPopup = ({ isVisible, onClose, singleCoinItem }) => {
                 }
                 title="Withdraw Cash"
                 subtitle="Transfer funds to your account"
-                onPress={() => navigateWithDelay("MethodSelection")}
+                onPress={() => navigateWithDelay("Withdraw")}
               />
             </View>
           </TouchableWithoutFeedback>
