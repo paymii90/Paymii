@@ -35,6 +35,17 @@ export const PortfolioProvider = ({ children }) => {
         },
       });
 
+      if (response.status === 401) {
+        Toast.show({
+          type: "error",
+          text1: "Session Expired",
+          text2: "Please login again.",
+        });
+        await AsyncStorage.removeItem("token");
+        setPortfolio([]);
+        return;
+      }
+
       if (!response.ok) {
         throw new Error(`Server error: ${response.status}`);
       }
@@ -42,14 +53,11 @@ export const PortfolioProvider = ({ children }) => {
       const json = await response.json();
       setPortfolio(json);
     } catch (error) {
-      // console.error("Error fetching portfolio:", error);
-
       Toast.show({
         type: "error",
         text1: "Portfolio Fetch Failed",
         text2: error.message || "Something went wrong. Check your internet.",
       });
-      // console.warn("Error fetching portfolio:", error);
       setPortfolio([]);
     } finally {
       setLoading(false);
@@ -71,5 +79,4 @@ export const PortfolioProvider = ({ children }) => {
   );
 };
 
-// Hook to use the context
 export const usePortfolio = () => useContext(PortfolioContext);

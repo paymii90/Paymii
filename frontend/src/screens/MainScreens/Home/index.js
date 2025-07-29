@@ -33,6 +33,8 @@ import CryptoNewsFeed from "../../../Components/CrytptoNewsFeed.js";
 import LottieView from "lottie-react-native";
 import { useFormattedCurrency } from "../../../hooks/useFormattedCurrency.js";
 import MiniChart from "../../../Components/MiniChart.js";
+//importing header for home screen
+import Searchbar from "../../../Components/Searchbar.js";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -116,6 +118,7 @@ const Home = () => {
       style={styles.container}
       edges={["top", "bottom", "left", "right"]}
     >
+      <Searchbar />
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
