@@ -12,6 +12,7 @@ import currencyMap from "currency-list";
 
 const NativeCurrency = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCurrency, setSelectedCurrency] = useState(null);
 
   const allCurrencies = useMemo(() => {
     const curr = currencyMap.getAll("en");

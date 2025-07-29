@@ -219,13 +219,13 @@ const CryptoNewsFeed = () => {
                   )}
                 </>
               )}
-              <Pressable
-                style={[styles.actionButton, { backgroundColor: "#0a84ff" }]}
-                onPress={closeModal}
-              >
-                <Text style={styles.buttonText}>Close</Text>
-              </Pressable>
             </ScrollView>
+            <Pressable
+              style={[styles.actionButton, { backgroundColor: "#0a84ff" }]}
+              onPress={closeModal}
+            >
+              <Text style={styles.buttonText}>Close</Text>
+            </Pressable>
           </Pressable>
         </Pressable>
       </Modal>
