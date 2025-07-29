@@ -4,11 +4,13 @@ import Button from "../../../Components/Button";
 import SearchList from "../../../Components/SearchList";
 import { AuthContext } from "../../../context/AuthContext";
 import { getAuth } from "firebase/auth";
+import CloseAccount from "./CloseAccount";
 
 const SettingsScreen = ({ navigation }) => {
   const { logout } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const auth = getAuth();
