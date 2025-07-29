@@ -19,10 +19,10 @@ const Pin = () => {
     newValues[index] = text.slice(-1); // Only allow 1 character per circle
     setInputValue(newValues);
 
-    //Auto focus first circle on startup
-    useEffect(() => {
-      inputRefs.current[0]?.focus();
-    }, []);
+    // //Auto focus first circle on startup
+    // useEffect(() => {
+    //   inputRefs.current[0]?.focus();
+    // }, []);
 
     // Auto-focus next circle if a character was entered
     if (text && index < 3) {
