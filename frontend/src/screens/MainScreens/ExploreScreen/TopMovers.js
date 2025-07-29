@@ -7,13 +7,13 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { CoinContext } from "../../../context/CoinContext";
+import { useCoins } from "../../../context/CoinContext";
 import { useNavigation } from "@react-navigation/native";
 import CoinCard from "./CoinCard";
 
 const TopMovers = () => {
   const navigation = useNavigation();
-  const { coins } = useContext(CoinContext);
+  const { coins } = useCoins();
   const movers = coins
     .filter((coin) => coin.market_cap_rank % 2 === 0)
     .slice(-10)
@@ -28,7 +28,9 @@ const TopMovers = () => {
         showsHorizontalScrollIndicator={false}
         data={movers}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <CoinCard item={item} navigation={navigation} />}
+        renderItem={({ item }) => (
+          <CoinCard item={item} navigation={navigation} />
+        )}
       />
     </View>
   );
@@ -46,5 +48,4 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 10,
   },
-
 });

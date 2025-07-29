@@ -1,7 +1,10 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React from "react";
+import { useFormattedCurrency } from "../../../hooks/useFormattedCurrency";
 
 const CoinCard = ({ item, navigation }) => {
+  const formatCurrency = useFormattedCurrency();
+
   return (
     <TouchableOpacity
       onPress={() =>
@@ -13,8 +16,10 @@ const CoinCard = ({ item, navigation }) => {
       style={styles.coinCard}
     >
       <Image source={{ uri: item.image }} style={styles.image} />
-      <Text style={styles.name}>{item.name}</Text>
-      <Text style={styles.price}>GH₵{item.current_price}</Text>
+      <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
+        {item.name}
+      </Text>
+      <Text style={styles.price}>{formatCurrency(item.current_price)}</Text>
       <Text
         style={[
           styles.change,

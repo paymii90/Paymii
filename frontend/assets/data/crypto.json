@@ -1,4 +1,4 @@
-const DummyPaymentMethods = []{
+{
   "id": "bitcoin",
   "symbol": "btc",
   "name": "Bitcoin",
@@ -199,4 +199,3 @@ const DummyPaymentMethods = []{
     }
   ]
 }
-

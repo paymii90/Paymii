@@ -3,11 +3,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { View, Platform } from "react-native";
 
-// import Home from "../screens/MainScreens/Home";
-// import PortfolioScreen from "../screens/MainScreens/PortfolioScreen";
-// import TransactionsScreen from "../screens/MainScreens/TransactionsScreen";
-// import ExploreScreen from "../screens/MainScreens/ExploreScreen";
-// import SettingsScreen from "../screens/MainScreens/SettingsScreen";
 
 import HomeStack from "../screens/MainStacks/HomeStack";
 import ExploreStack from "../screens/MainStacks/ExploreStack";

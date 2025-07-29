@@ -7,15 +7,16 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
-import { CoinContext } from "../../../context/CoinContext";
+import { useCoins } from "../../../context/CoinContext";
 import { useNavigation } from "@react-navigation/native";
+import { useFormattedCurrency } from "../../../hooks/useFormattedCurrency";
 
 const TopAssets = () => {
-  const { coins } = useContext(CoinContext);
-  const [topAssets, setTopAssets] = useState(coins.slice(0, 3));
+  const { coins } = useCoins();
+  const [topAssets, setTopAssets] = useState(coins.filter(coin => coin.market_cap_rank <= 10).slice(0, 3));
   const [buttonText, setbuttonText] = useState("See All");
   const navigation = useNavigation();
-  
+  const formatCurrency = useFormattedCurrency();
 
   const renderItem = ({ item }) => {
     const isNegative = item.price_change_percentage_24h < 0;
@@ -33,8 +34,14 @@ const TopAssets = () => {
         <View style={styles.assetItem}>
           <View style={styles.assetLeft}>
             <Image source={{ uri: item.image }} style={styles.assetImage} />
-            <View>
-              <Text style={styles.assetName}>{item.name}</Text>
+            <View style={{maxWidth : 200}}>
+              <Text
+                style={styles.assetName}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {item.name}
+              </Text>
               <Text style={styles.assetSymbol}>
                 {item.symbol.toUpperCase()}
               </Text>
@@ -42,7 +49,7 @@ const TopAssets = () => {
           </View>
           <View style={styles.assetRight}>
             <Text style={styles.assetPrice}>
-              GH₵{item.current_price.toLocaleString()}
+              {formatCurrency(item.current_price)}
             </Text>
             <Text style={[styles.assetChange, { color: changeColor }]}>
               {item.price_change_percentage_24h.toFixed(2)}%
@@ -63,11 +70,11 @@ const TopAssets = () => {
       />
       <TouchableOpacity
         onPress={() => {
-          setTopAssets(coins.slice(0, 10));
+          setTopAssets(coins.sort((a, b) => a.market_cap_rank - b.market_cap_rank));
           setbuttonText("See Less");
 
           if (buttonText === "See Less") {
-            setTopAssets(coins.slice(0, 3));
+            setTopAssets(coins.filter(coin => coin.market_cap_rank <= 10).slice(0, 3));
             setbuttonText("See All");
           }
         }}
@@ -100,6 +107,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    paddingBottom: 8,
   },
   assetLeft: {
     flexDirection: "row",

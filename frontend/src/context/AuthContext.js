@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -12,8 +12,8 @@ import { IpContext } from "./IpContext";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [authError, setAuthError] = useState("");
   const auth = FIREBASE_AUTH;
   const { ipAddress } = useContext(IpContext);
@@ -27,40 +27,20 @@ export const AuthProvider = ({ children }) => {
 
   // ✅ LOGIN
   const login = async (email, password) => {
-    // console.log(ipAddress);
-
     setLoading(true);
     setAuthError("");
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log("✅ Firebase login successful:", response);
-
       const user = response.user;
-      if (!user) {
-        console.warn("❗ Firebase user is null");
-        return;
-      }
-
-      // 🔑 Force-refresh the ID token
       const idToken = await user.getIdToken(true);
-      console.log("🔑 Firebase ID Token:", idToken);
-
-      // 🔄 Get user from your backend
       const backendUser = await getUserByEmail(user.email);
-      console.log("✅ Backend user:", backendUser);
-
-      // 🧠 Store user + token
       await AsyncStorage.setItem("user", JSON.stringify(backendUser));
       await AsyncStorage.setItem("token", idToken);
-
-      // 🔍 Verify token was stored
-      const confirmToken = await AsyncStorage.getItem("token");
-      console.log("🧠 Confirmed stored token:", confirmToken);
-
       setIsLoggedIn(true);
     } catch (error) {
       console.log("❌ Login error:", error);
-      setAuthError("Login failed. Please check your credentials.");
+      setAuthError("Login failed.");
+      throw error; // Let UI handle toast
     } finally {
       setLoading(false);
     }
@@ -71,45 +51,29 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setAuthError("");
     try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
+      const response = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(response.user, {
         displayName: `${firstName} ${lastName}`,
       });
 
       await sendEmailVerification(response.user);
-      const idToken = await response.user.getIdToken(true); // also force refresh here
-      await AsyncStorage.setItem("token", idToken); // ✅ store token too
+      const idToken = await response.user.getIdToken(true);
+      await AsyncStorage.setItem("token", idToken);
 
-      // Register in backend
-      const registerResp = await fetch(
-        `${ipAddress}/api/users/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${idToken}`,
-          },
-          body: JSON.stringify({
-            firstName,
-            lastName,
-            email,
-          }),
-        }
-      );
+      const registerResp = await fetch(`${ipAddress}/api/users/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({ firstName, lastName, email }),
+      });
 
-      if (!registerResp.ok)
-        throw new Error("Failed to register user in backend");
+      if (!registerResp.ok) throw new Error("Failed to register user in backend");
 
       const backendUser = await getUserByEmail(email);
       await AsyncStorage.setItem("user", JSON.stringify(backendUser));
-
-      setIsLoggedIn(true);
-      alert("Check your email to verify your account!");
+      // Do NOT set isLoggedIn here; wait until verification
     } catch (error) {
       console.log("❌ Sign up error:", error);
       if (error.code === "auth/email-already-in-use") {
@@ -121,13 +85,55 @@ export const AuthProvider = ({ children }) => {
       } else {
         setAuthError(error.message || "Sign Up Failed");
       }
+      throw error;
+      setIsLoggedIn(true);
     } finally {
       setLoading(false);
     }
   };
 
+  // 🔍 Check Auth on App Load
+  const checkAuthStatus = async () => {
+    try {
+      const storedUser = await AsyncStorage.getItem("user");
+      setIsLoggedIn(!!storedUser);
+    } catch (error) {
+      console.log("❌ Error checking auth status:", error);
+      setIsLoggedIn(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 🔓 Logout
+  const logout = async () => {
+    try {
+      await AsyncStorage.removeItem("user");
+      await AsyncStorage.removeItem("token");
+      setIsLoggedIn(false);
+      console.log("✅ Logged out");
+      
+    } catch (error) {
+      console.log("❌ Logout error:", error);
+    }
+  };
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ login, signUp, loading, authError }}>
+    <AuthContext.Provider
+      value={{
+        login,
+        signUp,
+        logout,
+        isLoggedIn,
+        setIsLoggedIn,
+        loading,
+        authError,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

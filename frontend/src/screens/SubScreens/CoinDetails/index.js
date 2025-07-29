@@ -15,15 +15,15 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Button from "../../../Components/Button";
 import Header from "./header";
-import Chart from "./chart";
+import ChartComponent from "./chart";
 import Buttons from "./buttons";
 import TabToggle from "./tabToggle";
 import WalletCard from "./walletCard";
 import CoinInsights from "./coinInsights";
 import BuyCryptoPopup from "./BuyCryptoPopup";
 import TransferPopup from "./TransferPopup";
-
-const timeRanges = ["1H", "1D", "1W", "1M", "1Y", "All"];
+import { useCoins } from "../../../context/CoinContext";
+import CoinChartData from "../../../../assets/data/crypto.json";
 
 const CoinDetailScreen = () => {
   const navigation = useNavigation();
@@ -35,6 +35,7 @@ const CoinDetailScreen = () => {
 
   const route = useRoute();
   const { coin } = route.params;
+  const { exchangeRate } = useCoins();
 
   // console.log(coin);
   const {
@@ -65,25 +66,23 @@ const CoinDetailScreen = () => {
           price_change_24h={price_change_24h}
           price_change_percentage_24h={price_change_percentage_24h}
           navigation={navigation}
+          exchangeRate={exchangeRate}
+          coinId={coin.id}
+          image={coin.image}
         />
 
         {/* Chart Placeholder */}
-        <Chart
-          selectedRange={selectedRange}
-          timeRanges={timeRanges}
-          setSelectedRange={setSelectedRange}
-        />
+        <ChartComponent prices={CoinChartData.prices} />
         {/* Balance or Insights  */}
         <TabToggle selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
 
         {selectedTab === "Balance" ? (
-         <WalletCard
+          <WalletCard
             image={coin.image}
             name={coin.name}
             symbol={coin.symbol}
             coinId={coin.id}
           />
-
         ) : (
           <CoinInsights coin={coin} /> // Render coin info/description
         )}

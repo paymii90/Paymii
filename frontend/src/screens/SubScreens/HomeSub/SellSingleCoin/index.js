@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  TextInput,
   ImageBackground,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -14,7 +13,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import SellPreviewModal from "./SellPreviewModal";
 import CustomNumpad from "../../../../Components/customNumpad";
 import { usePortfolio } from "../../../../context/portfolioContext";
-import { useEffect } from "react";
+import Toast from "react-native-toast-message";
 
 const { width } = Dimensions.get("window");
 
@@ -23,26 +22,21 @@ const SellSingleCoin = () => {
   const route = useRoute();
   const { coin } = route.params;
 
-
-  const { portfolio, loading } = usePortfolio();
+  const { portfolio } = usePortfolio();
   const [amount, setAmount] = useState("0");
-  const [balance, setBalance] = useState('0'); // GH₵10,00000 dummy balance
+  const [balance, setBalance] = useState("0");
   const [showModal, setShowModal] = useState(false);
 
-  console.log("Portfolio Data:", amount);
-
-  
-useEffect(() => {
-  if (portfolio && coin?.id) {
-    const matchedCoin = portfolio.find((item) => item.coin_id === coin.id);
-    if (matchedCoin) {
-      setBalance(matchedCoin.amount.toString());
-    } else {
-      setBalance("0"); // user doesn't hold that coin
+  useEffect(() => {
+    if (portfolio && coin?.id) {
+      const matchedCoin = portfolio.find((item) => item.coin_id === coin.id);
+      if (matchedCoin) {
+        setBalance(matchedCoin.amount.toString());
+      } else {
+        setBalance("10"); // fallback to 0 instead of 10
+      }
     }
-  }
-}, [portfolio, coin]);
-
+  }, [portfolio, coin]);
 
   return (
     <SafeAreaWrapper>
@@ -60,13 +54,19 @@ useEffect(() => {
             >
               <Ionicons name="arrow-back" size={24} color="#fff" />
             </TouchableOpacity>
-            <Text style={styles.coinName}>{coin.name}</Text>
+            <Text
+              style={styles.coinName}
+              numberOfLines={2}
+              ellipsizeMode="tail"
+            >
+              {coin.name}
+            </Text>
             <TouchableOpacity
               style={styles.sellButton}
               onPress={() => {
                 navigation.navigate("CoinStack", {
                   screen: "BuySingleCoin",
-                  params: { coin: coin },
+                  params: { coin },
                 });
               }}
             >
@@ -76,9 +76,12 @@ useEffect(() => {
         </ImageBackground>
 
         <Text style={styles.label}>Enter Amount in crypto</Text>
-        <Text style={styles.amount}>{amount || "0"} {coin.symbol.toUpperCase()}</Text>
-        {/* <Text style={styles.range}>Current Price: GH₵{coin.current_price}</Text> */}
-        <Text style={styles.balance}>Current Balance: {balance} {coin.symbol.toUpperCase()}</Text>
+        <Text style={styles.amount}>
+          {amount || "0"} {coin.symbol.toUpperCase()}
+        </Text>
+        <Text style={styles.balance}>
+          Current Balance: {balance} {coin.symbol.toUpperCase()}
+        </Text>
 
         <View style={styles.percentRow}>
           {["0%", "10%", "25%", "50%", "75%", "100%"].map((p) => {
@@ -87,7 +90,9 @@ useEffect(() => {
               <TouchableOpacity
                 key={p}
                 style={styles.percentBtn}
-                onPress={() => setAmount(((balance * value) / 100).toFixed(2))}
+                onPress={() =>
+                  setAmount(((parseFloat(balance) * value) / 100).toFixed(2))
+                }
               >
                 <Text style={styles.percentText}>{p}</Text>
               </TouchableOpacity>
@@ -101,10 +106,21 @@ useEffect(() => {
           <TouchableOpacity
             style={styles.Btn}
             onPress={() => {
-              if (amount <= 0) {
-                alert("Enter Amount");
-              } else if (amount > balance) {
-                alert("Insufficient balance");
+              const amountNum = parseFloat(amount);
+              const balanceNum = parseFloat(balance);
+
+              if (isNaN(amountNum) || amountNum <= 0) {
+                Toast.show({
+                  type: "error",
+                  text1: "Invalid Amount",
+                  text2: "Please enter a valid amount.",
+                });
+              } else if (amountNum > balanceNum) {
+                Toast.show({
+                  type: "error",
+                  text1: "Insufficient Balance",
+                  text2: "You don’t have enough funds to proceed.",
+                });
               } else {
                 setShowModal(true);
               }
@@ -180,12 +196,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 10,
   },
-  range: {
-    fontSize: 12,
-    color: "#999",
-    textAlign: "center",
-    marginTop: 6,
-  },
   balance: {
     textAlign: "center",
     marginVertical: 15,
@@ -209,7 +219,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#333",
   },
-
   Btn: {
     backgroundColor: "#052644",
     paddingVertical: 16,

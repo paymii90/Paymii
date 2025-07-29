@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-around",
-    paddingVertical: 20,
+    paddingVertical: 10,
     paddingHorizontal: 16,
     backgroundColor: "#fff",
     shadowColor: "#000",
@@ -65,7 +65,8 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    paddingVertical: 14,
+    // paddingVertical: 10,
+    padding: 5,
     borderRadius: 25,
     alignItems: "center",
     marginHorizontal: 5,

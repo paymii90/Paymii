@@ -13,6 +13,8 @@ import SafeAreaWrapper from "../../../../Components/SafeAreaWrapper";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import BuyPreviewModal from "./BuyPreviewModal";
 import CustomNumpad from "../../../../Components/customNumpad";
+import { useFormattedCurrency } from "../../../../hooks/useFormattedCurrency";
+import Toast from "react-native-toast-message";
 const { width } = Dimensions.get("window");
 
 const BuySingleCoin = () => {
@@ -24,12 +26,15 @@ const BuySingleCoin = () => {
   const [balance, setBalance] = useState(10000); // GH₵10,00000 dummy balance
   const [showModal, setShowModal] = useState(false);
 
+  const formatCurrency = useFormattedCurrency();
+
   return (
     <SafeAreaWrapper>
       <View style={styles.container}>
         <ImageBackground
           source={{ uri: coin.image }}
           style={styles.headerBackground}
+
           imageStyle={styles.headerImage}
           blurRadius={10}
         >
@@ -40,7 +45,10 @@ const BuySingleCoin = () => {
             >
               <Ionicons name="arrow-back" size={24} color="#fff" />
             </TouchableOpacity>
-            <Text style={styles.coinName}>{coin.name}</Text>
+  
+            <Text style={styles.coinName} numberOfLines={2} ellipsizeMode="tail">
+              {coin.name}
+            </Text>
             <TouchableOpacity
               style={styles.sellButton}
               onPress={() => {
@@ -57,7 +65,7 @@ const BuySingleCoin = () => {
 
         <Text style={styles.label}>Enter Amount in GHC</Text>
         <Text style={styles.amount}>GH₵ {amount || "0"}</Text>
-        <Text style={styles.range}>Current Price: GH₵{coin.current_price}</Text>
+        <Text style={styles.range}>Current Price: {formatCurrency(coin.current_price)}</Text>
         <Text style={styles.balance}>Current Balance: ₵10,000</Text>
 
         <View style={styles.percentRow}>
@@ -86,9 +94,17 @@ const BuySingleCoin = () => {
             style={styles.Btn}
             onPress={() => {
               if (amount <= 0) {
-                alert("Enter Amount");
+                Toast.show({
+                  type: "error",
+                  text1: "Invalid Amount",
+                  text2: "Please enter a valid amount.",
+                });
               } else if (amount > balance) {
-                alert("Insufficient balance");
+                Toast.show({
+                  type: "error",
+                  text1: "Insufficient Balance",
+                  text2: "You don’t have enough funds to proceed.",
+                });
               } else {
                 setShowModal(true);
               }

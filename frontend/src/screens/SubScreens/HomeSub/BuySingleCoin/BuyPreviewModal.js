@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -13,14 +13,36 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FIREBASE_AUTH } from "../../../../../firebaseConfig";
 import { buyCoin } from "../../../../api/transactionApi";
 import { useNavigation } from "@react-navigation/native";
-import { IpContext } from "../../../../context/IpContext"; // ✅ Add this
+import { IpContext } from "../../../../context/IpContext";
+import Toast from "react-native-toast-message";
+import LottieView from "lottie-react-native";
+import * as Notifications from "expo-notifications";
 
-const BuyPreviewModal = ({ visible, onClose, coin, amount, balance, setBalance }) => {
+const BuyPreviewModal = ({
+  visible,
+  onClose,
+  coin,
+  amount,
+  balance,
+  setBalance,
+}) => {
   const navigation = useNavigation();
-  const { ipAddress } = useContext(IpContext); // ✅ Use hook inside component
+  const { ipAddress } = useContext(IpContext);
   const coinValue = (amount / coin?.current_price).toFixed(6);
+  const [isBuying, setIsBuying] = useState(false);
+
+  const sendLocalNotification = async () => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "🎉 Purchase Successful!",
+        body: `You've successfully bought ${coinValue} ${coin?.symbol.toUpperCase()}. Check your portfolio now!`,
+      },
+      trigger: null, // Immediate
+    });
+  };
 
   const handleBuy = async () => {
+    setIsBuying(true);
     try {
       const user = JSON.parse(await AsyncStorage.getItem("user"));
       let token = await AsyncStorage.getItem("token");
@@ -31,7 +53,11 @@ const BuyPreviewModal = ({ visible, onClose, coin, amount, balance, setBalance }
           token = await currentUser.getIdToken(true);
           await AsyncStorage.setItem("token", token);
         } else {
-          alert("You're not logged in. Please log in again.");
+          Toast.show({
+            type: "error",
+            text1: "Not Logged In",
+            text2: "Please log in again.",
+          });
           return;
         }
       }
@@ -48,57 +74,96 @@ const BuyPreviewModal = ({ visible, onClose, coin, amount, balance, setBalance }
         paymentMethod: "Mobile Money",
       };
 
-      const result = await buyCoin(buyData, token, ipAddress); // ✅ Pass ipAddress
-      console.log("✅ Buy result:", result);
+      // const result = await buyCoin(buyData, token, ipAddress);
+      // console.log("✅ Buy result:", result);
 
       onClose();
       setTimeout(() => {
         navigation.navigate("SuccessScreen", { coinName: coin.name });
       }, 400);
 
+      await sendLocalNotification();
+
       setBalance((prev) => prev - parseFloat(amount));
     } catch (err) {
       console.log("❌ Buy error:", err);
-      alert("Buy failed. Try again.");
+      onClose();
+      Toast.show({
+        type: "error",
+        text1: "Buy Failed",
+        text2: "Something went wrong. Please try again.",
+      });
+    } finally {
+      setIsBuying(false);
     }
   };
 
   return (
-    <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent
+      onRequestClose={onClose}
+    >
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.fullscreen}>
-          <BlurView intensity={15} tint="light" style={StyleSheet.absoluteFill} />
-
+          <BlurView
+            intensity={15}
+            tint="light"
+            style={StyleSheet.absoluteFill}
+          />
           <TouchableWithoutFeedback>
             <View style={styles.modalContainer}>
-              <View style={styles.header}>
-                <Image source={{ uri: coin?.image }} style={styles.coinImage} />
-                <View>
-                  <Text style={styles.name}>{coin?.name}</Text>
-                  <Text style={styles.symbol}>{coin?.symbol.toUpperCase()}</Text>
+              {isBuying ? (
+                <View style={styles.loadingWrapper}>
+                  <LottieView
+                    source={require("../../../../../assets/animations/loading.json")}
+                    autoPlay
+                    loop
+                    style={{ width: 100, height: 100 }}
+                  />
+                  <Text style={styles.loadingText}>Processing Purchase...</Text>
                 </View>
-              </View>
+              ) : (
+                <>
+                  <View style={styles.header}>
+                    <Image
+                      source={{ uri: coin?.image }}
+                      style={styles.coinImage}
+                    />
+                    <View>
+                      <Text style={styles.name}>{coin?.name}</Text>
+                      <Text style={styles.symbol}>
+                        {coin?.symbol.toUpperCase()}
+                      </Text>
+                    </View>
+                  </View>
 
-              <View style={styles.info}>
-                <View style={styles.option}>
-                  <Text style={styles.label}>Amount (GHS):</Text>
-                  <Text style={styles.value}>GH₵ {amount}</Text>
-                </View>
-                <View style={styles.option}>
-                  <Text style={styles.label}>You’ll get:</Text>
-                  <Text style={styles.value}>
-                    {coinValue} {coin?.symbol.toUpperCase()}
-                  </Text>
-                </View>
-              </View>
+                  <View style={styles.info}>
+                    <View style={styles.option}>
+                      <Text style={styles.label}>Amount (GHS):</Text>
+                      <Text style={styles.value}>GH₵ {amount}</Text>
+                    </View>
+                    <View style={styles.option}>
+                      <Text style={styles.label}>You’ll get:</Text>
+                      <Text style={styles.value}>
+                        {coinValue} {coin?.symbol.toUpperCase()}
+                      </Text>
+                    </View>
+                  </View>
 
-              <TouchableOpacity style={styles.buyButton} onPress={handleBuy}>
-                <Text style={styles.buyText}>Buy Now</Text>
-              </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.buyButton}
+                    onPress={handleBuy}
+                  >
+                    <Text style={styles.buyText}>Buy Now</Text>
+                  </TouchableOpacity>
 
-              <TouchableOpacity style={styles.buyButton} onPress={onClose}>
-                <Text style={styles.cancelText}>Cancel</Text>
-              </TouchableOpacity>
+                  <TouchableOpacity style={styles.buyButton} onPress={onClose}>
+                    <Text style={styles.cancelText}>Cancel</Text>
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -174,5 +239,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "red",
     marginTop: 5,
+  },
+  loadingWrapper: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 200,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#052644",
+    fontWeight: "500",
   },
 });

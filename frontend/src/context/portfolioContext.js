@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IpContext } from "./IpContext";
+import Toast from "react-native-toast-message";
 
 // Create context
 const PortfolioContext = createContext();
@@ -19,27 +20,46 @@ export const PortfolioProvider = ({ children }) => {
 
   const fetchPortfolio = useCallback(async () => {
     try {
+      setLoading(true);
       const token = await AsyncStorage.getItem("token");
+
+      if (!token) {
+        console.warn("No token found, skipping fetch");
+        setPortfolio([]);
+        return;
+      }
+
       const response = await fetch(`${ipAddress}/api/portfolio`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
       const json = await response.json();
       setPortfolio(json);
     } catch (error) {
-      console.error("Error fetching portfolio:", error);
+      // console.error("Error fetching portfolio:", error);
+
+      Toast.show({
+        type: "error",
+        text1: "Portfolio Fetch Failed",
+        text2: error.message || "Something went wrong. Check your internet.",
+      });
+      // console.warn("Error fetching portfolio:", error);
+      setPortfolio([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [ipAddress]);
 
-  // Fetch once when app loads
   useEffect(() => {
     fetchPortfolio();
   }, [fetchPortfolio]);
 
-  // Optional: Call this after buy/sell to refresh
   const refreshPortfolio = async () => {
     await fetchPortfolio();
   };
