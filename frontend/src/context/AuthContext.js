@@ -38,8 +38,8 @@ export const AuthProvider = ({ children }) => {
       await AsyncStorage.setItem("token", idToken);
       setIsLoggedIn(true);
     } catch (error) {
-      console.log("❌ Login error:", error);
-      setAuthError("Login failed.");
+      // console.log("❌ Login error:", error);
+      // setAuthError("Login failed.");
       throw error; // Let UI handle toast
     } finally {
       setLoading(false);

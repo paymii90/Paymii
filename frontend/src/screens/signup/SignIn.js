@@ -12,7 +12,7 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formError, setFormError] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
   const { login, authError } = useContext(AuthContext);
@@ -31,7 +31,6 @@ const SignIn = () => {
     }
 
     try {
-      setLoading(true);
       await login(email, password);
     } catch (error) {
       console.log("❌ Login handler error:", error);
@@ -40,8 +39,7 @@ const SignIn = () => {
         text1: "Login Failed",
         text2: error.message || "Something went wrong. Check your internet.",
       });
-    } finally {
-      setLoading(false);
+      navigation.goBack();
     }
   };
 
@@ -70,11 +68,10 @@ const SignIn = () => {
           )}
 
           <Button
-            label={loading ? "Signing in..." : "Sign In"}
+            label={"Sign In"}
             backgroundColor="#052644"
             color="white"
             action={handleSubmit}
-            disabled={loading}
           />
         </View>
       </KeyboardManager>
