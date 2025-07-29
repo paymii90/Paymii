@@ -47,50 +47,57 @@ export const AuthProvider = ({ children }) => {
   };
 
   // ✅ SIGN UP
-  const signUp = async (firstName, lastName, email, password) => {
-    setLoading(true);
-    setAuthError("");
-    try {
-      const response = await createUserWithEmailAndPassword(auth, email, password);
-      await updateProfile(response.user, {
-        displayName: `${firstName} ${lastName}`,
-      });
+const signUp = async (firstName, lastName, email, password) => {
+  setLoading(true);
+  setAuthError("");
+  try {
+    const response = await createUserWithEmailAndPassword(auth, email, password);
 
-      await sendEmailVerification(response.user);
-      const idToken = await response.user.getIdToken(true);
-      await AsyncStorage.setItem("token", idToken);
+    await updateProfile(response.user, {
+      displayName: `${firstName} ${lastName}`,
+    });
 
-      const registerResp = await fetch(`${ipAddress}/api/users/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${idToken}`,
-        },
-        body: JSON.stringify({ firstName, lastName, email }),
-      });
+    await sendEmailVerification(response.user);
 
-      if (!registerResp.ok) throw new Error("Failed to register user in backend");
+    const idToken = await response.user.getIdToken(true);
+    await AsyncStorage.setItem("token", idToken);
 
-      const backendUser = await getUserByEmail(email);
-      await AsyncStorage.setItem("user", JSON.stringify(backendUser));
-      // Do NOT set isLoggedIn here; wait until verification
-    } catch (error) {
-      console.log("❌ Sign up error:", error);
-      if (error.code === "auth/email-already-in-use") {
-        setAuthError("This email is already in use.");
-      } else if (error.code === "auth/invalid-email") {
-        setAuthError("Please enter a valid email.");
-      } else if (error.code === "auth/weak-password") {
-        setAuthError("Password should be at least 6 characters.");
-      } else {
-        setAuthError(error.message || "Sign Up Failed");
-      }
-      throw error;
-      setIsLoggedIn(true);
-    } finally {
-      setLoading(false);
+    const registerResp = await fetch(`${ipAddress}/api/users/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+      },
+      body: JSON.stringify({ firstName, lastName, email }),
+    });
+
+    if (!registerResp.ok) {
+      throw new Error("Failed to register user in backend");
     }
-  };
+
+    const backendUser = await getUserByEmail(email);
+    await AsyncStorage.setItem("user", JSON.stringify(backendUser));
+
+    // Wait until user verifies email before setting isLoggedIn
+    return { success: true, message: "Verification email sent" };
+
+  } catch (error) {
+    console.log("❌ Sign up error:", error);
+    if (error.code === "auth/email-already-in-use") {
+      setAuthError("This email is already in use.");
+    } else if (error.code === "auth/invalid-email") {
+      setAuthError("Please enter a valid email.");
+    } else if (error.code === "auth/weak-password") {
+      setAuthError("Password should be at least 6 characters.");
+    } else {
+      setAuthError(error.message || "Sign Up Failed");
+    }
+    return { success: false, message: error.message };
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // 🔍 Check Auth on App Load
   const checkAuthStatus = async () => {
