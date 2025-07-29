@@ -17,6 +17,7 @@ const DepositConfirmation = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { amount } = route.params;
+  const transactionFee = (amount * 0.01).toFixed(2);
 
   const handleConfirm = () => {
     // TODO: Replace with actual logic
@@ -47,9 +48,9 @@ const DepositConfirmation = () => {
 
             <View style={styles.infoCard}>
               <Text style={styles.infoText}>Deposit Method: Mobile Money</Text>
-              <Text style={styles.infoText}>Transaction Fee: GH₵ 0.50</Text>
+              <Text style={styles.infoText}>Transaction Fee: GH₵ {transactionFee}</Text>
               <Text style={styles.infoText}>
-                Total: GH₵ {(parseFloat(amount) + 0.5).toFixed(2)}
+                Total: GH₵ {(parseFloat(amount) - transactionFee).toFixed(2)}
               </Text>
             </View>
           </View>
