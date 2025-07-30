@@ -7,19 +7,26 @@ import {
   Image,
   RefreshControl,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Button from "../../../Components/Button";
 import FooterButtons from "../../../Components/FooterButtons";
 import { usePortfolio } from "../../../context/portfolioContext";
 import Searchbar from "../../../Components/Searchbar";
+import { useCoins } from "../../../context/CoinContext";
 
 const PortfolioScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState("Crypto");
   const { portfolio, loading, refreshPortfolio } = usePortfolio();
+  const { getCoinById } = useCoins();
 
   const onRefresh = useCallback(() => {
     refreshPortfolio();
   }, [refreshPortfolio]);
+
+  // Auto-refresh when screen loads
+  useEffect(() => {
+    refreshPortfolio();
+  }, []);
 
   const totalValue = portfolio.reduce((sum, item) => {
     const value = parseFloat(item.totalValue || 0);
@@ -28,13 +35,13 @@ const PortfolioScreen = ({ navigation }) => {
 
   return (
     <View style={styles.main}>
-      <Searchbar text='Portfolio' />
-    <View style={styles.container}>
-      <FlatList
-        data={[]} // FlatList used to avoid ScrollView nesting error
-        keyExtractor={(item) => item.id}
-        ListHeaderComponent={
-          <>
+      <Searchbar text="Portfolio" />
+      <View style={styles.container}>
+        <FlatList
+          data={[{ id: "header" }]} // dummy data for key prop
+          keyExtractor={(item) => item.id}
+          renderItem={null}
+          ListHeaderComponent={
             <View style={styles.subContainer}>
               <Text style={styles.header}>My Assets</Text>
 
@@ -74,11 +81,13 @@ const PortfolioScreen = ({ navigation }) => {
                 <View>
                   <FlatList
                     data={portfolio}
-                    keyExtractor={(item) => item.name}
-                    r efreshControl={
+                    keyExtractor={(item) =>
+                      item.id?.toString() || item.coin_id
+                    }
+                    refreshControl={
                       <RefreshControl
                         refreshing={loading}
-                       onRefresh={onRefresh}
+                        onRefresh={onRefresh}
                       />
                     }
                     renderItem={({ item }) => (
@@ -97,12 +106,15 @@ const PortfolioScreen = ({ navigation }) => {
                         </View>
                         <TouchableOpacity
                           style={styles.buyButton}
-                          onPress={() =>
+                          onPress={() => {
+                            const coin = getCoinById(item.coin_id);
+                            // console.log("Buying coin:", coin);
+                            
                             navigation.navigate("CoinStack", {
                               screen: "CoinDetails",
-                              params: { coin: item },
-                            })
-                          }
+                              params: { coin },
+                            });
+                          }}
                         >
                           <Text style={styles.buyButtonText}>Buy</Text>
                         </TouchableOpacity>
@@ -121,7 +133,9 @@ const PortfolioScreen = ({ navigation }) => {
                 <View>
                   <FlatList
                     data={portfolio}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) =>
+                      item.id?.toString() || item.coin_id
+                    }
                     refreshControl={
                       <RefreshControl
                         refreshing={loading}
@@ -165,10 +179,9 @@ const PortfolioScreen = ({ navigation }) => {
                 </View>
               )}
             </View>
-          </>
-        }
-      />
-    </View>
+          }
+        />
+      </View>
       <FooterButtons style={styles.BottomActionButtons} />
     </View>
   );
@@ -180,14 +193,13 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    paddingTop: '12%'
+    paddingTop: "12%",
   },
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
   },
   subContainer: {
-    // paddingTop: "25%",
     padding: "5%",
   },
   header: {

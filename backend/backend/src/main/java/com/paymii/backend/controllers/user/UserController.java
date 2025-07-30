@@ -9,7 +9,6 @@ import com.paymii.backend.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -19,34 +18,39 @@ import java.util.List;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
     private final UserRepository userRepository;
 
+    // ✅ Simplified using @AuthenticationPrincipal
     @PostMapping("/register")
     public UserDto register(@AuthenticationPrincipal FirebaseToken token,
                             @RequestBody RegisterUserRequest request) {
         return userService.registerUser(token, request);
     }
-    // Get all users
+
+    // 🔍 Get all users
     @GetMapping
     public List<UserDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    // Get user by ID
+    // 🔍 Get user by ID
     @GetMapping("/{id}")
     public UserDto getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
+    // 🔍 Get user by email
     @GetMapping("/by-email")
     public UserDto getUserByEmail(@RequestParam String email) {
         return userService.getUserByEmail(email);
     }
 
+    // 💰 Top up user balance
     @PostMapping("/top-up")
-    public ResponseEntity<?> topUp(@RequestParam BigDecimal amount) {
-        FirebaseToken token = (FirebaseToken) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseEntity<?> topUp(@AuthenticationPrincipal FirebaseToken token,
+                                   @RequestParam BigDecimal amount) {
         String uid = token.getUid();
 
         User user = userRepository.findByFirebaseUid(uid)
@@ -57,5 +61,4 @@ public class UserController {
 
         return ResponseEntity.ok("Balance updated");
     }
-
 }
