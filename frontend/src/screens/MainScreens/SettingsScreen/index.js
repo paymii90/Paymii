@@ -4,11 +4,13 @@ import Button from "../../../Components/Button";
 import SearchList from "../../../Components/SearchList";
 import { AuthContext } from "../../../context/AuthContext";
 import { getAuth } from "firebase/auth";
+import CloseAccount from "./CloseAccount";
 
 const SettingsScreen = ({ navigation }) => {
   const { logout } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const auth = getAuth();
@@ -45,20 +47,20 @@ const SettingsScreen = ({ navigation }) => {
           <SearchList
             type="expand"
             label="Native Currency"
-            action={() =>
-              navigation.navigate("CoinStack", {
-                screen: "MethodSelection",
-              })
-            }
+            action={() => navigation.navigate("Cur")}
           />
           <SearchList
             type="expand"
             label="Privacy"
-            action={() => navigation.navigate("Trial")}
+            //action={() => navigation.navigate("Cur")}
           />
           <SearchList type="expand" label="Phone Numbers" />
           <SearchList type="expand" label="Notification Settings" />
-          <SearchList type="expand" label="Close Account" />
+          <SearchList
+            type="expand"
+            label="Close Account"
+            action={() => setIsVisible(true)}
+          />
         </View>
         <View style={styles.section}>
           <Text style={styles.header}>Display</Text>
@@ -67,7 +69,11 @@ const SettingsScreen = ({ navigation }) => {
         <View style={styles.section}>
           <Text style={styles.header}>Security</Text>
           <SearchList type="Checkbox" label="Require Pin" opacity={1} />
-          <SearchList type="expand" label="Pin Settings" />
+          <SearchList
+            type="expand"
+            label="Change Pin"
+            action={() => navigation.navigate("Pin")}
+          />
           <SearchList type="expand" label="Lock my account" />
         </View>
 
@@ -79,6 +85,7 @@ const SettingsScreen = ({ navigation }) => {
           action={logout}
         />
       </ScrollView>
+      <CloseAccount Visible={isVisible} onClose={() => setIsVisible(false)} />
     </View>
   );
 };

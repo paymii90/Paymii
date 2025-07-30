@@ -14,29 +14,29 @@ import * as Notifications from "expo-notifications";
 
 const { width } = Dimensions.get("window");
 
-const DepositConfirmation = () => {
+const WithdrawConfirmation = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { amount } = route.params;
-  const transactionFee = (amount * 0.01).toFixed(2);
 
   const sendLocalNotification = async () => {
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: "🎉 Deposit Successful!",
-        body: `You've successfully deposited GH₵ ${amount.toFixed(
+        title: "🎉 Withdrawal Successful!",
+        body: `You've successfully withdrawn GH₵ ${amount.toFixed(
           2
         )}. Check your portfolio now!`,
       },
       trigger: null, // Immediate
     });
   };
+
   const handleConfirm = async () => {
     // TODO: Replace with actual logic
     Toast.show({
       type: "success",
-      text1: "Deposit successful",
-      text2: "Your deposit has been processed successfully.",
+      text1: "Withdrawal successful",
+      text2: "Your withdrawal has been processed successfully.",
     });
     navigation.navigate("Main", {
       screen: "Portfolio",
@@ -56,18 +56,18 @@ const DepositConfirmation = () => {
         {/* Main Content */}
         <View style={{ flex: 1, justifyContent: "space-between" }}>
           <View>
-            <Text style={styles.title}>Confirm Deposit</Text>
-            <Text style={styles.subtitle}>You're about to deposit:</Text>
+            <Text style={styles.title}>Confirm Withdrawal</Text>
+            <Text style={styles.subtitle}>You're about to Withdraw:</Text>
             <Text style={styles.amount}>GH₵ {amount}</Text>
 
             <View style={styles.infoCard}>
-              <Text style={styles.infoText}>Deposit Method: Mobile Money</Text>
+              <Text style={styles.infoText}>Withdraw To: Mobile Money</Text>
               <Text style={styles.infoText}>
-                Transaction Fee: GH₵ {transactionFee}
+                Transaction Fee: GH₵ {(0.05 * amount).toFixed(2)}
               </Text>
-              <Text style={styles.infoText}>
-                Total: GH₵ {(parseFloat(amount) - transactionFee).toFixed(2)}
-              </Text>
+              {/* <Text style={styles.infoText}>
+                Total: GH₵ {(parseFloat(amount) + 0.5).toFixed(2)}
+              </Text> */}
             </View>
           </View>
 
@@ -89,7 +89,7 @@ const DepositConfirmation = () => {
   );
 };
 
-export default DepositConfirmation;
+export default WithdrawConfirmation;
 
 const styles = StyleSheet.create({
   container: {

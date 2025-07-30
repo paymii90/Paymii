@@ -2,9 +2,12 @@ import React from "react";
 import { View, StyleSheet, Text, ScrollView } from "react-native";
 import Paymentmethod from "../../../../../assets/Paymentmethod.svg";
 import Button from "../../../../Components/Button";
+import { useNavigation } from "@react-navigation/native";
+
 //import { ScrollView } from "react-native-web";
 
-const AddPayment = ({ navigation }) => {
+const AddPayment = () => {
+  const navigation = useNavigation();
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Paymentmethod />
@@ -17,7 +20,11 @@ const AddPayment = ({ navigation }) => {
           backgroundColor="#052644"
           color="white"
           label="Add mobile money number"
-          action={() => navigation.navigate("MoMo")}
+          action={() =>
+            navigation.navigate("SettingsMain", {
+              screen: "MoMo",
+            })
+          }
         />
         <Button
           backgroundColor="#052644"
