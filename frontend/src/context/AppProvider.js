@@ -4,6 +4,7 @@ import { CoinProvider } from "./CoinContext";
 import { PortfolioProvider } from "./portfolioContext";
 import { IpProvider } from "./IpContext";
 import { WatchlistProvider } from "./WatchlistContext";
+import { BalanceProvider } from "./balanceContext";
 
 const AppProvider = ({ children }) => {
   return (
@@ -11,7 +12,9 @@ const AppProvider = ({ children }) => {
       <AuthProvider>
         <CoinProvider>
           <WatchlistProvider>
-            <PortfolioProvider>{children}</PortfolioProvider>
+            <PortfolioProvider>
+              <BalanceProvider>{children}</BalanceProvider>
+            </PortfolioProvider>
           </WatchlistProvider>
         </CoinProvider>
       </AuthProvider>

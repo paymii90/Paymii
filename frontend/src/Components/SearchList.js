@@ -35,6 +35,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#CFCFCF",
+    // borderTopWidth: 1,
+    // borderTopColor: "#CFCFCF",
   },
   label: {
     fontSize: 16,

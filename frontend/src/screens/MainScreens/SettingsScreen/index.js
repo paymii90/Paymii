@@ -49,13 +49,13 @@ const SettingsScreen = ({ navigation }) => {
             label="Native Currency"
             action={() => navigation.navigate("Cur")}
           />
-          <SearchList
+          {/* <SearchList
             type="expand"
             label="Privacy"
             //action={() => navigation.navigate("Cur")}
-          />
-          <SearchList type="expand" label="Phone Numbers" />
-          <SearchList type="expand" label="Notification Settings" />
+          /> */}
+          {/* <SearchList type="expand" label="Phone Numbers" />
+          <SearchList type="expand" label="Notification Settings" /> */}
           <SearchList
             type="expand"
             label="Close Account"
@@ -74,7 +74,7 @@ const SettingsScreen = ({ navigation }) => {
             label="Change Pin"
             action={() => navigation.navigate("Pin")}
           />
-          <SearchList type="expand" label="Lock my account" />
+          {/* <SearchList type="expand" label="Lock my account" /> */}
         </View>
 
         <Button

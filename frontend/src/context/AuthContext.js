@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   sendEmailVerification,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -36,80 +37,62 @@ export const AuthProvider = ({ children }) => {
       const backendUser = await getUserByEmail(user.email);
       await AsyncStorage.setItem("user", JSON.stringify(backendUser));
       await AsyncStorage.setItem("token", idToken);
-      setIsLoggedIn(true);
+      // onAuthStateChanged will set isLoggedIn
     } catch (error) {
-      // console.log("❌ Login error:", error);
-      // setAuthError("Login failed.");
-      throw error; // Let UI handle toast
+      throw error;
     } finally {
       setLoading(false);
     }
   };
 
   // ✅ SIGN UP
-const signUp = async (firstName, lastName, email, password) => {
-  setLoading(true);
-  setAuthError("");
-  try {
-    const response = await createUserWithEmailAndPassword(auth, email, password);
-
-    await updateProfile(response.user, {
-      displayName: `${firstName} ${lastName}`,
-    });
-
-    await sendEmailVerification(response.user);
-
-    const idToken = await response.user.getIdToken(true);
-    await AsyncStorage.setItem("token", idToken);
-
-    const registerResp = await fetch(`${ipAddress}/api/users/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${idToken}`,
-      },
-      body: JSON.stringify({ firstName, lastName, email }),
-    });
-
-    const responseText = await registerResp.text();
-console.log("🛠 Backend response:", registerResp.status, responseText);
-
-    if (!registerResp.ok) {
-      throw new Error("Failed to register user in backend");
-    }
-
-    const backendUser = await getUserByEmail(email);
-    await AsyncStorage.setItem("user", JSON.stringify(backendUser));
-
-    // Wait until user verifies email before setting isLoggedIn
-    return { success: true, message: "Verification email sent" };
-
-  } catch (error) {
-    console.log("❌ Sign up error:", error);
-    if (error.code === "auth/email-already-in-use") {
-      setAuthError("This email is already in use.");
-    } else if (error.code === "auth/invalid-email") {
-      setAuthError("Please enter a valid email.");
-    } else if (error.code === "auth/weak-password") {
-      setAuthError("Password should be at least 6 characters.");
-    } else {
-      setAuthError(error.message || "Sign Up Failed");
-    }
-    return { success: false, message: error.message };
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-  // 🔍 Check Auth on App Load
-  const checkAuthStatus = async () => {
+  const signUp = async (firstName, lastName, email, password) => {
+    setLoading(true);
+    setAuthError("");
     try {
-      const storedUser = await AsyncStorage.getItem("user");
-      setIsLoggedIn(!!storedUser);
+      const response = await createUserWithEmailAndPassword(auth, email, password);
+
+      await updateProfile(response.user, {
+        displayName: `${firstName} ${lastName}`,
+      });
+
+      await sendEmailVerification(response.user);
+
+      const idToken = await response.user.getIdToken(true);
+      await AsyncStorage.setItem("token", idToken);
+
+      const registerResp = await fetch(`${ipAddress}/api/users/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({ firstName, lastName, email }),
+      });
+
+      const responseText = await registerResp.text();
+      console.log("🛠 Backend response:", registerResp.status, responseText);
+
+      if (!registerResp.ok) {
+        throw new Error("Failed to register user in backend");
+      }
+
+      const backendUser = await getUserByEmail(email);
+      await AsyncStorage.setItem("user", JSON.stringify(backendUser));
+
+      return { success: true, message: "Verification email sent" };
     } catch (error) {
-      console.log("❌ Error checking auth status:", error);
-      setIsLoggedIn(false);
+      console.log("❌ Sign up error:", error);
+      if (error.code === "auth/email-already-in-use") {
+        setAuthError("This email is already in use.");
+      } else if (error.code === "auth/invalid-email") {
+        setAuthError("Please enter a valid email.");
+      } else if (error.code === "auth/weak-password") {
+        setAuthError("Password should be at least 6 characters.");
+      } else {
+        setAuthError(error.message || "Sign Up Failed");
+      }
+      return { success: false, message: error.message };
     } finally {
       setLoading(false);
     }
@@ -122,14 +105,34 @@ console.log("🛠 Backend response:", registerResp.status, responseText);
       await AsyncStorage.removeItem("token");
       setIsLoggedIn(false);
       console.log("✅ Logged out");
-      
     } catch (error) {
       console.log("❌ Logout error:", error);
     }
   };
 
+  // 🔁 Listen to Firebase auth changes
   useEffect(() => {
-    checkAuthStatus();
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const backendUser = await getUserByEmail(user.email);
+          await AsyncStorage.setItem("user", JSON.stringify(backendUser));
+          const idToken = await user.getIdToken(true);
+          await AsyncStorage.setItem("token", idToken);
+          setIsLoggedIn(true);
+        } catch (error) {
+          console.log("❌ Error syncing user:", error);
+          setIsLoggedIn(false);
+        }
+      } else {
+        await AsyncStorage.removeItem("user");
+        await AsyncStorage.removeItem("token");
+        setIsLoggedIn(false);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   return (

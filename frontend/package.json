@@ -61,9 +61,7 @@
     "react-native-toast-message": "^2.3.3",
     "react-native-vector-icons": "^10.2.0",
     "react-native-wagmi-charts": "^2.7.1",
-
     "react-native-web": "^0.20.0"
-
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
