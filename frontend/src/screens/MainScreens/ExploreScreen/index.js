@@ -11,8 +11,8 @@ import Searchbar from "../../../Components/Searchbar";
 const ExploreScreen = () => {
   return (
     <SafeAreaWrapper>
-      <View style={styles.container}>
       <Searchbar text="Explore" />
+      <View style={styles.container}>
        
 
         <FlatList

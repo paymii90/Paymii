@@ -10,11 +10,14 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  Image
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { fetchMessages, sendMessage } from "../../../../api/messageApi";
 import { IpContext } from "../../../../context/IpContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BlurView } from "expo-blur";
+
 
 export default function ChatScreen() {
   const [messages, setMessages] = useState([]);
@@ -137,7 +140,11 @@ export default function ChatScreen() {
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
+    ><Image source={require('../../../../../assets/chat-bg.png')} style={{ position: 'absolute', width: '100%', height: '100%' }} />
+    <BlurView style={styles.header}>
+      <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 10 }}>Chat</Text>
+      <Text style={{ fontSize: 16, marginBottom: 20 }}>Welcome, {name || "User"}!</Text>
+      </BlurView>
       <FlatList
         ref={flatListRef}
         data={messages}
@@ -147,7 +154,7 @@ export default function ChatScreen() {
         onContentSizeChange={scrollToEnd}
       />
 
-      <View style={styles.inputContainer}>
+      <BlurView  style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           value={input}
@@ -157,7 +164,8 @@ export default function ChatScreen() {
         <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
           <Ionicons name="send" size={24} color="white" />
         </TouchableOpacity>
-      </View>
+      </BlurView>
+    
     </KeyboardAvoidingView>
   );
 }
@@ -170,6 +178,11 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
     padding: 10,
     borderRadius: 8,
+  },
+  header: {
+   // flex: 1,
+    padding: 10,
+    paddingTop: 50,
   },
   sent: {
     alignSelf: "flex-end",
@@ -198,6 +211,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderTopWidth: 1,
     borderColor: "#ccc",
+    paddingBottom: 20,
+    // backgroundColor: "red",
   },
   input: {
     flex: 1,
@@ -207,7 +222,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   sendButton: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#052644",
     borderRadius: 20,
     padding: 10,
     justifyContent: "center",

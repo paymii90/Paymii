@@ -6,19 +6,15 @@ import { AuthContext } from "../../context/AuthContext";
 import Toast from "react-native-toast-message";
 import KeyboardManager from "../../Components/KeyboardManager";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formError, setFormError] = useState("");
-  // const [loading, setLoading] = useState(false);
-  const navigation = useNavigation();
 
-  const { login, authError } = useContext(AuthContext);
+  const { login, authError, loading } = useContext(AuthContext);
 
   const handleSubmit = async () => {
-    navigation.navigate("Main"); //would later be removed
     setFormError("");
 
     if (!email || !password) {
@@ -32,6 +28,7 @@ const SignIn = () => {
 
     try {
       await login(email, password);
+      // ✅ No manual navigation; isLoggedIn will trigger reroute
     } catch (error) {
       console.log("❌ Login handler error:", error);
       Toast.show({
@@ -39,7 +36,6 @@ const SignIn = () => {
         text1: "Login Failed",
         text2: error.message || "Something went wrong. Check your internet.",
       });
-      navigation.goBack();
     }
   };
 
@@ -68,10 +64,11 @@ const SignIn = () => {
           )}
 
           <Button
-            label={"Sign In"}
+            label={loading ? "Signing In..." : "Sign In"}
             backgroundColor="#052644"
             color="white"
             action={handleSubmit}
+            disabled={loading}
           />
         </View>
       </KeyboardManager>

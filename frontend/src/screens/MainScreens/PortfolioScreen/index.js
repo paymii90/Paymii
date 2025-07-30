@@ -7,25 +7,29 @@ import {
   Image,
   RefreshControl,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState ,useContext} from "react";
 import Button from "../../../Components/Button";
 import FooterButtons from "../../../Components/FooterButtons";
 import { usePortfolio } from "../../../context/portfolioContext";
 import Searchbar from "../../../Components/Searchbar";
 import { useCoins } from "../../../context/CoinContext";
+import { BalanceContext } from "../../../context/balanceContext";
 
 const PortfolioScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState("Crypto");
   const { portfolio, loading, refreshPortfolio } = usePortfolio();
   const { getCoinById } = useCoins();
+  const { refreshBalance,balance } = useContext(BalanceContext);
 
   const onRefresh = useCallback(() => {
     refreshPortfolio();
-  }, [refreshPortfolio]);
+    refreshBalance();
+  }, [refreshPortfolio, refreshBalance]);
 
   // Auto-refresh when screen loads
   useEffect(() => {
     refreshPortfolio();
+    refreshBalance();
   }, []);
 
   const totalValue = portfolio.reduce((sum, item) => {
@@ -70,10 +74,13 @@ const PortfolioScreen = ({ navigation }) => {
               </View>
 
               {/* Balance */}
-              <View style={styles.balanceText}>
+              <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                 <Text style={styles.balanceText}>
                   GHS {totalValue.toFixed(2)}
                 </Text>
+                {/* <Text style={styles.balanceText}>
+                  Cash Balance: GHS {balance.toFixed(2)}
+                </Text> */}
               </View>
 
               {/* Assets */}
@@ -173,7 +180,7 @@ const PortfolioScreen = ({ navigation }) => {
                     backgroundColor="#052644"
                     color="white"
                     action={() =>
-                      navigation.navigate("CoinStack", { screen: "Buy" })
+                      navigation.navigate("CoinStack", { screen: "Deposit" })
                     }
                   />
                 </View>
@@ -194,6 +201,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
     paddingTop: "12%",
+    width: "100%",
   },
   container: {
     flex: 1,

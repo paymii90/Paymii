@@ -8,39 +8,42 @@ import {
 } from "react-native";
 
 const Pin = () => {
-  const [inputValue, setInputValue] = useState(["", "", "", ""]); // Array for each circle
-  const inputRefs = useRef([]); // Refs for each TextInput
-  const [activeIndex, setActiveIndex] = useState(-1);
-  //   index === 0 ? inputRefs.current[0].focus() : null;
+  const [inputValue, setInputValue] = useState(["", "", "", ""]);
+  const inputRefs = useRef([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    inputRefs.current[0]?.focus();
+  }, []);
 
   const handleTextChange = (text, index) => {
-    // Update current circle
     const newValues = [...inputValue];
-    newValues[index] = text.slice(-1); // Only allow 1 character per circle
+    newValues[index] = text.slice(-1); // Only keep the last digit
     setInputValue(newValues);
 
-    // //Auto focus first circle on startup
-    // useEffect(() => {
-    //   inputRefs.current[0]?.focus();
-    // }, []);
-
-    // Auto-focus next circle if a character was entered
     if (text && index < 3) {
-      inputRefs.current[index + 1].focus();
+      inputRefs.current[index + 1]?.focus();
+      setActiveIndex(index + 1);
+    } else {
+      setActiveIndex(index);
     }
-    activeIndex === 3 ? setActiveIndex(3) : setActiveIndex(activeIndex + 1);
-    console.log(index, activeIndex);
   };
 
   const handleBackspace = (index) => {
-    inputValue[index] = "";
-    // Move focus to previous circle on backspace if current is empty
-    if (index > 0) {
-      inputRefs.current[index - 1].focus();
+    if (inputValue[index] === "") {
+      if (index > 0) {
+        const newValues = [...inputValue];
+        newValues[index - 1] = "";
+        setInputValue(newValues);
+        inputRefs.current[index - 1]?.focus();
+        setActiveIndex(index - 1);
+      }
+    } else {
+      const newValues = [...inputValue];
+      newValues[index] = "";
+      setInputValue(newValues);
+      setActiveIndex(index);
     }
-    index -= 1;
-    index === 0 ? setActiveIndex(-1) : setActiveIndex(index - 1);
-    console.log(index, activeIndex);
   };
 
   return (
@@ -49,7 +52,7 @@ const Pin = () => {
         {[0, 1, 2, 3].map((index) => (
           <View
             key={index}
-            style={[styles.circle, activeIndex >= index && styles.active]}
+            style={[styles.circle, activeIndex === index && styles.active]}
           >
             <TextInput
               ref={(ref) => (inputRefs.current[index] = ref)}
@@ -63,32 +66,14 @@ const Pin = () => {
                 }
               }}
               maxLength={1}
-              cursorColor={null}
-              selection={{ start: 0, end: 0 }}
+              secureTextEntry={true} // Optional: mask input
               textAlign="center"
+              selection={{ start: 0, end: 0 }}
             />
           </View>
         ))}
       </View>
-      {/* Hidden single input for mobile keyboards */}
-      {/* <TextInput
-        style={styles.hiddenInput}
-        value={inputValue.join("")}
-        keyboardType="numeric"
-        onChangeText={(text) => {
-          // Distribute text across circles
-          const newValues = ["", "", "", ""];
-          text
-            .split("")
-            .slice(0, 4)
-            .forEach((char, i) => {
-              newValues[i] = char;
-            });
-          setInputValue(newValues);
-        }}
-        maxLength={4}
-      /> */}{" "}
-      <Text style={styles.text}>Choose your pin</Text>
+      <Text style={styles.text}>Choose your PIN</Text>
     </View>
   );
 };
@@ -97,44 +82,39 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    // justifyContent: "center",
     alignItems: "center",
     paddingTop: "50%",
   },
   circleContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "40%",
+    width: "60%",
   },
   circle: {
-    width: 20,
-    height: 20,
-    borderRadius: 30,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     backgroundColor: "#e0e0e0",
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: "#052644",
+    marginHorizontal: 5,
   },
   input: {
-    // width: "100%",
-    // height: "100%",
-    fontSize: 0,
-    textAlign: "center",
+    fontSize: 22,
+    color: "white",
+    width: "100%",
+    height: "100%",
   },
-  //   hiddenInput: {
-  //     position: "absolute",
-  //     width: 0,
-  //     height: 0,
-  //     opacity: 0,
-  //   },
   active: {
     backgroundColor: "#052644",
   },
   text: {
     fontSize: 18,
     fontWeight: "bold",
-    marginTop: 10,
+    marginTop: 20,
+    color: "#052644",
   },
 });
 

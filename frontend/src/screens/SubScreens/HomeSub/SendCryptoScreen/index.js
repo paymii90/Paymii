@@ -14,6 +14,9 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import SafeAreaWrapper from "../../../../Components/SafeAreaWrapper";
+import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import SendCryptoModal from "./SendCryptoModal";
 
 const { width } = Dimensions.get("window");
 
@@ -25,6 +28,7 @@ const SendCryptoScreen = () => {
   const [address, setAddress] = useState("");
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
 
   return (
     <SafeAreaWrapper>
@@ -104,10 +108,35 @@ const SendCryptoScreen = () => {
           </ScrollView>
 
           {/* Send Button */}
-          <TouchableOpacity style={styles.sendBtn}>
-            <Text style={styles.sendText}>SEND {coin.symbol.toUpperCase()}</Text>
+          <TouchableOpacity style={styles.sendBtn} onPress={() => {
+            if (!address || !amount) {
+              Toast.show({
+                type: "error",
+                text1: "Missing Information",
+                text2: "Please fill in all fields",
+              });
+              return;
+            } else if (parseFloat(amount) <= 0) {
+              Toast.show({
+                type: "error",
+                text1: "Invalid Amount",
+                text2: "Amount must be greater than zero",
+              });
+              return;
+            } else {
+              setIsVisible(true); // Show the modal
+            }
+          }}>
+            <Text style={styles.sendText}>PREVIEW SEND</Text>
           </TouchableOpacity>
         </View>
+        <SendCryptoModal
+          visible={isVisible} // Change this to true when you want to show the modal
+          onClose={() => setIsVisible(false) }
+          coin={coin}
+          address={address}
+          amount={amount}
+        />
       </KeyboardAvoidingView>
     </SafeAreaWrapper>
   );

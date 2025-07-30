@@ -35,7 +35,7 @@ const Searchbar = ({text=''}) => {
   );
 
   return (
-    <View style={styles.main} >
+    
     <View style={styles.container}>
       {clicked ? (
         <View style={styles.overlay}>
@@ -107,7 +107,7 @@ const Searchbar = ({text=''}) => {
         </>
       )}
     </View>
-    </View>
+    
   );
 };
 
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   // },
   container: {
     flexDirection: "row",
-    width: "95%",
+    width: "100%",
     height: 75,
    // position: "absolute",
    // top: 60,
@@ -140,8 +140,10 @@ const styles = StyleSheet.create({
   },
   overlay: {
     position: "absolute",
-    top: -20,
+    top: 3,
     width: "100%",
+    // top: 60,
+    paddingTop: 10,
     backgroundColor: "#fff",
     borderRadius: 8,
     padding: 8,
