@@ -71,6 +71,9 @@ const signUp = async (firstName, lastName, email, password) => {
       body: JSON.stringify({ firstName, lastName, email }),
     });
 
+    const responseText = await registerResp.text();
+console.log("🛠 Backend response:", registerResp.status, responseText);
+
     if (!registerResp.ok) {
       throw new Error("Failed to register user in backend");
     }

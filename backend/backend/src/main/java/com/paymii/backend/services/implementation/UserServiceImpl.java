@@ -10,8 +10,8 @@ import com.paymii.backend.repositories.UserRepository;
 import com.paymii.backend.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
                     .email(email)
                     .createdAt(Instant.now())
                     .updatedAt(Instant.now())
+                    .balance(BigDecimal.valueOf(10000)) // ✅ Set default balance
                     .build();
             user = userRepository.save(user);
         }
@@ -53,7 +54,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByFirebaseUid(firebaseUid)
                 .orElseThrow(() -> new RuntimeException("User not found!"));
 
-        // Only update allowed fields
         if (request.getFirstName() != null) user.setFirstName(request.getFirstName());
         if (request.getLastName() != null) user.setLastName(request.getLastName());
         if (request.getProfilePhoto() != null) user.setProfilePhoto(request.getProfilePhoto());
@@ -71,16 +71,15 @@ public class UserServiceImpl implements UserService {
                 .orElse(null);
     }
 
+    // ✅ Register user with default balance of 10000
     @Override
     public UserDto registerUser(FirebaseToken token, RegisterUserRequest request) {
         String firebaseUid = token.getUid();
         String emailFromToken = token.getEmail();
         boolean emailVerified = token.isEmailVerified();
 
-        // Prefer email from token
         String email = emailFromToken != null ? emailFromToken : request.getEmail();
 
-        // Check if user already exists
         User user = userRepository.findByFirebaseUid(firebaseUid)
                 .orElseGet(() -> {
                     User newUser = User.builder()
@@ -89,6 +88,9 @@ public class UserServiceImpl implements UserService {
                             .firstName(request.getFirstName())
                             .lastName(request.getLastName())
                             .verified(emailVerified)
+                            .balance(BigDecimal.valueOf(10000)) // ✅ Set default balance
+                            .createdAt(Instant.now())
+                            .updatedAt(Instant.now())
                             .build();
                     return userRepository.save(newUser);
                 });
@@ -129,6 +131,3 @@ public class UserServiceImpl implements UserService {
         return toDto(user);
     }
 }
-
-
-

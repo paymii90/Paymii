@@ -179,7 +179,7 @@ const TransactionsScreen = () => {
         horizontal
         showsHorizontalScrollIndicator={false}
         style={{ marginBottom: 10 }}
-        contentContainerStyle={{ flexDirection: "row", flexGrow: 1 }}
+        contentContainerStyle={styles.tabsContainer}
       >
         {TABS.map(({ name, icon }) => (
           <TouchableOpacity
@@ -271,6 +271,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 20,
   },
+  tabsContainer: {
+  flexDirection: "row",
+  alignItems: "center",
+  paddingHorizontal: 4,
+  paddingBottom: 10,
+},
   backBtn: {
     marginBottom: 10,
   },

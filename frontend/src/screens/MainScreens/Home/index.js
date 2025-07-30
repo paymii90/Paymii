@@ -120,6 +120,7 @@ const Home = () => {
     >
       <Searchbar />
       <ScrollView
+      style={styles.scroll}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -277,8 +278,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "#f5f5f5",
-    marginLeft: 12,
-    marginRight: 12,
+    // marginLeft: 12,
+    // marginRight: 12,
+  },
+  scroll: {
+    paddingHorizontal: 12
   },
   iconsCont: {
     position: "absolute",

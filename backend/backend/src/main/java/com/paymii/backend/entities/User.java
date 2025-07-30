@@ -46,7 +46,7 @@ public class User {
     private String profilePhoto;
 
     @Column(nullable = false, precision = 20, scale = 2)
-    private BigDecimal balance = BigDecimal.valueOf(100000.000);
+    private BigDecimal balance = BigDecimal.valueOf(10000.00);
 
 
     private boolean verified;
